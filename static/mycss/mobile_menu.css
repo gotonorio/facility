@@ -1,0 +1,57 @@
+
+.menubox {
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    padding: .5em .5em 0;
+    background-color:#000033;
+    color: white;
+    /* border: solid 1px;
+    margin-top: 2px;
+    margin-left: 10px;
+    padding: 10px;
+    position: relative;
+    background-color:#000033;
+    border-radius: 0.5em; */
+  }
+  hr {
+    border-style: none;
+    border-top: 1px solid black;
+  }
+  a.black_color {
+    color : black;
+    display: block;
+    }
+  a.white_color {
+    color : white;
+    display: block;
+    }
+  .sectionbox {
+    border: none;
+    margin-top: 2px;
+    margin-left: 10px;
+    padding: 20px;
+    position: relative;
+  }
+/* https://developer.mozilla.org/ja/docs/Web/HTML/Element/details */ 
+details {
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    padding: .5em .5em 0;
+    background-color:#000033;
+    color: white;
+}
+summary {
+    font-weight: bold;
+    margin: -.5em -.5em 0;
+    padding: .5em;
+}
+details[open] {
+    padding: .5em;
+}
+details[open] summary {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: .5em;
+}
+details > hr.divide {
+  height: 0.5px;
+}

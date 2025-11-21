@@ -1,0 +1,15 @@
+*.log
+*.pot
+*.pyc
+*.pdf
+*.ico
+*.png
+*.sqlite3
+.DS_Store
+.env
+local_settings.py
+__pycache__/
+media/
+.vscode/
+tags
+

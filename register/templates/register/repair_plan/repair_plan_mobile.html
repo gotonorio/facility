@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{# http://cccabinet.jpn.org/bootstrap4/components/navbar #}
+{% block title %}
+  長期修繕計画
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【設備台帳】</a>
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      {% if perms.register.add_user %}
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link is-size-6">管理者用</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="{% url 'register:signup' %}">仮登録</a>
+            <a class="navbar-item" href="{% url 'register:user_list' %}">登録者一覧</a>
+            <a class="navbar-item" href="{% url 'register:pwd_update' user.pk %}">パスワード変更</a>
+          </div>
+        </div>
+      {% endif %}
+      <div class="navbar-item">
+        <a href="{% url 'register:mypage' %}" class="navbar-item">戻る</a>
+      </div>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+<br>
+{% block content %}
+<br>
+<div class="container">
+  <section class="sectionbox">
+    <details>
+      <summary>長期修繕計画</summary>
+      <a href="{% url 'plan:repair_plan_list' %}" class="navbar-item">修繕工事リスト（詳細版）</a>
+      <a href="{% url 'plan:repair_plan_table' %}" class="navbar-item">長期修繕計画表</a>
+      {% if perms.plan.add_koujiname %}
+        <a href="{% url 'plan:repair_plan_by_koujitype' %}" class="navbar-item">修繕計画 工事種別リスト</a>
+      {% endif %}
+      <div class="navbar-divider"></div>
+      <a href="{% url 'plan:repair_masterplan_list' %}" class="navbar-item">修繕計画マスタ 一覧</a>
+    </details>
+    <br>
+    <details>
+      <summary>工事履歴</summary>
+      <a href="{% url 'rireki:rireki_list' %}" class="navbar-item">工事一覧</a>
+    </details>
+    <br>
+    <details>
+      <summary>修繕計画シミュレータ</summary>
+      <a href="{% url 'simulate:do_simulate' %}" class="navbar-item">修繕計画シミュレータ</a>
+    </details>
+  </section>
+</div>
+{% endblock %}

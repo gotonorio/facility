@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #}
+
+{% block title %}
+登録ユーザ 一覧
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【{{user}}】</a>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'register:mypage' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+{% block content %}
+<br>
+<div class="container is-fluid">
+  {% comment %} <div class="content has-text-centered"> {% endcomment %}
+  <div class="content">
+    <h4>登録ユーザ 一覧</h4>
+    <ul>
+      <li> chairman : システム管理者（プログラムの作成・修正・削除）</li>
+      <li> data_manager : データ管理者（共用部データ管理者 : 共用部データの管理権限、全データの閲覧権限）</li>
+      <li> repair_plan_manager : 修繕専門委員（修繕専門委員会 : 修繕計画データの管理権限、全データの閲覧権限）</li>
+      <li> sophiag : 区分所有者（外部に漏れても問題ないデータの閲覧権限）</li>
+    </ul>
+  
+  </div>
+  <table class="table table_nowrap is-striped is-narrow is-responsible">
+    <thead>
+      <tr>
+        <th class="has-text-centered">group</th>
+        <th class="has-text-centered">user</th>
+        <th class="has-text-centered">email</th>
+        <th class="has-text-centered">有効</th>
+        <th class="has-text-centered">#</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for list in user_list %}
+        {% comment %} スタッフは表示しない {% endcomment %}
+        {% if not list.is_staff %}
+          <tr>
+            <td class="has-text-left">{{ list.groups.get }}</td>
+            <td class="has-text-left"><a href="{% url 'register:user_update' list.pk %}">{{ list.username}}</a></td>
+            <td class="has-text-centered ">{{ list.email}}</td>
+            {% if list.is_active == False %}
+              <td class="has-text-centered has-text-danger">{{ list.is_active}}</td>
+            {% else %}
+              <td class="has-text-centered ">{{ list.is_active}}</td>
+            {% endif %}
+            <td>
+              <a href="{% url 'register:delete_user' list.pk %}" >
+                削除
+              </a>
+            </td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "page.html" %}
+{% endblock %}

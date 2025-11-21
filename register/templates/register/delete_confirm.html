@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <br>
+  <form action="" method="POST" enctype='multipart/form-data'>
+    <div class="content has-text-centered">
+      <p>ユーザ名:【 {{ user.username }} 】</p>
+      <p>メールアドレス:【 {{ user.email }} 】</p>
+      <button type="submit" class="button is-danger">削除する</button>
+      <a class="button is-primary" href="javascript:void(0);" onclick="window.history.back();">戻る</a>
+    </div>
+    {% csrf_token %}
+  </form>
+</div>
+{% endblock %}

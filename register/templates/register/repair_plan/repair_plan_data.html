@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}
+管理者ページ
+{% endblock title %}
+{% block navbar %}
+{# https://bulma.io/documentation/components/navbar/ #}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">修繕計画</a>
+        <div class="navbar-dropdown">
+          <a href="{% url 'plan:create_master_plan' %}" class="navbar-item">修繕計画マスタの登録/修正</a>
+          <div class="navbar-divider"></div>
+          <a href="{% url 'plan:add_repair_plan' %}" class="navbar-item">修繕計画データの登録</a>
+          <a href="{% url 'plan:update_repair_plan_list' %}" class="navbar-item" >修繕計画データ修正</a>
+          <div class="navbar-divider"></div>
+          <div class="navbar-divider"></div>
+          <a href="{% url 'plan:duplicate_repair_plan' %}" class="navbar-item">修繕計画データ複製</a>
+        </div>
+      </div>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">シミュレーション</a>
+        <div class="navbar-dropdown">
+          <div class="navbar-divider"></div>
+          <a href="{% url 'simulate:create_income'%}" class="navbar-item">実収入の登録/修正</a>
+          <a href="{% url 'simulate:create_cpi'%}" class="navbar-item">物価指数の登録/修正</a>
+        </div>
+      </div>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">工事履歴</a>
+        <div class="navbar-dropdown">
+          <a href="{% url 'rireki:create' %}" class="navbar-item">工事履歴の登録</a>
+          <a href="{% url 'rireki:update_list' %}" class="navbar-item">工事履歴の修正</a>
+        </div>
+      </div>
+    </div>
+    <div class="navbar-end">
+      {% comment %} {% if perms.register.add_user %} {% endcomment %}
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">マスタデータ</a>
+        <div class="navbar-dropdown">
+          <div class="navbar-divider"></div>
+          <a href="{% url 'plan:create_koujitype' %}" class="navbar-item">工事種別データの登録/修正</a>
+          <a href="{% url 'plan:create_unitname' %}" class="navbar-item">数量単位データの登録</a>
+          <div class="navbar-divider"></div>
+          <a href="{% url 'plan_data_create:create_basicplandata' %}" class="navbar-item">工事周期データの作成</a>
+          <a href="{% url 'plan_data_create:duplicate_koujicycledata' %}" class="navbar-item">工事周期データの複製</a>
+          <a href="{% url 'plan_data_create:koujicycledata_list' %}" class="navbar-item">工事周期データ一覧</a>
+          <a href="{% url 'plan_data_create:create_repairplan' %}" class="navbar-item">修繕計画データ変換</a>
+          <a href="{% url 'plan_data_create:delete_koujicycledata' %}" class="navbar-item">工事周期データ削除</a>
+            <div class="navbar-divider"></div>
+          {% comment %}
+            <a href="{% url 'plan:import_repair_plan' %}" class="navbar-item">修繕計画データ読込み</a>
+          {% endcomment %}
+            <a href="{% url 'plan:delete_koujiname_ver' %}" class="navbar-item">修繕計画データの削除</a>
+        </div>
+      </div>
+      {% comment %} {% endif %} {% endcomment %}
+      <div class="navbar-item">
+        <a class="button is-light is-small" href="{% url 'register:repair_plan' %}" >戻る</a>
+      </div>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content has-text-centered ">
+    <h4>修繕工事データの登録／修正</h4>
+  </div>
+  <div class="content has-text-left">
+    <ul>
+      <li>完了した工事に「完了フラグ」を立てる。</li>
+      <li>シミュレーション用データとして、完了工事を実工事金額で再登録する。</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{# http://cccabinet.jpn.org/bootstrap4/components/navbar #}
+{% block title %}
+設備管理
+{% endblock %}
+
+{% block navbar %}
+{# https://bulma.io/documentation/components/navbar/ #}
+<nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    {% if DEBUG %}
+      <div class="navbar-item">【{{user}}】</div>
+    {% else %}
+      <div class="navbar-item">【SG川崎】</div>
+    {% endif %}
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <a href="{% url 'shoukaki:list' %}" class="navbar-item">消火器</a>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link is-size-6">駐車場</a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="{% url 'parking:fig' %}">使用状況図</a>
+          <a class="navbar-item" href="{% url 'parking:list' %}">使用状況リスト</a>
+          {% if perms.parking.add_parkingspace %}
+            <a class="navbar-item" href="{% url 'kurasel_translator:read_parking' %}">kuraselチェック</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link is-size-6">駐輪場</a>
+        <div class="navbar-dropdown">
+          <a href="{% url 'bicycle:list' %}" class="navbar-item">使用状況</a>
+          {% if perms.parking.add_parkingspace %}
+            <a class="navbar-item" href="{% url 'kurasel_translator:read_bicycle' %}">kuraselチェック</a>
+          {% endif %}
+        </div>
+      </div>
+      <a href="{% url 'motorcycle:list' %}" class="navbar-item">バイク置場</a>
+    </div>
+    <div class="navbar-end">
+    <div class="navbar-item">
+      <a href="{% url 'register:mypage' %}" class="navbar-item">戻る</a>
+    </div>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+{% block content %}
+<div class="hero is-dark">
+  <div class="hero-body">
+    <div class="has-text-centered">
+      <div class="title">駐車場・消火器</div>
+      {% if debug %}
+        <div class="subtitle">開発版</div>
+      {% else %}
+        <div class="subtitle">運用版</div>
+      {% endif %}
+      {% comment %} <div class="subtitle">{{VERSION_NO}}</div> {% endcomment %}
+    </div>
+  </div>
+</div>
+<!-- メッセージフレームワーク -->
+{% if messages %}
+<div class="container" style="margin-top:1rem;">
+    <div class="notification is-info">
+        <button class="delete" type="button"></button>
+        {% for message in messages %}
+        <p> {{ message }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<br>
+<div class="content has-text-centered">
+  {% load static%}
+  <img src="{% static 'ramune.png' %}" style="max-height:400px" class="img-fluid" />
+</div>
+{% endblock %}

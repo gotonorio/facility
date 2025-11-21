@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{# http://cccabinet.jpn.org/bootstrap4/components/navbar #}
+{% block title %}
+  設備管理
+{% endblock %}
+
+{% block navbar %}
+{# https://bulma.io/documentation/components/navbar/ #}
+<nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    {% if DEBUG %}
+      <a class="navbar-item">{{user}}</a>
+    {% else %}
+      <a class="navbar-item">【SG川崎】</a>
+    {% endif %}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      {% comment %}
+      <a href="{% url 'register:facility' %}" class="navbar-item">共用設備</a>
+      <a href="{% url 'register:repair_plan' %}" class="navbar-item">修繕計画</a>
+      {% endcomment %}
+    </div>
+    <div class="navbar-end">
+      {% if perms.parking.add_parkingspace %}
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link is-size-6">管理者専用</a>
+          <div class="navbar-dropdown">
+            {% comment %} <a class="navbar-item" href="{% url 'control:backupDB' %}" >DBバックアップ</a> {% endcomment %}
+            <hr class="dropdown-divider">
+            {% if perms.register.add_user %}
+              <a class="navbar-item" href="{% url 'register:user_list' %}">登録者一覧</a>
+              <a class="navbar-item" href="{% url 'register:pwd_update' user.pk %}">パスワード変更</a>
+              {% comment %} <a class="navbar-item" href="{% url 'control:control_list' %}">コントロールデータ修正</a> {% endcomment %}
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+      <div class="navbar-item">
+        <form method="post" action="{% url 'register:logout' %}">
+          {% csrf_token %}
+          <button type="submit">ログアウト</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+<br>
+{% block content %}
+<div class="hero is-dark">
+  <div class="hero-body">
+    <div class="has-text-centered">
+      {% if DEBUG %}
+        <div class="title">開発版</div>
+      {% else %}
+        <div class="title">運用版</div>
+      {% endif %}
+      <div class="subtitle">{{VERSION_NO}}</div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="content has-text-centered">
+  {% load static%}
+  <img src="{% static 'ramune.png' %}" style="max-height:400px" class="img-fluid" />
+</div>
+
+{% endblock %}

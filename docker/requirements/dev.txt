@@ -1,0 +1,3 @@
+# read base.txt
+-r base.txt
+django-debug-toolbar==6.1.0

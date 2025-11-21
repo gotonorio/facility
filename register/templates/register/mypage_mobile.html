@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{# http://cccabinet.jpn.org/bootstrap4/components/navbar #}
+{% block title %}
+  設備管理ホーム
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG】</a>
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      {% if perms.register.add_user %}
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link is-size-6">管理者用</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="{% url 'register:signup' %}">仮登録</a>
+            <a class="navbar-item" href="{% url 'register:user_list' %}">登録者一覧</a>
+            <a class="navbar-item" href="{% url 'register:pwd_update' user.pk %}">パスワード変更</a>
+          </div>
+        </div>
+      {% endif %}
+      <div class="navbar-item">
+        <form method="post" action="{% url 'register:logout' %}">
+          {% csrf_token %}
+          <button type="submit">ログアウト</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+<br>
+{% block content %}
+<br>
+<div class="container">
+
+  <section class="sectionbox">
+    <div class="columns">
+      <div class="column is-2">
+        <div class="menubox has-text-centered">
+          <a href="{% url 'register:facility' %}" class="navbar-item">共用設備</a>
+        </div>
+      </div>
+      <div class="column is-3">
+        <div class="menubox has-text-centered">
+          <a href="{% url 'register:repair_plan' %}" class="navbar-item">長期修繕計画</a>
+        </div>
+      </div>
+      <br>
+      <br>
+      <br>
+      <br>
+      <div class="column is-3">
+        <div class="menubox has-text-centered is-size-7">
+          <form method="post" action="{% url 'register:logout' %}">
+            {% csrf_token %}
+            <button type="submit">ログアウト</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

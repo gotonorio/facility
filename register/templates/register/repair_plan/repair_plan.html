@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{# http://cccabinet.jpn.org/bootstrap4/components/navbar #}
+{% block title %}
+修繕計画
+{% endblock %}
+
+{% block navbar %}
+{# https://bulma.io/documentation/components/navbar/ #}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    {% if DEBUG %}
+      <a class="navbar-item">{{user}}</a>
+    {% else %}
+      <a class="navbar-item">【修繕計画】</a>
+    {% endif %}
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">長期修繕計画</a>
+        <div class="navbar-dropdown">
+          <a href="{% url 'plan:repair_plan_list' %}" class="navbar-item">修繕工事リスト</a>
+          {% if perms.plan.add_koujiname %}
+            <a href="{% url 'plan:repair_plan_table' %}" class="navbar-item">長期修繕計画表</a>
+            <a href="{% url 'plan:repair_plan_by_koujitype' %}" class="navbar-item">修繕計画 工事種別リスト</a>
+            <div class="navbar-divider"></div>
+          {% endif %}
+          <a href="{% url 'plan:repair_plan_simpletable' %}" class="navbar-item">長期修繕計画表（簡易版）</a>
+          <div class="navbar-divider"></div>
+          <a href="{% url 'plan:repair_masterplan_list' %}" class="navbar-item">修繕計画マスタ 一覧</a>
+        </div>
+      </div>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">工事履歴</a>
+        <div class="navbar-dropdown">
+          <a href="{% url 'rireki:rireki_list' %}" class="navbar-item">工事一覧</a>
+        </div>
+      </div>
+      <a href="{% url 'simulate:do_simulate' %}" class="navbar-item">修繕計画シミュレータ</a>
+
+    </div>
+    <div class="navbar-end">
+      <a href="{% url 'control:description' %}" class="navbar-item">ヘルプ</a>
+      {% if perms.plan.add_koujiname %}
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link is-size-6">管理者用</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="{% url 'register:repair_plan_data' %}">データ管理</a>
+            <a class="navbar-item" href="{% url 'control:description_create' %}">ヘルプの作成</a>
+          </div>
+        </div>
+      {% endif %}
+      <div class="navbar-item">
+        <a href="{% url 'register:mypage' %}" class="navbar-item">戻る</a>
+      </div>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+{% block content %}
+<div class="hero is-dark">
+  <div class="hero-body">
+    <div class="has-text-centered">
+      <div class="title">長期修繕計画</div>
+      {% if debug %}
+        <div class="subtitle">開発版</div>
+      {% else %}
+        <div class="subtitle">運用版</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<br>
+<div class="content has-text-centered">
+  {% load static%}
+  <img src="{% static 'ramune.png' %}" style="max-height:500px" class="img-fluid" />
+</div>
+{% endblock %}

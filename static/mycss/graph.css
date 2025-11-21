@@ -1,0 +1,16 @@
+/*
+ グラフ表示用
+ https://obel.hatenablog.jp/entry/20160626/1466937585 
+*/
+/* 769px以上ではwidthは60% */
+.graph_container {
+  width: 70%;
+  /* margin: auto; */
+}
+/* 768px以下ではwidthは100% */
+@media screen and (max-width: 768px) {
+  .graph_container {
+    width: 100%;
+    /* margin: auto; */
+  }
+}
