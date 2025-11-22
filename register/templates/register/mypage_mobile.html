@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+
+{# Load custom template tags #}
+{% load my_templatetags %}
+
 {# http://cccabinet.jpn.org/bootstrap4/components/navbar #}
 {% block title %}
   設備管理ホーム
@@ -19,7 +23,7 @@
     <div class="navbar-start">
     </div>
     <div class="navbar-end">
-      {% if perms.register.add_user %}
+      {% if request.user|is_in_group:'chairman' %}
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link is-size-6">管理者用</a>
           <div class="navbar-dropdown">
@@ -51,11 +55,11 @@
           <a href="{% url 'register:facility' %}" class="navbar-item">共用設備</a>
         </div>
       </div>
-      <div class="column is-3">
+      {% comment %} <div class="column is-3">
         <div class="menubox has-text-centered">
           <a href="{% url 'register:repair_plan' %}" class="navbar-item">長期修繕計画</a>
         </div>
-      </div>
+      </div> {% endcomment %}
       <br>
       <br>
       <br>

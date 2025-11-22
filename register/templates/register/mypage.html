@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+
+{# Load custom template tags #}
+{% load my_templatetags %}
+
 {# http://cccabinet.jpn.org/bootstrap4/components/navbar #}
 {% block title %}
   設備管理
@@ -28,17 +32,15 @@
       {% endcomment %}
     </div>
     <div class="navbar-end">
-      {% if perms.parking.add_parkingspace %}
+      {% if request.user|is_in_group:'chairman' %}
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link is-size-6">管理者専用</a>
           <div class="navbar-dropdown">
             {% comment %} <a class="navbar-item" href="{% url 'control:backupDB' %}" >DBバックアップ</a> {% endcomment %}
             <hr class="dropdown-divider">
-            {% if perms.register.add_user %}
-              <a class="navbar-item" href="{% url 'register:user_list' %}">登録者一覧</a>
-              <a class="navbar-item" href="{% url 'register:pwd_update' user.pk %}">パスワード変更</a>
-              {% comment %} <a class="navbar-item" href="{% url 'control:control_list' %}">コントロールデータ修正</a> {% endcomment %}
-            {% endif %}
+            <a class="navbar-item" href="{% url 'register:user_list' %}">登録者一覧</a>
+            <a class="navbar-item" href="{% url 'register:pwd_update' user.pk %}">パスワード変更</a>
+            {% comment %} <a class="navbar-item" href="{% url 'control:control_list' %}">コントロールデータ修正</a> {% endcomment %}
           </div>
         </div>
       {% endif %}

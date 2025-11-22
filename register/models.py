@@ -53,8 +53,8 @@ class User(AbstractUser):
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="削除日時")
 
     class Meta:
-        verbose_name = "ユーザー"
-        verbose_name_plural = "ユーザー"
+        verbose_name = "User"
+        verbose_name_plural = "Users"
 
     # 論理削除
     def delete(self, using=None, keep_parents=False):

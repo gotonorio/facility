@@ -5,7 +5,8 @@ from django.utils.safestring import mark_safe
 
 register = template.Library()
 
-"""facilityアプリケーション用カスタムテンプレートタグ・フィルタ.
+"""
+facilityアプリケーション用カスタムテンプレートタグ・フィルタ.
     - facility/settings.pyのTEMPLATES設定に以下を追加すること。
         "OPTIONS": {
             "context_processors": [
@@ -59,3 +60,13 @@ def multi(value, arg):
 def subtract(value, arg):
     """引き算用フィルタ"""
     return value - arg
+
+
+@register.filter(name="is_in_group")
+def is_in_group(user, group_name):
+    """
+    ユーザーが特定のグループに属している場合にTrueを返すテンプレートフィルタ
+    """
+    if user.groups.filter(name=group_name).exists():
+        return True
+    return False

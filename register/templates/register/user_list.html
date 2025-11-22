@@ -54,24 +54,21 @@
     </thead>
     <tbody>
       {% for list in user_list %}
-        {% comment %} スタッフは表示しない {% endcomment %}
-        {% if not list.is_staff %}
-          <tr>
-            <td class="has-text-left">{{ list.groups.get }}</td>
-            <td class="has-text-left"><a href="{% url 'register:user_update' list.pk %}">{{ list.username}}</a></td>
-            <td class="has-text-centered ">{{ list.email}}</td>
-            {% if list.is_active == False %}
-              <td class="has-text-centered has-text-danger">{{ list.is_active}}</td>
-            {% else %}
-              <td class="has-text-centered ">{{ list.is_active}}</td>
-            {% endif %}
-            <td>
-              <a href="{% url 'register:delete_user' list.pk %}" >
-                削除
-              </a>
-            </td>
-          </tr>
-        {% endif %}
+        <tr>
+          <td class="has-text-left">{{ list.groups.get }}</td>
+          <td class="has-text-left"><a href="{% url 'register:user_update' list.pk %}">{{ list.username}}</a></td>
+          <td class="has-text-centered ">{{ list.email}}</td>
+          {% if list.is_active == False %}
+            <td class="has-text-centered has-text-danger">{{ list.is_active}}</td>
+          {% else %}
+            <td class="has-text-centered ">{{ list.is_active}}</td>
+          {% endif %}
+          <td>
+            <a href="{% url 'register:delete_user' list.pk %}" >
+              削除
+            </a>
+          </td>
+        </tr>
       {% endfor %}
     </tbody>
   </table>
