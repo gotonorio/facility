@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+
+{# Load custom template tags #}
+{% load my_templatetags %}
+
 {# http://cccabinet.jpn.org/bootstrap4/components/navbar #}
 {% block title %}
 修繕計画
@@ -26,7 +30,7 @@
         <a class="navbar-link">長期修繕計画</a>
         <div class="navbar-dropdown">
           <a href="{% url 'repair_plan:repair_plan_list' %}" class="navbar-item">修繕工事リスト</a>
-          {% if perms.repair_plan.add_koujiname %}
+          {% if request.user|is_in_group:'repair_plan_manager' %}
             <a href="{% url 'repair_plan:repair_plan_table' %}" class="navbar-item">長期修繕計画表</a>
             <a href="{% url 'repair_plan:repair_plan_by_koujitype' %}" class="navbar-item">修繕計画 工事種別リスト</a>
             <div class="navbar-divider"></div>

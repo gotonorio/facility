@@ -47,7 +47,7 @@
 <div class="container is-fluid">
   <div class="content">
     <h4>修繕計画一覧表</h4>
-    {% if perms.plan.add_koujiname %}
+    {% if request.user|is_in_group:'repair_plan_manager' %}
       <ul>
         <li class="has-text-danger has-text-weight-bold">赤字は完了または除外した工事。</li>
         <li class="has-text-weight-bold">金額には「経費」「消費税」「物価上昇分」は含まない。</li>
@@ -64,7 +64,7 @@
           <th class="has-text-centered">期</th>
           <th class="has-text-centered">工事種別</th>
           <th class="has-text-centered">工事名</th>
-          {% if perms.plan.add_koujiname %}
+          {% if request.user|is_in_group:'repair_plan_manager' %}
             <th class="has-text-centered">数量</th>
             <th class="has-text-centered">単位</th>
             <th class="has-text-centered">金額</th>
@@ -81,7 +81,7 @@
             <td class="has-text-centered has-text-danger">{{ item.kouji_year|add:start_year }}</td>
             <td class="has-text-left has-text-danger">{{ item.kouji_type }}</td>
             <td class="has-text-left has-text-danger">{{ item.kouji_name }}</td>
-            {% if perms.plan.add_koujiname %}
+            {% if request.user|is_in_group:'repair_plan_manager' %}
               <td class="has-text-right has-text-danger">{{ item.kouji_quantity }}</td>
               <td class="has-text-centered has-text-danger">{{ item.unit }}</td>
               <td class="has-text-right has-text-danger">{{ item.unit_price|multi:item.kouji_quantity|intcomma}}</td>
@@ -93,7 +93,7 @@
             <td class="has-text-centered">{{ item.kouji_year|add:start_year }}</td>
             <td class="has-text-left">{{ item.kouji_type }}</td>
             <td class="has-text-left">{{ item.kouji_name }}</td>
-            {% if perms.plan.add_koujiname %}
+            {% if request.user|is_in_group:'repair_plan_manager' %}
               <td class="has-text-right">{{ item.kouji_quantity }}</td>
               <td class="has-text-centered">{{ item.unit }}</td>
               <td class="has-text-right">{{ item.unit_price|multi:item.kouji_quantity|intcomma}}</td>
@@ -107,7 +107,7 @@
         <td></td>
         <td></td>
         <td></td>
-        {% if perms.plan.add_koujiname %}
+        {% if request.user|is_in_group:'repair_plan_manager' %}
           <td></td>
           <td></td>
           <td class="has-text-centered">合計</td>

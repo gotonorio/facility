@@ -5,7 +5,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
-
 from repair_plan.forms import (
     ImportRepairPlanDataForm,
     MasterKoujiTypeForm,
@@ -21,7 +20,7 @@ class MasterPlanListView(LoginRequiredMixin, generic.TemplateView):
     """長期修繕計画マスタの一覧表示"""
 
     model = MasterPlan
-    template_name = "plan/masterplan_list.html"
+    template_name = "repair_plan/masterplan_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -46,7 +45,7 @@ class ImportRepairPlanDataView(PermissionRequiredMixin, generic.FormView):
     form_class = ImportRepairPlanDataForm
     success_url = reverse_lazy("repair_plan:repair_plan_list")
     # 必要な権限
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
     raise_exception = True
 
@@ -68,7 +67,7 @@ class CreateKoujiTypeView(PermissionRequiredMixin, generic.CreateView):
     form_class = MasterKoujiTypeForm
     template_name = "plan/master_koujitype_form.html"
     # 必要な権限
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
     raise_exception = True
 
@@ -87,9 +86,7 @@ class CreateKoujiTypeView(PermissionRequiredMixin, generic.CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["masterlist"] = MasterKoujiType.objects.all().order_by(
-            "-live", "sequense"
-        )
+        context["masterlist"] = MasterKoujiType.objects.all().order_by("-live", "sequense")
         return context
 
 
@@ -100,7 +97,7 @@ class UpdateKoujiTypeView(PermissionRequiredMixin, generic.UpdateView):
     form_class = MasterKoujiTypeForm
     template_name = "plan/master_koujitype_form.html"
     # 必要な権限
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
     raise_exception = True
 
@@ -125,7 +122,7 @@ class CreateMasterUnitView(PermissionRequiredMixin, generic.CreateView):
     form_class = MasterUnitForm
     template_name = "plan/master_unit_form.html"
     # 必要な権限
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
     raise_exception = True
 

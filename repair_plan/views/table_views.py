@@ -16,14 +16,12 @@ class RepairPlanTableView(PermissionRequiredMixin, generic.TemplateView):
     """長期修繕計画表（詳細版）"""
 
     model = KoujiName
-    template_name = "plan/repair_plan_table.html"
-    permission_required = "plan.add_koujiname"
+    template_name = "repair_plan/repair_plan_table.html"
+    permission_required = "repair_plan.add_koujiname"
 
     def repairplan_table(self, ver, start_year, end_year):
         # 長期修繕計画表を抽出する（listとする）
-        qs_list = KoujiName.objects.get_repair_plan_list(
-            ver, start_year, end_year, False
-        )
+        qs_list = KoujiName.objects.get_repair_plan_list(ver, start_year, end_year, False)
         # 年毎の支出合計を保持するListの初期化
         year_total = [0 for i in range(start_year, end_year + 3)]
         # 合計
@@ -71,9 +69,18 @@ class RepairPlanTableView(PermissionRequiredMixin, generic.TemplateView):
         #
         # 計画修繕支出テーブルの生成
         #
-        qs_list, year_total, all_total = self.repairplan_table(
-            ver, start_year, end_year
-        )
+        qs_list, year_total, all_total = self.repairplan_table(ver, start_year, end_year)
+
+        # 年毎の支出合計
+        context["total"] = year_total
+        # 支出合計
+        context["all_total"] = all_total
+
+        # タイトル（西暦）Listを作成
+        context["year"] = [i for i in range(start_year, end_year + 1)]
+        # 修繕計画表
+        context["repair_plan_list"] = list(qs_list)
+        context["form"] = form
 
         # #
         # # 修繕積立金収入
@@ -96,24 +103,14 @@ class RepairPlanTableView(PermissionRequiredMixin, generic.TemplateView):
         #     )
         # ]
 
-        # 年毎の支出合計
-        context["total"] = year_total
-        # 支出合計
-        context["all_total"] = all_total
-
-        # タイトル（西暦）Listを作成
-        context["year"] = [i for i in range(start_year, end_year + 1)]
-        # 修繕計画表
-        context["repair_plan_list"] = list(qs_list)
-        context["form"] = form
-        # 修繕積立金収入
-        context["shuuzenhi_income"] = shuuzenhi_incomelist
-        # 駐車場収入
-        context["parking_income"] = parking_incomelist
-        # 駐輪場・バイク置場等収入
-        context["extra_income"] = extra_incomelist
-        # 収入合計
-        context["income_total"] = income_total
+        # # 修繕積立金収入
+        # context["shuuzenhi_income"] = shuuzenhi_incomelist
+        # # 駐車場収入
+        # context["parking_income"] = parking_incomelist
+        # # 駐輪場・バイク置場等収入
+        # context["extra_income"] = extra_incomelist
+        # # 収入合計
+        # context["income_total"] = income_total
         return context
 
 
@@ -121,14 +118,12 @@ class RepairPlanSimpleTableView(RepairPlanTableView):
     """長期修繕計画表（シンプル版）"""
 
     model = KoujiName
-    template_name = "plan/repair_plan_simpletable.html"
-    permission_required = "plan.view_koujiname"
+    template_name = "repair_plan/repair_plan_simpletable.html"
+    permission_required = "repair_plan.view_koujiname"
 
     def repairplan_table(self, ver, start_year, end_year):
         # 長期修繕計画表を抽出する（listとする）
-        qs_list = KoujiName.objects.get_repair_plan_list(
-            ver, start_year, end_year, True
-        )
+        qs_list = KoujiName.objects.get_repair_plan_list(ver, start_year, end_year, True)
         # 年毎の支出合計を保持するListの初期化
         year_total = [0 for i in range(start_year, end_year + 3)]
         # 合計

@@ -6,7 +6,6 @@ from django.db.models.aggregates import Max
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import generic
-
 from repair_plan.forms import (
     DeleteKoujinameVerForm,
     DuplicateRepairPlanForm,
@@ -29,7 +28,7 @@ class CreateRepairPlanView(PermissionRequiredMixin, generic.CreateView):
     form_class = RepairPlanCreateForm
     template_name = "plan/repair_plan_form.html"
     # 必要な権限(admin以外で下記の権限を持つユーザーが利用可能)
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
     raise_exception = True
     # 保存が成功した場合に遷移するurl。再度入力画面に遷移する。
@@ -49,9 +48,7 @@ class CreateRepairPlanView(PermissionRequiredMixin, generic.CreateView):
         context["title"] = title
         # formに初期値を表示させる。
         ver = MasterPlan.objects.aggregate(ver=Max("version"))["ver"]
-        context["form"] = RepairPlanCreateForm(
-            initial={"version": ver, "kouji_quantity": 1, "unit": 1}
-        )
+        context["form"] = RepairPlanCreateForm(initial={"version": ver, "kouji_quantity": 1, "unit": 1})
         return context
 
 
@@ -78,15 +75,13 @@ class UpdateRepairPlanView(PermissionRequiredMixin, generic.UpdateView):
     form_class = RepairPlanUpdateForm
     template_name = "plan/repair_plan_form.html"
     # 必要な権限（データ登録できる権限は共通）
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
     raise_exception = True
 
     # 保存が成功した場合に遷移するurl
     def get_success_url(self):
-        qs = KoujiName.objects.filter(pk=self.object.pk).values(
-            "version__version", "kouji_type"
-        )
+        qs = KoujiName.objects.filter(pk=self.object.pk).values("version__version", "kouji_type")
         ver = qs[0]["version__version"]
         koujitype = qs[0]["kouji_type"]
         return reverse_lazy(
@@ -108,7 +103,7 @@ class DeleteRepairPlanView(PermissionRequiredMixin, generic.DeleteView):
     # 削除してよいか確認するためのtemplate
     template_name = "plan/delete_confirm.html"
     # 必要な権限（データ登録できる権限は共通）
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
     raise_exception = True
     # 削除が成功した場合に遷移するurl
@@ -119,7 +114,7 @@ class DuplicateRepairPlanView(PermissionRequiredMixin, generic.FormView):
     form_class = DuplicateRepairPlanForm
     template_name = "plan/duplicate_plan_form.html"
     success_url = reverse_lazy("repair_plan:repair_plan_list")
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
 
     def get_context_data(self, **kwargs):
         """コンテキストデータにタイトルとマスタプランリストを追加
@@ -197,7 +192,7 @@ class MasterPlanCreateView(PermissionRequiredMixin, generic.CreateView):
     form_class = MasterPlanCreateForm
     template_name = "plan/masterplan_form.html"
     # 必要な権限（管理者権限）
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
     raise_exception = True
 
@@ -226,7 +221,7 @@ class MasterPlanUpdateView(PermissionRequiredMixin, generic.UpdateView):
     form_class = MasterPlanCreateForm
     template_name = "plan/masterplan_form.html"
     # 必要な権限（管理者権限）
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
     raise_exception = True
 
@@ -246,7 +241,7 @@ class DeleteKoujiNameByVerView(PermissionRequiredMixin, generic.FormView):
     template_name = "plan/delete_koujiname_ver.html"
     form_class = DeleteKoujinameVerForm
     # 必要な権限（管理者権限）
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     success_url = reverse_lazy("repair_plan:delete_koujiname_ver")
 
     def form_valid(self, form):

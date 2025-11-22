@@ -46,7 +46,7 @@
           <th class="has-text-centered">西暦</th>
           <th class="has-text-centered">工事種別</th>
           <th class="has-text-centered">工事名</th>
-          {% if perms.plan.view_masterplan %}
+          {% if request.user|is_in_group:'repair_plan_manager' %}
             <th class="has-text-centered">金額</th>
           {% endif %}
         </tr>
@@ -58,14 +58,14 @@
             <td class="has-text-centered has-text-danger">{{ item.kouji_year }}</td>
             <td class="has-text-centered has-text-danger">{{ item.kouji_type }}</td>
             <td class="has-text-left has-text-danger">{{ item.kouji_name }}</td>
-            {% if perms.plan.view_masterplan %}
+            {% if request.user|is_in_group:'repair_plan_manager' %}
               <td class="has-text-right has-text-danger">{{ item.unit_price|multi:item.kouji_quantity|intcomma}}</td>
             {% endif %}
           {% else %}
             <td class="has-text-centered">{{ item.kouji_year }}</td>
             <td class="has-text-centered">{{ item.kouji_type }}</td>
             <td class="has-text-left">{{ item.kouji_name }}</td>
-            {% if perms.plan.view_masterplan %}
+            {% if request.user|is_in_group:'repair_plan_manager' %}
               <td class="has-text-right">{{ item.unit_price|multi:item.kouji_quantity|intcomma}}</td>
             {% endif %}
           {% endif %}
@@ -74,7 +74,7 @@
         <tr>
         <td></td>
         <td></td>
-        {% if perms.plan.view_masterplan %}
+        {% if request.user|is_in_group:'repair_plan_manager' %}
           <td class="has-text-centered">合計</td>
           <td class="has-text-right">{{ total|intcomma }}</td>
         {% endif %}

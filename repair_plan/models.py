@@ -87,13 +87,9 @@ class KoujiNameQuerySet(models.QuerySet):
         - 表示年数（列数）を動的に決めるためlistとして返す(values_list)
         """
         if simple:
-            qs = self.filter(version__version=ver).values_list(
-                "kouji_type__master_name"
-            )
+            qs = self.filter(version__version=ver).values_list("kouji_type__master_name")
         else:
-            qs = self.filter(version__version=ver).values_list(
-                "kouji_type__master_name", "kouji_name"
-            )
+            qs = self.filter(version__version=ver).values_list("kouji_type__master_name", "kouji_name")
 
         cnt = end_year - start_year + 1
         # annotateの引数をDictとして生成する。
@@ -135,21 +131,15 @@ class KoujiNameQuerySet(models.QuerySet):
 class KoujiName(models.Model):
     """新修繕計画データ"""
 
-    version = models.ForeignKey(
-        MasterPlan, verbose_name="Ver", on_delete=models.PROTECT
-    )
+    version = models.ForeignKey(MasterPlan, verbose_name="Ver", on_delete=models.PROTECT)
     # simulation計算時に予定した工事を中止した場合にdo_calc=Falseとしてシミュレーションする。
     # 上記以外では使用しない。（本当はBooleaeFieldでよかったけれど）
     do_calc = models.IntegerField(verbose_name="計算対象", default=1)
-    kouji_type = models.ForeignKey(
-        MasterKoujiType, on_delete=models.PROTECT, verbose_name="工事種別"
-    )
+    kouji_type = models.ForeignKey(MasterKoujiType, on_delete=models.PROTECT, verbose_name="工事種別")
     kouji_name = models.CharField(verbose_name="工事名", max_length=128)
     kouji_spec = models.CharField(verbose_name="工事仕様", max_length=128, blank=True)
     kouji_quantity = models.FloatField(verbose_name="施工数量")
-    unit = models.ForeignKey(
-        MasterUnit, verbose_name="単位", on_delete=models.PROTECT, null=True
-    )
+    unit = models.ForeignKey(MasterUnit, verbose_name="単位", on_delete=models.PROTECT, null=True)
     unit_price = models.IntegerField(verbose_name="工事単価")
     kouji_year = models.IntegerField(verbose_name="施工予定年")
     comment = models.TextField(verbose_name="備考", blank=True, null=True)

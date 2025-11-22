@@ -5,7 +5,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.db.models import F, IntegerField
 from django.db.models.aggregates import Sum
 from django.views import generic
-
 from repair_plan.forms import RepairPlanListForm
 from repair_plan.lib import utils
 from repair_plan.models import KoujiName, MasterPlan
@@ -51,7 +50,7 @@ class RepairPlanListView(LoginRequiredMixin, generic.TemplateView):
         if koujitype is False or koujitype == "" or koujitype is None:
             koujitype = "ALL"
 
-        # クエリの作成
+        # クエリの作成（verはMasterPlanのversion番号）)
         repair_plan = KoujiName.objects.get_koujiname_list(ver, koujitype).order_by(
             "kouji_year", "kouji_type"
         )
@@ -61,9 +60,7 @@ class RepairPlanListView(LoginRequiredMixin, generic.TemplateView):
             total = total + (item.unit_price * item.kouji_quantity)
 
         # formに初期値を渡す。
-        form = RepairPlanListForm(
-            is_manager, initial={"koujitype": koujitype, "version": ver}
-        )
+        form = RepairPlanListForm(is_manager, initial={"koujitype": koujitype, "version": ver})
         context["repair_plan_list"] = repair_plan
         context["form"] = form
         context["start_year"] = -settings.INITIAL_YEAR
@@ -76,7 +73,7 @@ class RepairPlanByYearView(PermissionRequiredMixin, generic.TemplateView):
 
     model = KoujiName
     template_name = "plan/repair_plan_by_year.html"
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -84,9 +81,9 @@ class RepairPlanByYearView(PermissionRequiredMixin, generic.TemplateView):
         year = self.kwargs.get("year", False)
 
         # 工事選択
-        repair_plan = KoujiName.objects.get_repair_plan_list_by_year(
-            ver, year
-        ).order_by("kouji_type", "kouji_name")
+        repair_plan = KoujiName.objects.get_repair_plan_list_by_year(ver, year).order_by(
+            "kouji_type", "kouji_name"
+        )
         if not repair_plan:
             # 修繕計画がない場合は、空のリストを返す。
             repair_plan = []
@@ -111,8 +108,8 @@ class RepairPlanByKoujitypeView(PermissionRequiredMixin, generic.TemplateView):
     """
 
     model = KoujiName
-    template_name = "plan/repair_plan_by_koujitype.html"
-    permission_required = "plan.view_koujiname"
+    template_name = "repair_plan/repair_plan_by_koujitype.html"
+    permission_required = "repair_plan.add_koujiname"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -131,11 +128,7 @@ class RepairPlanByKoujitypeView(PermissionRequiredMixin, generic.TemplateView):
         qs = (
             KoujiName.objects.get_koujiname_list(ver, "ALL")
             .values("kouji_type__master_name")
-            .annotate(
-                subtotal=Sum(
-                    F("kouji_quantity") * F("unit_price"), output_field=IntegerField()
-                )
-            )
+            .annotate(subtotal=Sum(F("kouji_quantity") * F("unit_price"), output_field=IntegerField()))
             .order_by("kouji_type")
         )
         # 合計金額を計算する。
@@ -157,7 +150,7 @@ class MasterPlanListView(LoginRequiredMixin, generic.TemplateView):
     """長期修繕計画マスタの一覧表示"""
 
     model = MasterPlan
-    template_name = "plan/masterplan_list.html"
+    template_name = "repair_plan/masterplan_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
