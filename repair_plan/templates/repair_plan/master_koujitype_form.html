@@ -1,0 +1,108 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+工事種別マスターの登録/修正
+{% endblock title %}
+
+{% block head %}
+{% endblock head%}
+
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a href="{% url 'register:repair_plan_data' %}" class="navbar-item">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+<br>
+{% block content %}
+{% if messages %}
+<div class="container" style="margin-top:1rem;">
+  <div class="notification is-info">
+    <button class="delete" type="button"></button>
+    {% for message in messages %}
+      <p>{{message}}</p>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+<div class="container">
+  <br>
+  <div class="content has-text-centered">
+    <h4>工事種別マスターの登録/修正aaa</h4>
+  </div>
+  <form method='POST' enctype='multipart/form-data' id='form_style'>
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      <div class='field'>
+        <div class='control'>
+          {% if field.field.widget.input_type == "checkbox" %}
+            <!-- ✅ チェックボックス専用（Bulma構文） -->
+            <label class="checkbox">
+              {{ field }} {{ field.label }}
+            </label>
+          {% else %}
+            <!-- ✅ 通常のinputやtextなど -->
+            <label class="label">{{ field.label }}</label>
+            <div class="my_field">{{ field }}</div>
+          {% endif %}
+          {% if field.help_text %}
+            <p class="help is-size-6">{{ field.help_text|safe }}</p>
+          {% endif %}
+          {{ field.errors }}
+        </div>
+      </div>
+    {% endfor %}
+    {% csrf_token %}
+    <br>
+    <div class='my_button has-text-centered'>
+      <button type='submit' class='button is-danger has-text-weight-bold is-size-7'>読込み</button>
+      <a class="button is-primary is-size-7 has-text-black has-text-weight-bold" href="javascript:void(0);" onclick="window.history.back();">キャンセル</a>
+    </div>
+  </form>
+  <hr>
+  <div class="table-container">
+    <table class="table table_center_nowrap is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">表示順序</th>
+          <th class="has-text-centered">工事種別</th>
+          <th class="has-text-centered">有効/無効</th>
+          <th class="has-text-centered">修正</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for list in masterlist %}
+        <tr>
+          {% if list.live %}
+            <td class="has-text-centered">{{ list.sequense }}</td>
+            <td class="has-text-left">{{ list.master_name }}</td>
+            <td class="has-text-centered">{{ list.live }}</td>
+            <td class="has-text-centered"><a href="{% url 'update_koujitype' list.pk %}">修正</a></td>
+          {% else %}
+            <td class="has-text-centered has-text-danger">{{ list.sequense }}</td>
+            <td class="has-text-left has-text-danger">{{ list.master_name }}</td>
+            <td class="has-text-centered has-text-danger">{{ list.live }}</td>
+            <td class="has-text-centered has-text-danger"><a href="{% url 'repair_plan:update_koujitype' list.pk %}">修正</a></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <br>
+{% endblock content %}

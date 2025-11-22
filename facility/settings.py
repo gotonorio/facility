@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "register.apps.RegisterConfig",
+    "repair_plan.apps.RepairPlanConfig",
 ]
 
 MIDDLEWARE = [

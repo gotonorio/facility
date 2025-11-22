@@ -1,0 +1,102 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #}
+{% load my_templatetags %}
+
+{% block title %}
+修繕計画一覧
+{% endblock title %}
+
+{% block head %}
+{# javascriptファイルを取り込む #}
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+<script src="{% static 'repair_plan/shubetu_chart.js' %}"></script>
+<link href="{% static 'mycss/graph.css' %}" rel="stylesheet">
+<!--<script src='{% static 'js/moment-with-locales.js' %}'></script>-->
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    <form class="navbar-item" action="{% url 'repair_plan:repair_plan_by_koujitype' %}" method="get">
+      {{form.version}}
+      <button type="submit" class="button is-primary is-size-7">表示</button>
+    </form>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'register:repair_plan' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+
+{% endblock navbar %}
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>修繕計画 工事種別支出</h4>
+    <ul>
+      <li class="has-text-weight-bold">金額には「経費」「消費税」「物価上昇分」は含まない。</li>
+    </ul>
+  </div>
+  <br>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">Ver.</th>
+          <th class="has-text-centered">工事種別</th>
+          <th class="has-text-centered">修繕支出額</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in repair_plan_by_koujitype %}
+        <tr>
+          <td class="has-text-centered">{{ ver }}</td>
+          <td class="has-text-left">{{ item.kouji_type__master_name }}</td>
+          <td class="has-text-right">{{ item.subtotal|intcomma }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+        <td></td>
+        <td class="has-text-centered">合計</td>
+        <td class="has-text-right">{{ total|intcomma }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<br>
+{# グラフ表示エリア #}
+{# https://misc.0o0o.org/chartjs-doc-ja/general/responsive.html #}
+{# https://obel.hatenablog.jp/entry/20160626/1466937585 #}
+<div class="graph_container">
+  <canvas id="stage" width="300" height="200"></canvas>
+</div>
+
+{# 以下でグラフ作成用のデータを生成する。 #}
+<script type="text/javascript">
+  var graph_data = [];
+</script>
+{% for data in repair_plan_by_koujitype %}
+<script type="text/javascript">
+  var list = [];
+  list.push("{{data.kouji_type__master_name}}");
+  list.push("{{data.subtotal}}");
+  graph_data.push(list);
+</script>
+{% endfor %}
+<script type="text/javascript">
+  //console.log(graph_data);
+  koujiShubetuChart(graph_data);
+</script>
+<br>
+{% endblock content %}

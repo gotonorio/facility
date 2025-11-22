@@ -36,6 +36,7 @@
           <a href="{% url 'repair_plan:repair_masterplan_list' %}" class="navbar-item">修繕計画マスタ 一覧</a>
         </div>
       </div>
+      {% comment %}
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">工事履歴</a>
         <div class="navbar-dropdown">
@@ -43,9 +44,11 @@
         </div>
       </div>
       <a href="{% url 'simulate:do_simulate' %}" class="navbar-item">修繕計画シミュレータ</a>
+      {% endcomment %}
 
     </div>
     <div class="navbar-end">
+      {% comment %}
       <a href="{% url 'control:description' %}" class="navbar-item">ヘルプ</a>
       {% if perms.repair_plan.add_koujiname %}
         <div class="navbar-item has-dropdown is-hoverable">
@@ -56,6 +59,7 @@
           </div>
         </div>
       {% endif %}
+      {% endcomment %}
       <div class="navbar-item">
         <a href="{% url 'register:mypage' %}" class="navbar-item">戻る</a>
       </div>

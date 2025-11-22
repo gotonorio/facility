@@ -1,0 +1,87 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+{% load my_templatetags %}
+
+{% block title %}
+修繕計画マスタ一覧
+{% endblock title %}
+
+{% block head %}
+<style>
+  /* セル内のテキスト折り返しを禁止 */
+  .no-wrap {
+    white-space: nowrap;
+  }
+</style>
+{% endblock head%}
+
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a href="{% url 'register:repair_plan' %}" class="navbar-item">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+{% block content %}
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<div class="container is-fluid">
+  <br>
+  <div class="content">
+    <h4>修繕計画バージョン 一覧</h4>
+    <br>
+  </div>
+  <div class="table-container">
+    <table class="table table_center is-narrow is-bordered">
+      <thead>
+        <tr>
+          <th class="has-text-centered">Ver.</th>
+          <th class="has-text-centered no-wrap">計画期間</th>
+          <th class="has-text-centered no-wrap">開始時<br>修繕積立金残高</th>
+          <th class="has-text-centered">コメント</th>
+          {% if perms.plan.add_koujiname %}
+            <th class="has-text-centered">only_manager</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for list in masterlist %}
+        <tr>
+          {% if perms.plan.add_koujiname %}
+            <td class="has-text-centered"><a href="{% url 'repair_plan:update_master_plan' list.pk%}">{{ list.version }}</a></td>
+          {% else %}
+            <td class="has-text-centered">{{list.version}}</td>
+          {% endif %}
+          <td class="has-text-centered">{{list.first_year}}〜{{list.final_year}}</td>
+          <td class="has-text-right">{{ list.balance|intcomma}}</td>
+          <td class="content has-text-left is-size-7">{{ list.comment|markdown_to_html}}</td>
+          {% if perms.plan.add_koujiname %}
+            <td class="content has-text-left">{{ list.only_manager}}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<br>
+{% endblock content %}

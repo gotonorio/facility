@@ -1,0 +1,86 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #}
+{% load my_templatetags %}
+
+{% block title %}
+修繕計画一覧
+{% endblock title %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-end">
+      <a class="navbar-item" href="javascript:void(0);" onclick="window.history.back();">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>修繕計画一覧表</h4>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">西暦</th>
+          <th class="has-text-centered">期</th>
+          <th class="has-text-centered">工事種別</th>
+          <th class="has-text-centered">工事名</th>
+          <th class="has-text-centered">数量</th>
+          <th class="has-text-centered">単位</th>
+          <th class="has-text-centered">金額</th>
+          <th class="has-text-centered">コメント</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in repair_plan_by_year %}
+        <tr>
+          {% if item.complete %}
+            <td class="has-text-centered has-text-danger">{{ item.kouji_year }}</td>
+            <td class="has-text-centered has-text-danger">{{ item.kouji_year|add:start_year }}</td>
+            <td class="has-text-centered has-text-danger">{{ item.kouji_type }}</td>
+            <td class="has-text-left has-text-danger">{{ item.kouji_name }}</td>
+            <td class="has-text-right has-text-danger">{{ item.kouji_quantity }}</td>
+            <td class="has-text-centered has-text-danger">{{ item.unit }}</td>
+            <td class="has-text-right has-text-danger">{{ item.unit_price|multi:item.kouji_quantity|intcomma}}</td>
+            <td class="has-text-left has-text-danger">{{ item.comment }}</td>
+          {% else %}
+            <td class="has-text-centered">{{ item.kouji_year }}</td>
+            <td class="has-text-centered">{{ item.kouji_year|add:start_year }}</td>
+            <td class="has-text-centered">{{ item.kouji_type }}</td>
+            <td class="has-text-left">{{ item.kouji_name }}</td>
+            <td class="has-text-right">{{ item.kouji_quantity }}</td>
+            <td class="has-text-centered">{{ item.unit }}</td>
+            <td class="has-text-right">{{ item.unit_price|multi:item.kouji_quantity|intcomma}}</td>
+            <td class="has-text-left">{{ item.comment }}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+        <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="has-text-centered">合計</td>
+        <td class="has-text-right">{{ total|intcomma }}</td>
+        <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}

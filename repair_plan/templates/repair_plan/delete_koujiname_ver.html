@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+{% load my_templatetags %}
+
+{% block title %}
+修繕計画の削除
+{% endblock title %}
+
+{% block head %}
+{# javascriptファイルを取り込む #}
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+<script src="{% static 'simulate/simulate_graph.js' %}"></script>
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'register:repair_plan_data' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+<br>
+{% block content %}
+{% if messages %}
+<div class="container" style="margin-top:1rem;">
+  <div class="notification is-info">
+    <button class="delete" type="button"></button>
+    {% for message in messages %}
+      <p>{{message}}</p>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+<div class="container  is-fluid">
+  <div class="content">
+    <br>
+    <h4>長期修繕計画の削除</h4>
+  </div>
+  <form method='POST' enctype='multipart/form-data'>
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      <div class='field'>
+        <div class='control'>
+          <div class='label'>{{ field.label_tag }}</div>
+          {% if field.help_text %}
+            <span class='helptext'>{{ field.help_text }}</span>
+          {% endif %}
+          <div class='my_field'>{{ field }}</div>
+          {{ field.errors }}
+        </div>
+      </div>
+    {% endfor %}
+    {% csrf_token %}
+    <br>
+    <div class='my_button'>
+      <button type='submit' class="button is-size-7 is-danger has-text-weight-bold">削除</button>
+      <a class="button is-primary is-size-7 has-text-black has-text-weight-bold" href="javascript:void(0);" onclick="window.history.back();">キャンセル</a>
+    </div>
+  </form>
+</div>
+<br>
+{% endblock %}

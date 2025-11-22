@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+{% load my_templatetags %}
+{% load humanize %}
+
+{% block title %}
+修繕計画複製処理
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black  is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <div class="navbar-item" >【計画の複製】</div>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a href="{% url 'register:repair_plan_data' %}" class="navbar-item">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>{{title}}</h4>
+  </div>
+</div>
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <form method='POST' enctype='multipart/form-data'>
+      {{ form.non_field_errors }}
+      {% for field in form %}
+        <div class='field'>
+          <div class='control'>
+            <div class='label'>{{ field.label_tag }}</div>
+            <div class='my_field'>{{ field }}</div>
+            {% if field.help_text %}
+              <span class='helptext'>{{ field.help_text }}</span>
+            {% endif %}
+            {{ field.errors }}
+          </div>
+        </div>
+      {% endfor %}
+      {% csrf_token %}
+      <br>
+      <div class='my_button'>
+        <button type='submit' class='button is-primary is-size-7'>登録</button>
+        <a class='button is-danger is-size-7' href='javascript:void(0);' onclick='window.history.back();'>キャンセル</a>
+      </div>
+    </form>
+  </div>
+  <br>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow ">
+      <thead>
+          <tr>
+            <th class="has-text-centered">Ver.</th>
+            <th class="has-text-centered">計画書年度</th>
+            <th class="has-text-centered">初年度の修繕会計残高</th>
+            <th class="has-text-centered">備考</th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for d in masterlist %}
+          <tr>
+            <td class="has-text-left">{{d.version}}</div>
+            <td class="has-text-right">{{d.year}}</td>
+            <td class="has-text-right">{{d.balance|intcomma}}</td>
+            <td class="has-text-left is-size-7">{{ d.comment|markdown_to_html}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br>
+  </div>
+</div>
+{% endblock %}

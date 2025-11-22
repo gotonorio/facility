@@ -1,0 +1,90 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #}
+{% load my_templatetags %}
+
+{% block title %}
+修繕計画一覧
+{% endblock title %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <form class="navbar-item" action="{% url 'repair_plan:repair_plan_simpletable'%}" method="get">
+        計画バージョン :{{form.version}}
+        <button type="submit" class="button is-primary is-size-7">表示</button>
+      </form>
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'register:repair_plan' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+{% block content %}
+{% if messages %}
+<div class="container" style="margin-top:1rem;">
+    <div class="notification is-info">
+        <button class="delete" type="button"></button>
+        {% for message in messages %}
+        <p> {{ message }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>長期修繕計画表</h4>
+    <ul>
+      <li class="has-text-weight-bold">金額には「経費」「消費税」「物価上昇分」は含まない。</li>
+    </ul>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">工事種別</th>
+          {%for i in year %} 
+            <th class="has-text-centered">{{i}}</th>
+          {% endfor %}
+          <th class="has-text-centered">合計</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in repair_plan_list %}
+        <tr>
+          {% for i in item %}
+            {% if forloop.first %}
+              <td class="has-text-weight-bold has-text-left">{{i}}</td>
+            {% else %}
+              <td class="has-text-right ">{{i|intcomma}}</td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+        <tr>
+          {% for item in total %}
+            {% if forloop.first %}
+              <td class="has-text-weight-bold has-text-centered">修繕支出合計</td>
+            {% else %}
+              <td class="has-text-right has-text-weight-bold ">{{item|intcomma}}</td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<br>
+{% endblock content %}

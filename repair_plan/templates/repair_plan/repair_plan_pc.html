@@ -1,0 +1,122 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #}
+{% load my_templatetags %}
+
+{% block title %}
+修繕計画一覧
+{% endblock title %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <form class="navbar-item" action="{% url 'repair_plan:repair_plan_list'%}" method="get">
+        計画バージョン :{{form.version}}{{form.koujitype}}
+        <button type="submit" class="button is-primary is-size-7">表示</button>
+      </form>
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'register:repair_plan' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+{% block content %}
+<!-- メッセージフレームワーク -->
+{% if messages %}
+<div class="container" style="margin-top:1rem;">
+    <div class="notification is-info">
+        <button class="delete" type="button"></button>
+        {% for message in messages %}
+        <p> {{ message }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>修繕計画一覧表</h4>
+    {% if perms.plan.add_koujiname %}
+      <ul>
+        <li class="has-text-danger has-text-weight-bold">赤字は完了または除外した工事。</li>
+        <li class="has-text-weight-bold">金額には「経費」「消費税」「物価上昇分」は含まない。</li>
+      </ul>
+    {% endif %}
+  <div class="content has-text-left">
+  {{comment|markdown_to_html}}
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">西暦</th>
+          <th class="has-text-centered">期</th>
+          <th class="has-text-centered">工事種別</th>
+          <th class="has-text-centered">工事名</th>
+          {% if perms.plan.add_koujiname %}
+            <th class="has-text-centered">数量</th>
+            <th class="has-text-centered">単位</th>
+            <th class="has-text-centered">金額</th>
+            <th class="has-text-centered">実支出額</th>
+            <th class="has-text-centered">コメント</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in repair_plan_list %}
+        <tr>
+          {% if item.complete or not item.do_calc %}
+            <td class="has-text-centered has-text-danger">{{ item.kouji_year }}</td>
+            <td class="has-text-centered has-text-danger">{{ item.kouji_year|add:start_year }}</td>
+            <td class="has-text-left has-text-danger">{{ item.kouji_type }}</td>
+            <td class="has-text-left has-text-danger">{{ item.kouji_name }}</td>
+            {% if perms.plan.add_koujiname %}
+              <td class="has-text-right has-text-danger">{{ item.kouji_quantity }}</td>
+              <td class="has-text-centered has-text-danger">{{ item.unit }}</td>
+              <td class="has-text-right has-text-danger">{{ item.unit_price|multi:item.kouji_quantity|intcomma}}</td>
+              <td class="has-text-right has-text-danger">{{ item.actual_cost|intcomma }}</td>
+              <td class="has-text-left has-text-danger is-size-7">{{ item.comment|markdown_to_html }}</td>
+            {% endif %}
+          {% else %}
+            <td class="has-text-centered">{{ item.kouji_year }}</td>
+            <td class="has-text-centered">{{ item.kouji_year|add:start_year }}</td>
+            <td class="has-text-left">{{ item.kouji_type }}</td>
+            <td class="has-text-left">{{ item.kouji_name }}</td>
+            {% if perms.plan.add_koujiname %}
+              <td class="has-text-right">{{ item.kouji_quantity }}</td>
+              <td class="has-text-centered">{{ item.unit }}</td>
+              <td class="has-text-right">{{ item.unit_price|multi:item.kouji_quantity|intcomma}}</td>
+              <td class="has-text-right">{{ item.actual_cost|intcomma }}</td>
+              <td class="has-text-left is-size-7">{{ item.comment|markdown_to_html}}</td>
+            {% endif %}
+          {% endif %}
+        </tr>
+        {% endfor %}
+        <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        {% if perms.plan.add_koujiname %}
+          <td></td>
+          <td></td>
+          <td class="has-text-centered">合計</td>
+          <td class="has-text-right">{{ total|intcomma }}</td>
+        {% endif %}
+        <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}

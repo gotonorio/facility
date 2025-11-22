@@ -1,0 +1,90 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #}
+
+{% block title %}
+修繕計画一覧
+{% endblock title %}
+{% block content %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    <form class="navbar-item" action="{% url 'repair_plan:update_repair_plan_list' %}" method="get">
+      {{form.version}}{{form.koujitype}}
+      <button type="submit" class="button is-primary is-size-7">選択</button>
+    </form>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-end">
+      <a href="{% url 'register:repair_plan_data' %}" class="navbar-item">戻る</a>
+    </div>
+  </div>
+</nav>
+<div class="container is-fluid">
+  <div class="content">
+    <H4>修繕計画一覧表</H4>
+    <ul>
+      <li>シミュレーションで除外工事の場合は「修正」で「計算対象外」にする。</li>
+    </ul>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-narrow is-responsive">
+      <thead>
+        <tr>
+          <th class="has-text-centered">Ver.</th>
+          <th class="has-text-centered">西暦</th>
+          <th class="has-text-centered">工事種別</th>
+          <th class="has-text-centered">工事名</th>
+          <th class="has-text-centered">数量</th>
+          <th class="has-text-centered">単位</th>
+          <th class="has-text-centered">単価</th>
+          <th class="has-text-centered">実支出</th>
+          {% comment %} <th class="has-text-centered">備考</th> {% endcomment %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in repair_plan_list %}
+        <tr>
+          {% if item.complete or not item.do_calc %}
+            <td class="has-text-centered has-text-danger">{{ item.version }}</td>
+            <td class="has-text-centered has-text-danger">{{ item.kouji_year }}</td>
+            <td class="has-text-left has-text-danger">{{ item.kouji_type }}</td>
+            <td class="has-text-left has-text-danger">{{ item.kouji_name }}</td>
+            <td class="has-text-right has-text-danger">{{ item.kouji_quantity }}</td>
+            <td class="has-text-centered has-text-danger">{{ item.unit }}</td>
+            <td class="has-text-right has-text-danger">{{ item.unit_price|intcomma }}</td>
+            <td class="has-text-right has-text-danger">{{ item.actual_cost|intcomma }}</td>
+            {% comment %} <td class="has-text-left has-text-danger is-size-7">{{ item.comment }}</td> {% endcomment %}
+          {% else %}
+            <td class="has-text-centered">{{ item.version }}</td>
+            <td class="has-text-centered">{{ item.kouji_year }}</td>
+            <td class="has-text-left">{{ item.kouji_type }}</td>
+            <td class="has-text-left">{{ item.kouji_name }}</td>
+            <td class="has-text-right">{{ item.kouji_quantity }}</td>
+            <td class="has-text-centered">{{ item.unit }}</td>
+            <td class="has-text-right">{{ item.unit_price|intcomma }}</td>
+            <td class="has-text-right">{{ item.actual_cost|intcomma }}</td>
+            {% comment %} <td class="has-text-left is-size-7">{{ item.comment }}</td> {% endcomment %}
+          {% endif %}
+          <td>
+            <a href="{% url 'repair_plan:update_repair_plan' item.pk %}" class="button is-small is-primary has-text-black">
+              修正
+            </a>
+            <a href="{% url 'repair_plan:delete_repair_plan' item.pk %}" class="button is-small is-danger">
+              削除
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}
