@@ -24,7 +24,7 @@ class RepairPlanListView(LoginRequiredMixin, generic.TemplateView):
         """templateファイルをuser agentで切り替える"""
         if self.request.user_agent_flag == "mobile":
             template_name = "repair_plan/repair_plan_pc.html"
-            # template_name = "plan/repair_plan_mobile.html"
+            # template_name = "repair_plan/repair_plan_mobile.html"
         else:
             template_name = "repair_plan/repair_plan_pc.html"
         return [template_name]
@@ -72,7 +72,7 @@ class RepairPlanByYearView(PermissionRequiredMixin, generic.TemplateView):
     """年度を指定して長期修繕計画を表示"""
 
     model = KoujiName
-    template_name = "plan/repair_plan_by_year.html"
+    template_name = "repair_plan/repair_plan_by_year.html"
     permission_required = "repair_plan.add_koujiname"
 
     def get_context_data(self, **kwargs):

@@ -70,8 +70,6 @@ class FacilityView(LoginRequiredMixin, generic.TemplateView):
 class RepairPlanView(LoginRequiredMixin, generic.TemplateView):
     """長期修繕計画のメインページ"""
 
-    # template_name = "register/repair_plan/repair_plan.html"
-
     def get_template_names(self):
         """templateファイルを切り替える"""
         if self.request.user_agent_flag == "mobile":

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+{% comment %} {% load mytag %} {% endcomment %}
+{% load my_templatetags %}
+
+{% block title %}
+シミュレーションデータ
+{% endblock title %}
+
+{% block head %}
+{# javascriptファイルを取り込む #}
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+<script src="{% static 'repair_plan_simulator/simulate_graph.js' %}"></script>
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <a href="{% url 'repair_plan:repair_plan_list' %}" class="navbar-item" >長期修繕計画</a>
+      <a href="{% url 'repair_plan_simulator:do_simulate' %}" class="navbar-item">シミュレータ</a>
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'repair_plan_simulator:do_simulate' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+<br>
+{% block content %}
+<div class="container  is-fluid">
+<br>
+  <div class="content">
+    <h4>マスタデータ</h4>
+  </div>
+  <div class="context">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">Ver</th>
+          <th class="has-text-centered">初年度</th>
+          <th class="has-text-centered">初年度修繕資産</th>
+          <th class="has-text-centered">備考</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in master_data %}
+        <tr>
+          <td class="has-text-centered">{{ data.version}}</td>
+          <td class="has-text-right">{{ data.year }}</td>
+          <td class="has-text-right">{{ data.balance|intcomma }}</td>
+          <td class="has-text-left is-size-7">{{ data.comment|markdown_to_html }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <br>
+  <br>
+  <div class="content">
+    <h4>収入見込みデータ</h4>
+  </div>
+  <div class="context">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">西暦</th>
+          <th class="has-text-centered">修繕積立金</th>
+          <th class="has-text-centered">駐車場会計より</th>
+          <th class="has-text-centered">その他収入</th>
+          <th class="has-text-centered">備考</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in income_data %}
+        <tr>
+          <td class="has-text-centered">{{ data.year}}</td>
+          <td class="has-text-right">{{ data.income|intcomma }}</td>
+          <td class="has-text-right">{{ data.parking_income|intcomma }}</td>
+          <td class="has-text-right">{{ data.extra_income|intcomma }}</td>
+          <td class="has-text-left is-size-7">{{ data.comment|default_if_none:""|markdown_to_html }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <br>
+  <div class="content">
+    <h4>物価指数データ</h4>
+    <ul>
+      <li>計画初年度を1.0とした、各年度の想定物価指数（累計値）</li>
+    </ul>
+  </div>
+  <div class="context">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">西暦</th>
+          <th class="has-text-centered">物価指数</th>
+          <th class="has-text-centered">備考</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in cpi_data %}
+        <tr>
+          <td class="has-text-centered">{{data.year}}</td>
+          <td class="has-text-centered">{{data.cpi|floatformat:3}}</td>
+          <td class="has-text-left is-size-7">{{data.comment|markdown_to_html}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+<br>
+{% endblock %}

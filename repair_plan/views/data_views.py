@@ -19,14 +19,14 @@ from repair_plan.views.list_views import RepairPlanListView
 logger = logging.getLogger(__name__)
 
 
-class CreateRepairPlanView(PermissionRequiredMixin, generic.CreateView):
+class ReparPlanCreateView(PermissionRequiredMixin, generic.CreateView):
     """長期修繕計画データを登録する
     http://k-mawa.hateblo.jp/entry/2017/10/20/181711
     """
 
     model = KoujiName
     form_class = RepairPlanCreateForm
-    template_name = "plan/repair_plan_form.html"
+    template_name = "repair_plan/repair_plan_form.html"
     # 必要な権限(admin以外で下記の権限を持つユーザーが利用可能)
     permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
@@ -52,7 +52,7 @@ class CreateRepairPlanView(PermissionRequiredMixin, generic.CreateView):
         return context
 
 
-class UpdateRepairPlanListView(RepairPlanListView):
+class RepairPlanUpdateListView(RepairPlanListView):
     """長期修繕計画の編集用list表示
     - ToDo
     - templateファイルで管理者の場合、「編集・削除」ボタンを表示するようにすれば、
@@ -62,18 +62,18 @@ class UpdateRepairPlanListView(RepairPlanListView):
     def get_template_names(self):
         """templateファイルをuser agentで切り替える"""
         if self.request.user_agent_flag == "mobile":
-            template_name = "plan/update_repair_plan_list.html"
+            template_name = "repair_plan/update_repair_plan_list.html"
         else:
-            template_name = "plan/update_repair_plan_list.html"
+            template_name = "repair_plan/update_repair_plan_list.html"
         return [template_name]
 
 
-class UpdateRepairPlanView(PermissionRequiredMixin, generic.UpdateView):
+class RepairPlanUpdateView(PermissionRequiredMixin, generic.UpdateView):
     """長期修繕計画UPDATE"""
 
     model = KoujiName
     form_class = RepairPlanUpdateForm
-    template_name = "plan/repair_plan_form.html"
+    template_name = "repair_plan/repair_plan_form.html"
     # 必要な権限（データ登録できる権限は共通）
     permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
@@ -96,12 +96,12 @@ class UpdateRepairPlanView(PermissionRequiredMixin, generic.UpdateView):
         return context
 
 
-class DeleteRepairPlanView(PermissionRequiredMixin, generic.DeleteView):
+class RepairPlanDeleteView(PermissionRequiredMixin, generic.DeleteView):
     """個別工事項目の削除View"""
 
     model = KoujiName
     # 削除してよいか確認するためのtemplate
-    template_name = "plan/delete_confirm.html"
+    template_name = "repair_plan/delete_confirm.html"
     # 必要な権限（データ登録できる権限は共通）
     permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
@@ -110,9 +110,9 @@ class DeleteRepairPlanView(PermissionRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("repair_plan:update_repair_plan_list")
 
 
-class DuplicateRepairPlanView(PermissionRequiredMixin, generic.FormView):
+class RepairPlanDuplicateView(PermissionRequiredMixin, generic.FormView):
     form_class = DuplicateRepairPlanForm
-    template_name = "plan/duplicate_plan_form.html"
+    template_name = "repair_plan/duplicate_plan_form.html"
     success_url = reverse_lazy("repair_plan:repair_plan_list")
     permission_required = "repair_plan.add_koujiname"
 
@@ -190,7 +190,7 @@ class MasterPlanCreateView(PermissionRequiredMixin, generic.CreateView):
 
     model = MasterPlan
     form_class = MasterPlanCreateForm
-    template_name = "plan/masterplan_form.html"
+    template_name = "repair_plan/masterplan_form.html"
     # 必要な権限（管理者権限）
     permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
@@ -219,7 +219,7 @@ class MasterPlanUpdateView(PermissionRequiredMixin, generic.UpdateView):
 
     model = MasterPlan
     form_class = MasterPlanCreateForm
-    template_name = "plan/masterplan_form.html"
+    template_name = "repair_plan/masterplan_form.html"
     # 必要な権限（管理者権限）
     permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
@@ -235,10 +235,10 @@ class MasterPlanUpdateView(PermissionRequiredMixin, generic.UpdateView):
         return context
 
 
-class DeleteKoujiNameByVerView(PermissionRequiredMixin, generic.FormView):
+class KoujiNameDeleteView(PermissionRequiredMixin, generic.FormView):
     """指定されたversionのKoujiNameデータを削除する"""
 
-    template_name = "plan/delete_koujiname_ver.html"
+    template_name = "repair_plan/delete_koujiname_ver.html"
     form_class = DeleteKoujinameVerForm
     # 必要な権限（管理者権限）
     permission_required = "repair_plan.add_koujiname"

@@ -68,6 +68,8 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "register.apps.RegisterConfig",
     "repair_plan.apps.RepairPlanConfig",
+    "repair_plan_simulator.apps.RepairPlanSimulatorConfig",
+    "repair_plan_cycle.apps.RepairPlanCycleConfig",
 ]
 
 MIDDLEWARE = [

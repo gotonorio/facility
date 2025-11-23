@@ -1,0 +1,87 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}
+実支出の登録/修正
+{% endblock title %}
+
+{% block content %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a href="{% url 'register:operate_data' %}" class="navbar-item">戻る</a>
+    </div>
+  </div>
+</nav>
+<br>
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<div class="container">
+  <div class="content has-text-centered">
+    <h4>修繕会計支出の登録/修正</h4>
+  </div>
+  <form method='POST' enctype='multipart/form-data' id='form_style'>
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      <div class='field'>
+        <div class='control'>
+          <div class='label'>{{ field.label_tag }}</div>
+          <div class='my_field'>{{ field }}</div>
+          {% if field.help_text %}
+            <span class='helptext'>{{ field.help_text }}</span>
+          {% endif %}
+          {{ field.errors }}
+        </div>
+      </div>
+    {% endfor %}
+    {% csrf_token %}
+    <br>
+    <div class='my_button has-text-centered'>
+      <button type='submit' class='button is-primary'>登録</button>
+      <a class="button is-danger" href="javascript:void(0);" onclick="window.history.back();">キャンセル</a>
+    </div>
+  </form>
+</div>
+<div class="container is-fluid">
+  <hr>
+  <div class="table-container">
+    <table class="table table_center_nowrap is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">西暦</th>
+          <th class="has-text-centered">工事名</th>
+          <th class="has-text-centered">支出金額</th>
+          <th class="has-text-centered">修正</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for list in masterlist %}
+        <tr>
+          <td class="has-text-centered">{{ list.year }}</td>
+          <td class="has-text-left">{{ list.kouji_name}}</td>
+          <td class="has-text-right">{{ list.expenditure|intcomma }}</td>
+          <td class="has-text-centered"><a href="{% url 'repair_plan_simulator:update_expenditure' list.pk %}">修正</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<br>
+{% endblock content %}

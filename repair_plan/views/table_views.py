@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views import generic
 
-# from simulate.models import Shuuzenhi_income
+# from repair_plan_simulator.models import Shuuzenhi_income
 from repair_plan.forms import RepairPlanTableForm
 from repair_plan.lib import utils
 from repair_plan.models import KoujiName

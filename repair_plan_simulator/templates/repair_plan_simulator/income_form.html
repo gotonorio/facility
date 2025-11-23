@@ -1,0 +1,101 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+{% load my_templatetags %}
+
+{% block title %}
+修繕会計収入の登録/修正
+{% endblock title %}
+
+{% block head %}
+  {% comment %} <link href="{% static 'repair_plan/repair.css' %}" rel="stylesheet"> {% endcomment %}
+{% endblock head%}
+
+{% block content %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a href="{% url 'register:repair_plan_data' %}" class="navbar-item">戻る</a>
+    </div>
+  </div>
+</nav>
+<br>
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+<div class="container is-fluid">
+  <div class="content">
+    <h4>修繕会計収入の登録/修正</h4>
+  </div>
+  <form action="" method='POST' enctype="multipart/form-data">
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      <div class='field'>
+        <div class='control'>
+          <div class='label'>{{ field.label_tag }}</div>
+          <div class='my_field'>{{ field }}</div>
+          {% if field.help_text %}
+            <span class='helptext'>{{ field.help_text }}</span>
+          {% endif %}
+          {{ field.errors }}
+        </div>
+      </div>
+    {% endfor %}
+    {% csrf_token %}
+    <br>
+    <div class='my_button'>
+      <button type='submit' class='button is-primary is-size-7'>登録</button>
+      <a class="button is-danger is-size-7" href="javascript:void(0);" onclick="window.history.back();">キャンセル</a>
+    </div>
+  </form>
+</div>
+<div class="container is-fluid">
+  <hr>
+  <div class="table-container">
+    <table class="table table_nowrap is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">西暦</th>
+          <th class="has-text-centered">修繕積立金額</th>
+          <th class="has-text-centered">駐車場収入</th>
+          {% comment %} <th class="has-text-centered">駐車場管理費</th> {% endcomment %}
+          <th class="has-text-centered">その他収入</th>
+          <th class="has-text-centered">実収入</th>
+          <th class="has-text-centered">備考</th>
+          <th class="has-text-centered">修正</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for list in masterlist %}
+        <tr>
+          <td class="has-text-centered">{{ list.year }}</td>
+          <td class="has-text-right">{{ list.income|intcomma }}</td>
+          <td class="has-text-right">{{ list.parking_income|intcomma }}</td>
+          {% comment %} <td class="has-text-right">{{ list.parking_kanrihi|intcomma }}</td> {% endcomment %}
+          <td class="has-text-right">{{ list.extra_income|intcomma }}</td>
+          <td class="has-text-centered">{{ list.real }}</td>
+          <td class="has-text-left">{{ list.comment|default_if_none:""|markdown_to_html }}</td>
+          <td class="has-text-centered"><a href="{% url 'repair_plan_simulator:update_income' list.pk %}">修正</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<br>
+{% endblock content %}

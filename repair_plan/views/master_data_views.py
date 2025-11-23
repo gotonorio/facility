@@ -41,7 +41,7 @@ class MasterPlanListView(LoginRequiredMixin, generic.TemplateView):
 class ImportRepairPlanDataView(PermissionRequiredMixin, generic.FormView):
     """同じversionが存在したら読み込み処理を中止する"""
 
-    template_name = "plan/import_repair_plan.html"
+    template_name = "repair_plan/import_repair_plan.html"
     form_class = ImportRepairPlanDataForm
     success_url = reverse_lazy("repair_plan:repair_plan_list")
     # 必要な権限
@@ -65,7 +65,7 @@ class CreateKoujiTypeView(PermissionRequiredMixin, generic.CreateView):
 
     model = MasterKoujiType
     form_class = MasterKoujiTypeForm
-    template_name = "plan/master_koujitype_form.html"
+    template_name = "repair_plan/master_koujitype_form.html"
     # 必要な権限
     permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
@@ -95,7 +95,7 @@ class UpdateKoujiTypeView(PermissionRequiredMixin, generic.UpdateView):
 
     model = MasterKoujiType
     form_class = MasterKoujiTypeForm
-    template_name = "plan/master_koujitype_form.html"
+    template_name = "repair_plan/master_koujitype_form.html"
     # 必要な権限
     permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
@@ -120,7 +120,7 @@ class CreateMasterUnitView(PermissionRequiredMixin, generic.CreateView):
 
     model = MasterUnit
     form_class = MasterUnitForm
-    template_name = "plan/master_unit_form.html"
+    template_name = "repair_plan/master_unit_form.html"
     # 必要な権限
     permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。

@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+{% load my_templatetags %}
+
+{% block title %}
+長期修繕計画シミュレータ
+{% endblock title %}
+
+{% block head %}
+{# javascriptファイルを取り込む #}
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+<script src="{% static 'repair_plan_simulator/simulate_graph.js' %}"></script>
+<link href="{% static 'mycss/graph.css' %}" rel="stylesheet">
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      {% if perms.parking.add_parkingspace %}
+        <a href="{% url 'repair_plan_simulator:except_list' %}" class="navbar-item" >除外工事の選定</a>
+      {% endif %}
+      <a href="{% url 'repair_plan_simulator:simulate_data' %}" class="navbar-item">シミュレーション用データ</a>
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'register:repair_plan' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+<br>
+{% block content %}
+<div class="container  is-fluid">
+  <div class="content">
+    <br>
+    <h4>長期修繕計画シミュレータ</h4>
+  </div>
+
+  <form method='GET' enctype='multipart/form-data' style="width:240px;" class="narrow_spacing">
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      <div class='field'>
+        <div class='control'>
+          <div class='label'>{{ field.label_tag }}</div>
+          {% if field.help_text %}
+            <span class='helptext'>{{ field.help_text }}</span>
+          {% endif %}
+          {{ field.errors }}
+          <div class='my_field'>{{ field }}</div>
+        </div>
+      </div>
+    {% endfor %}
+    <br>
+    <div class="content">
+      <button type="submit" class="button is-success is-size-7">実行</button>
+      <a class="button is-danger is-size-7" href="javascript:void(0);" onclick="window.history.back();">キャンセル</a>
+    </div>
+  </form>
+  <br>
+  {% if simulate_data %}
+  <div class="content">
+    <br>
+    <ul>
+      <li class="has-text-danger">「その他収入」は、駐輪場使用料・バイク置場使用料・専用庭使用料・受取利息等</li>
+      <li class="has-text-danger">「予定支出額」は未完了工事（今後の支出予定金額）で「消費税」「経費」を考慮した金額</li>
+    </ul>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">西暦</th>
+          <th class="has-text-centered">修繕積立金</th>
+          <th class="has-text-centered">駐車場会計からの<br>繰入金額</th>
+          <th class="has-text-centered">その他収入</th>
+          <th class="has-text-centered">収入合計</th>
+          <th class="has-text-centered">収入累計</th>
+          <th class="has-text-centered">予定支出額</th>
+          <th class="has-text-centered">実支出額</th>
+          <th class="has-text-centered">支出累計額</th>
+          <th class="has-text-centered">修繕会計残高</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in simulate_data %}
+        <tr>
+          {% if perms.repair_plan.add_koujiname %}
+            <td class="has-text-centered"><a href="{% url 'repair_plan:repair_plan_by_year' data.kouji_year version %}">{{ data.kouji_year}}</a></td>
+          {% else %}
+            <td class="has-text-centered">{{ data.kouji_year}}</td>
+          {% endif %}
+          <td class="has-text-right">{{ data.shuuzenhi_income|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.parking_income|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.extra_income|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.income|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.income_ruikei|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.cost|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.actual_cost|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.ruikei_cost|floatformat:0|intcomma }}</td>
+          {% if data.income_ruikei < data.ruikei_cost %}
+            <td class="has-text-right has-text-danger">{{ data.income_ruikei|subtract:data.ruikei_cost|floatformat:0|intcomma }}</td>
+          {% else %}
+            <td class="has-text-right">{{ data.income_ruikei|subtract:data.ruikei_cost|floatformat:0|intcomma }}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <br>
+  <div class="graph_container">
+    <canvas id="simulate_graph" width="420" height="270"></canvas>
+  </div>
+  {# 修繕費シミュレーショングラフ作成用のデータを生成する #}
+  <script type="text/javascript">
+    var graph_data = [];
+  </script>
+  {% for d in simulate_data %}
+  <script type="text/javascript">
+    var list = [];
+    list.push("{{d.kouji_year}}");
+    list.push("{{d.income_ruikei}}");
+    list.push("{{d.ruikei_cost}}");
+    graph_data.push(list);
+  </script>
+  {% endfor %}
+  <script type="text/javascript">
+    simulateShuuzenhiChart(graph_data);
+  </script>
+  {% endif %}
+  <br>
+  {% if excluded_data %}
+  <div class="content has-text-centered">
+    <br>
+    <h4>シミュレーション除外工事一覧</h4>
+  </div>
+  <div class="table-container">
+    <table class="table table_center_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">西暦</th>
+          <th class="has-text-centered">期</th>
+          <th class="has-text-centered">工事種別</th>
+          <th class="has-text-centered">工事名</th>
+          <th class="has-text-centered">金額</th>
+          <th class="has-text-centered">コメント</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in excluded_data %}
+        <tr>
+          <td class="has-text-centered">{{ item.kouji_year }}</td>
+          <td class="has-text-centered">{{ item.kouji_year|add:start_year }}</td>
+          <td class="has-text-left">{{ item.kouji_type }}</td>
+          <td class="has-text-left">{{ item.kouji_name }}</td>
+          <td class="has-text-left">{{ item.unit_price|multi:item.kouji_quantity|intcomma }}</td>
+          <td class="has-text-left">{{ item.comment }}</td>
+          <td>
+            <a href="{% url 'repair_plan_simulator:reset_do_calc' item.pk %}" class="button is-small is-primary has-text-black">
+              リセット
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+<br>
+{% endblock %}

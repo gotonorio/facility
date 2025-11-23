@@ -1,0 +1,70 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #}
+{% load my_templatetags %}
+
+{% block title %}
+工事周期データ一覧
+{% endblock title %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <form class="navbar-item" action="{% url 'repair_plan_cycle:cycledata_list'%}" method="get">
+        {{form.version.label}}:{{form.version}}
+        <button type="submit" class="button is-primary is-size-7">表示</button>
+      </form>
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'register:repair_plan' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>周期データ一覧</h4>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">ver.</th>
+          <th class="has-text-centered">工事種別</th>
+          <th class="has-text-centered">工事名</th>
+          <th class="has-text-centered">工事初年度</th>
+          <th class="has-text-centered">周期（年）</th>
+          <th class="has-text-centered">金額</th>
+          <th class="has-text-centered">備考</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cycledata_list %}
+        <tr>
+            <td class="has-text-centered">
+              <a href="{% url 'repair_plan_cycle:update_basicplandata' item.pk %}">{{item.version}}</a>
+            </td>
+            <td class="has-text-left">{{item.kouji_type}}</td>
+            <td class="has-text-left">{{item.kouji_name}}</td>
+            <td class="has-text-right">{{item.first_year}}</td>
+            <td class="has-text-right">{{item.repeat_cycle}}</td>
+            <td class="has-text-right">{{item.cost|intcomma}}</td>
+            <td class="has-text-left is-size-7">{{ item.comment|markdown_to_html }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}

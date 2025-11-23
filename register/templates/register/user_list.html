@@ -56,7 +56,7 @@
       {% for list in user_list %}
         <tr>
           <td class="has-text-left">{{ list.groups.get }}</td>
-          <td class="has-text-left"><a href="{% url 'register:user_update' list.pk %}">{{ list.username}}</a></td>
+          <td class="has-text-left"><a href="{% url 'register:user_update' list.pk %}">{{ list.username }}</a></td>
           <td class="has-text-centered ">{{ list.email}}</td>
           {% if list.is_active == False %}
             <td class="has-text-centered has-text-danger">{{ list.is_active}}</td>

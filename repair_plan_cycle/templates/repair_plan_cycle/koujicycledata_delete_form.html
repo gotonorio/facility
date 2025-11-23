@@ -4,13 +4,13 @@
 {% load my_templatetags %}
 
 {% block title %}
-修繕計画の削除
+工事周期データの削除
 {% endblock title %}
 
 {% block head %}
 {# javascriptファイルを取り込む #}
 <script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
-<script src="{% static 'repair_plan_simulator/simulate_graph.js' %}"></script>
+<script src="{% static 'simulate/simulate_graph.js' %}"></script>
 {% endblock head %}
 {% block navbar %}
 <nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
@@ -47,7 +47,7 @@
 <div class="container  is-fluid">
   <div class="content">
     <br>
-    <h4>長期修繕計画の削除</h4>
+    <h4>工事周期データの削除</h4>
   </div>
   <form method='POST' enctype='multipart/form-data'>
     {{ form.non_field_errors }}

@@ -1,0 +1,107 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #}
+
+{% block title %}
+長期修繕計画シミュレータ
+{% endblock title %}
+
+{% block head %}
+{# javascriptファイルを取り込む #}
+<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+<script src="{% static 'repair_plan_simulator/simulate_graph.js' %}"></script>
+{% endblock head %}
+
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a href="{% url 'register:mypage' %}" class="navbar-item">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<div class="container  is-fluid">
+  <div class="content has-text-centered">
+    <br>
+    <h4>長期修繕計画シミュレータ</h4>
+  </div>
+  <form action="" method="get"> {# 同じviewで処理するため，actionは不要 #}
+    {% comment %} <table style="width:390px; margin:auto;"> {% endcomment %}
+    <table style="width:340px; margin:auto;">
+      {{form}}
+    </table>
+    <br>
+    <div class="content has-text-centered">
+      <button type="submit" class="button is-success btn-sm">実行</button>
+      <a class="button is-danger" href="javascript:void(0);" onclick="window.history.back();">キャンセル</a>
+    </div>
+  </form>
+  <br>
+  {% if simulate_data %}
+  <div class="table-container">
+    <table class="table table_center_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">西暦</th>
+          <th class="has-text-centered">修繕積立金</th>
+          <th class="has-text-centered">駐車場収入</th>
+          <th class="has-text-centered">その他収入</th>
+          <th class="has-text-centered">収入合計</th>
+          <th class="has-text-centered">収入累計</th>
+          <th class="has-text-centered">計画支出額</th>
+          <th class="has-text-centered">支出累計額</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in simulate_data %}
+        <tr>
+          <td class="has-text-centered">{{ data.kouji_year}}</td>
+          <td class="has-text-right">{{ data.shuuzenhi_income|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.parking_income|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.extra_income|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.income|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.income_ruikei|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.cost|floatformat:0|intcomma }}</td>
+          <td class="has-text-right">{{ data.ruikei_cost|floatformat:0|intcomma }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <br>
+  <div class="graph_container">
+    <canvas id="simulate_graph" width="420" height="270"></canvas>
+  </div>
+  {# 修繕費シミュレーショングラフ作成用のデータを生成する #}
+  <script type="text/javascript">
+    var graph_data = [];
+  </script>
+  {% for d in simulate_data %}
+  <script type="text/javascript">
+    var list = [];
+    list.push("{{d.kouji_year}}");
+    list.push("{{d.income_ruikei}}");
+    list.push("{{d.ruikei_cost}}");
+    graph_data.push(list);
+  </script>
+  {% endfor %}
+  <script type="text/javascript">
+    simulateShuuzenhiChart_mobile(graph_data);
+  </script>
+  {% endif %}
+</div>
+{% endblock content %}

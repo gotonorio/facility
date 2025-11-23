@@ -16,10 +16,8 @@ urlpatterns = [
     # path("facility", views.FacilityView.as_view(), name="facility"),
     # 長期修繕計画メインページ
     path("repair_plan", views.RepairPlanView.as_view(), name="repair_plan"),
-    # # 長期修繕計画データ管理ページ
-    # path(
-    #     "repair_plan_data", views.RepairPlanDataView.as_view(), name="repair_plan_data"
-    # ),
+    # 長期修繕計画データ管理ページ
+    path("repair_plan_data", views.RepairPlanDataView.as_view(), name="repair_plan_data"),
     # ユーザー操作
     path("signup", user_views.TempUserCreateView.as_view(), name="signup"),
     path("signup_done", user_views.TempUserDoneView.as_view(), name="temp_user_done"),
@@ -34,7 +32,5 @@ urlpatterns = [
         user_views.UserPasswordUpdate.as_view(),
         name="pwd_update",
     ),
-    path(
-        "delete_user/<int:pk>", user_views.DeleteUserView.as_view(), name="delete_user"
-    ),
+    path("delete_user/<int:pk>", user_views.DeleteUserView.as_view(), name="delete_user"),
 ]

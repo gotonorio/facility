@@ -45,7 +45,7 @@ urlpatterns = [
     ),
     path(
         "add_repair_plan/",
-        data_views.CreateRepairPlanView.as_view(),
+        data_views.ReparPlanCreateView.as_view(),
         name="add_repair_plan",
     ),
     # データの修正
@@ -56,34 +56,34 @@ urlpatterns = [
     ),
     path(
         "update_repair_plan_list/",
-        data_views.UpdateRepairPlanListView.as_view(),
+        data_views.RepairPlanUpdateListView.as_view(),
         name="update_repair_plan_list",
     ),
     path(
         "update_repair_plan_list/<int:version>/<int:kouji_type>",
-        data_views.UpdateRepairPlanListView.as_view(),
+        data_views.RepairPlanUpdateListView.as_view(),
         name="update_repair_plan_list",
     ),
     path(
         "update_repair_plan/<int:pk>",
-        data_views.UpdateRepairPlanView.as_view(),
+        data_views.RepairPlanUpdateView.as_view(),
         name="update_repair_plan",
     ),
     # データ削除
     path(
         "delete_repair_plan/<int:pk>",
-        data_views.DeleteRepairPlanView.as_view(),
+        data_views.RepairPlanDeleteView.as_view(),
         name="delete_repair_plan",
     ),
     path(
         "delete_koujiname_ver/",
-        data_views.DeleteKoujiNameByVerView.as_view(),
+        data_views.KoujiNameDeleteView.as_view(),
         name="delete_koujiname_ver",
     ),
     # データ複製
     path(
         "duplicate_repair_plan/",
-        data_views.DuplicateRepairPlanView.as_view(),
+        data_views.RepairPlanDuplicateView.as_view(),
         name="duplicate_repair_plan",
     ),
     # マスタデータの作成
