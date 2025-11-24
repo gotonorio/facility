@@ -26,9 +26,7 @@
   </div>
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      {% if perms.parking.add_parkingspace %}
-        <a href="{% url 'repair_plan_simulator:except_list' %}" class="navbar-item" >除外工事の選定</a>
-      {% endif %}
+      <a href="{% url 'repair_plan_simulator:except_list' %}" class="navbar-item" >除外工事の選定</a>
       <a href="{% url 'repair_plan_simulator:simulate_data' %}" class="navbar-item">シミュレーション用データ</a>
     </div>
     <div class="navbar-end">
