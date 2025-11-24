@@ -23,9 +23,9 @@
           <div class="navbar-divider"></div>
           <a href="{% url 'repair_plan:add_repair_plan' %}" class="navbar-item">修繕計画データの登録</a>
           <a href="{% url 'repair_plan:update_repair_plan_list' %}" class="navbar-item" >修繕計画データ修正</a>
-          <div class="navbar-divider"></div>
-          <div class="navbar-divider"></div>
+          <a href="{% url 'repair_plan:delete_koujiname_ver' %}" class="navbar-item">修繕計画データの削除</a>
           <a href="{% url 'repair_plan:duplicate_repair_plan' %}" class="navbar-item">修繕計画データ複製</a>
+          <a href="{% url 'repair_plan:import_repair_plan' %}" class="navbar-item">修繕計画データ読込み</a>
         </div>
       </div>
       <div class="navbar-item has-dropdown is-hoverable">
@@ -56,15 +56,10 @@
           <a href="{% url 'repair_plan:create_unitname' %}" class="navbar-item">数量単位データの登録</a>
           <div class="navbar-divider"></div>
           <a href="{% url 'repair_plan_cycle:cycledata_list' %}" class="navbar-item">工事周期データ一覧</a>
-          {% comment %}
           <a href="{% url 'repair_plan_cycle:create_cycledata' %}" class="navbar-item">工事周期データの作成</a>
           <a href="{% url 'repair_plan_cycle:duplicate_koujicycledata' %}" class="navbar-item">工事周期データの複製</a>
-          <a href="{% url 'repair_plan_cycle:create_repairplan' %}" class="navbar-item">修繕計画データ変換</a>
           <a href="{% url 'repair_plan_cycle:delete_koujicycledata' %}" class="navbar-item">工事周期データ削除</a>
-            <div class="navbar-divider"></div>
-            <a href="{% url 'repair_plan:import_repair_plan' %}" class="navbar-item">修繕計画データ読込み</a>
-          {% endcomment %}
-            <a href="{% url 'repair_plan:delete_koujiname_ver' %}" class="navbar-item">修繕計画データの削除</a>
+          <a href="{% url 'repair_plan_cycle:create_repairplan' %}" class="navbar-item">修繕計画データ変換</a>
         </div>
       </div>
       {% comment %} {% endif %} {% endcomment %}

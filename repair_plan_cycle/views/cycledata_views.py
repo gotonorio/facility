@@ -23,7 +23,8 @@ class CycleDataUpdateView(PermissionRequiredMixin, generic.UpdateView):
 
     model = KoujiCycleData
     form_class = KoujiCycleDataForm
-    template_name = "koujicycledata_form.html"
+    # template_name = "koujicycledata_form.html"
+    template_name = "repair_plan_cycle/koujicycledata_form.html"
     permission_required = "repair_plan.add_koujiname"
 
     def get_success_url(self):
@@ -38,7 +39,8 @@ class CycleDataCreateView(PermissionRequiredMixin, generic.CreateView):
 
     model = KoujiCycleData
     form_class = KoujiCycleDataForm
-    template_name = "koujicycledata_form.html"
+    # template_name = "koujicycledata_form.html"
+    template_name = "repair_plan_cycle/koujicycledata_form.html"
     success_url = reverse_lazy("repair_plan_cycle:")
     permission_required = "repair_plan.add_koujiname"
 
@@ -54,7 +56,7 @@ class CycleDataCreateView(PermissionRequiredMixin, generic.CreateView):
 class RepairplanCreateView(PermissionRequiredMixin, generic.FormView):
     """長期修繕計画データを周期データから新規作成"""
 
-    template_name = "koujicycledata_form.html"
+    template_name = "repair_plan_cycle/koujicycledata_form.html"
     form_class = RepairPlanCreateForm
     success_url = reverse_lazy("repair_plan_cycle:")
     permission_required = "repair_plan.add_koujiname"

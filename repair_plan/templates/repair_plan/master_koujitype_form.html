@@ -92,7 +92,7 @@
             <td class="has-text-centered">{{ list.sequense }}</td>
             <td class="has-text-left">{{ list.master_name }}</td>
             <td class="has-text-centered">{{ list.live }}</td>
-            <td class="has-text-centered"><a href="{% url 'update_koujitype' list.pk %}">修正</a></td>
+            <td class="has-text-centered"><a href="{% url 'repair_plan:update_koujitype' list.pk %}">修正</a></td>
           {% else %}
             <td class="has-text-centered has-text-danger">{{ list.sequense }}</td>
             <td class="has-text-left has-text-danger">{{ list.master_name }}</td>
