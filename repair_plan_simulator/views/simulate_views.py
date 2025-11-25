@@ -38,16 +38,17 @@ class SimulateView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        ver = None
-        ver_id = self.request.GET.get("keikaku_ver")
+        ver_str = self.request.GET.get("keikaku_ver")
 
-        if ver_id:
-            plan = MasterPlan.objects.get(version=int(ver_id))
-            ver = plan.version
+        if ver_str:
+            plan = MasterPlan.objects.get(version=int(ver_str))
+            ver_int = plan.version
+        else:
+            ver_int = None
 
-        if ver:
+        if ver_int:
             sim_data = {
-                "ver": ver,
+                "ver": ver_str,
                 "expense_rate": float(self.request.GET.get("expense_rate")),
                 "sales_tax_rate": float(self.request.GET.get("sales_tax_rate")),
                 "shuuzenhi_rate": float(self.request.GET.get("shuuzenhi_rate")),
@@ -58,7 +59,7 @@ class SimulateView(LoginRequiredMixin, FormView):
             form = SimulateDataForm(
                 self.only_manager,
                 initial={
-                    "keikaku_ver": ver_id,
+                    "keikaku_ver": ver_str,
                     "expense_rate": sim_data["expense_rate"],
                     "sales_tax_rate": sim_data["sales_tax_rate"],
                     "shuuzenhi_rate": sim_data["shuuzenhi_rate"],
@@ -68,16 +69,17 @@ class SimulateView(LoginRequiredMixin, FormView):
             )
 
             expense = simulator.calc_expense_list(
-                ver,
+                ver_str,
                 sim_data["expense_rate"],
                 sim_data["sales_tax_rate"],
                 sim_data["cpi_flg"],
             )
 
-            balance = MasterPlan.objects.filter(version=ver).values("balance")[0]["balance"]
+            balance = MasterPlan.objects.filter(version=ver_int).values("balance")[0]["balance"]
+            logger.debug(f"SimulateView get_context_data balance={balance}")
 
             simulate_data = simulator.add_income_list(expense, sim_data, balance)
-            excluded_data = KoujiName.objects.filter(version__version=ver, do_calc=False)
+            excluded_data = KoujiName.objects.filter(version__version=ver_int, do_calc=False)
 
             context.update(
                 {
@@ -85,7 +87,7 @@ class SimulateView(LoginRequiredMixin, FormView):
                     "form": form,
                     "excluded_data": excluded_data,
                     "start_year": -settings.INITIAL_YEAR,
-                    "version": ver,
+                    "version": ver_str,
                 }
             )
 

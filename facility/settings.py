@@ -170,7 +170,7 @@ CSRF_TRUSTED_ORIGINS = ["https://facility.sophiagardens.org"]
 AUTH_USER_MODEL = "register.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-VERSION_NO = "ver.2025-11-19"
+VERSION_NO = "ver.2025-11-24"
 LOGIN_URL = "register:login"
 LOGIN_REDIRECT_URL = "register:mypage"
 LOGOUT_REDIRECT_URL = "register:login"

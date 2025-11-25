@@ -9,10 +9,8 @@ from repair_plan_cycle.models import KoujiCycleData
 logger = logging.getLogger(__name__)
 
 
-class KoujiCycleDataListForm(forms.Form):
-    """修繕計画表用Form
-    http://www.subthread.co.jp/blog/20160531/
-    """
+class CycleDataListForm(forms.Form):
+    """工事周期データ選択用Form"""
 
     version = forms.ModelChoiceField(
         queryset=KoujiCycleData.objects.values_list("version", flat=True).distinct().order_by("-version"),
@@ -23,7 +21,7 @@ class KoujiCycleDataListForm(forms.Form):
     )
 
 
-class KoujiCycleDataForm(forms.ModelForm):
+class CycleDataForm(forms.ModelForm):
     """工事周期データ用Form"""
 
     version = forms.ModelChoiceField(
@@ -98,7 +96,7 @@ class RepairPlanCreateForm(forms.Form):
         return version
 
 
-class DuplicateKoujiCycleDataForm(forms.Form):
+class CycleDataDuplicateForm(forms.Form):
     """工事周期データの複製フォーム"""
 
     # 複製元 version
@@ -126,7 +124,7 @@ class DuplicateKoujiCycleDataForm(forms.Form):
         self.fields["source_version"].choices = [(v, v) for v in versions]
 
 
-class DeleteKoujiCycleDataForm(forms.Form):
+class CycleDataDeleteForm(forms.Form):
     """工事周期データの削除用Form"""
 
     delete_version = forms.ChoiceField(

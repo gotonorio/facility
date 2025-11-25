@@ -4,13 +4,13 @@
 {% load static %} {# {% static  を使うため必要 #}
 
 {% block title %}
-修繕計画一覧
+修繕計画修正用一覧表
 {% endblock title %}
 {% block content %}
 <nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item">【SG川崎】</a>
-    <form class="navbar-item" action="{% url 'repair_plan:update_repair_plan_list' %}" method="get">
+    <form class="navbar-item" action="{% url 'repair_plan:repairplan_update_list' %}" method="get">
       {{form.version}}{{form.koujitype}}
       <button type="submit" class="button is-primary is-size-7">選択</button>
     </form>
@@ -50,7 +50,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in repair_plan_list %}
+        {% for item in repairplan_list %}
         <tr>
           {% if item.complete or not item.do_calc %}
             <td class="has-text-centered has-text-danger">{{ item.version }}</td>
@@ -74,7 +74,7 @@
             {% comment %} <td class="has-text-left is-size-7">{{ item.comment }}</td> {% endcomment %}
           {% endif %}
           <td>
-            <a href="{% url 'repair_plan:update_repair_plan' item.pk %}" class="button is-small is-primary has-text-black">
+            <a href="{% url 'repair_plan:repairplan_update' item.pk %}" class="button is-small is-primary has-text-black">
               修正
             </a>
             <a href="{% url 'repair_plan:delete_repair_plan' item.pk %}" class="button is-small is-danger">

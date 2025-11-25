@@ -19,7 +19,7 @@
 <nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item">【SG川崎】</a>
-    <form class="navbar-item" action="{% url 'repair_plan:repair_plan_by_koujitype' %}" method="get">
+    <form class="navbar-item" action="{% url 'repair_plan:repairplan_by_koujitype' %}" method="get">
       {{form.version}}
       <button type="submit" class="button is-primary is-size-7">表示</button>
     </form>
@@ -58,7 +58,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in repair_plan_by_koujitype %}
+        {% for item in repairplan_by_koujitype %}
         <tr>
           <td class="has-text-centered">{{ ver }}</td>
           <td class="has-text-left">{{ item.kouji_type__master_name }}</td>
@@ -86,7 +86,7 @@
 <script type="text/javascript">
   var graph_data = [];
 </script>
-{% for data in repair_plan_by_koujitype %}
+{% for data in repairplan_by_koujitype %}
 <script type="text/javascript">
   var list = [];
   list.push("{{data.kouji_type__master_name}}");

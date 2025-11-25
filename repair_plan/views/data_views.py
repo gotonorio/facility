@@ -62,9 +62,9 @@ class RepairPlanUpdateListView(RepairPlanListView):
     def get_template_names(self):
         """templateファイルをuser agentで切り替える"""
         if self.request.user_agent_flag == "mobile":
-            template_name = "repair_plan/update_repair_plan_list.html"
+            template_name = "repair_plan/repairplan_update_list.html"
         else:
-            template_name = "repair_plan/update_repair_plan_list.html"
+            template_name = "repair_plan/repairplan_update_list.html"
         return [template_name]
 
 
@@ -85,7 +85,7 @@ class RepairPlanUpdateView(PermissionRequiredMixin, generic.UpdateView):
         ver = qs[0]["version__version"]
         koujitype = qs[0]["kouji_type"]
         return reverse_lazy(
-            "repair_plan:update_repair_plan_list",
+            "repair_plan:repairplan_update_list",
             kwargs={"version": ver, "kouji_type": koujitype},
         )
 
@@ -107,13 +107,13 @@ class RepairPlanDeleteView(PermissionRequiredMixin, generic.DeleteView):
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
     raise_exception = True
     # 削除が成功した場合に遷移するurl
-    success_url = reverse_lazy("repair_plan:update_repair_plan_list")
+    success_url = reverse_lazy("repair_plan:repairplan_update_list")
 
 
 class RepairPlanDuplicateView(PermissionRequiredMixin, generic.FormView):
     form_class = DuplicateRepairPlanForm
     template_name = "repair_plan/duplicate_plan_form.html"
-    success_url = reverse_lazy("repair_plan:repair_plan_list")
+    success_url = reverse_lazy("repair_plan:repairplan_list")
     permission_required = "repair_plan.add_koujiname"
 
     def get_context_data(self, **kwargs):

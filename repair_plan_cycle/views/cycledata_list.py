@@ -2,7 +2,7 @@ import logging
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views import generic
-from repair_plan_cycle.form import KoujiCycleDataListForm
+from repair_plan_cycle.form import CycleDataListForm
 from repair_plan_cycle.models import KoujiCycleData
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class KoujiCycleDataListView(PermissionRequiredMixin, generic.ListView):
 
         qs = KoujiCycleData.objects.filter(version=version_id).order_by("kouji_type", "first_year")
 
-        form = KoujiCycleDataListForm(initial={"version": version_id})
+        form = CycleDataListForm(initial={"version": version_id})
         context["form"] = form
         # 追加したいデータをcontextへセット
         context["cycledata_list"] = qs

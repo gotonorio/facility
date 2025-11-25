@@ -20,7 +20,7 @@
   </div>
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      <form class="navbar-item" action="{% url 'repair_plan:repair_plan_list'%}" method="get">
+      <form class="navbar-item" action="{% url 'repair_plan:repairplan_list'%}" method="get">
         計画バージョン :{{form.version}}{{form.koujitype}}
         <button type="submit" class="button is-primary is-size-7">表示</button>
       </form>
@@ -74,7 +74,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in repair_plan_list %}
+        {% for item in repairplan_list %}
         <tr>
           {% if item.complete or not item.do_calc %}
             <td class="has-text-centered has-text-danger">{{ item.kouji_year }}</td>

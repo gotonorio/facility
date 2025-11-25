@@ -92,7 +92,7 @@
         {% for data in simulate_data %}
         <tr>
           {% if perms.repair_plan.add_koujiname %}
-            <td class="has-text-centered"><a href="{% url 'repair_plan:repair_plan_by_year' data.kouji_year version %}">{{ data.kouji_year}}</a></td>
+            <td class="has-text-centered"><a href="{% url 'repair_plan:repairplan_by_year' data.kouji_year version %}">{{ data.kouji_year}}</a></td>
           {% else %}
             <td class="has-text-centered">{{ data.kouji_year}}</td>
           {% endif %}

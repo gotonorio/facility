@@ -16,7 +16,7 @@ class RepairPlanTableView(PermissionRequiredMixin, generic.TemplateView):
     """長期修繕計画表（詳細版）"""
 
     model = KoujiName
-    template_name = "repair_plan/repair_plan_table.html"
+    template_name = "repair_plan/repairplan_table.html"
     permission_required = "repair_plan.add_koujiname"
 
     def repairplan_table(self, ver, start_year, end_year):
@@ -79,7 +79,7 @@ class RepairPlanTableView(PermissionRequiredMixin, generic.TemplateView):
         # タイトル（西暦）Listを作成
         context["year"] = [i for i in range(start_year, end_year + 1)]
         # 修繕計画表
-        context["repair_plan_list"] = list(qs_list)
+        context["repairplan_list"] = list(qs_list)
         context["form"] = form
 
         # #
@@ -118,7 +118,7 @@ class RepairPlanSimpleTableView(RepairPlanTableView):
     """長期修繕計画表（シンプル版）"""
 
     model = KoujiName
-    template_name = "repair_plan/repair_plan_simpletable.html"
+    template_name = "repair_plan/repairplan_simpletable.html"
     permission_required = "repair_plan.view_koujiname"
 
     def repairplan_table(self, ver, start_year, end_year):

@@ -38,12 +38,12 @@ class MasterPlanListView(LoginRequiredMixin, generic.TemplateView):
         return context
 
 
-class ImportRepairPlanDataView(PermissionRequiredMixin, generic.FormView):
+class RepairPlanImportView(PermissionRequiredMixin, generic.FormView):
     """同じversionが存在したら読み込み処理を中止する"""
 
     template_name = "repair_plan/import_repair_plan.html"
     form_class = ImportRepairPlanDataForm
-    success_url = reverse_lazy("repair_plan:repair_plan_list")
+    success_url = reverse_lazy("repair_plan:repairplan_list")
     # 必要な権限
     permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
@@ -53,10 +53,10 @@ class ImportRepairPlanDataView(PermissionRequiredMixin, generic.FormView):
     def form_valid(self, form):
         """forms.pyで作成したsave()関数を呼び出して保存する"""
         form.save()
-        return redirect("repair_plan:repair_plan_list")
+        return redirect("repair_plan:repairplan_list")
 
 
-class CreateKoujiTypeView(PermissionRequiredMixin, generic.CreateView):
+class KoujiTypeCreateView(PermissionRequiredMixin, generic.CreateView):
     """修繕費の工事種別マスターを登録/修正する。
     マスターデータは、数が多くはないので表示しながら入力formを表示させる。
     データが存在すれば表示し、修正か新規登録させる。
@@ -90,7 +90,7 @@ class CreateKoujiTypeView(PermissionRequiredMixin, generic.CreateView):
         return context
 
 
-class UpdateKoujiTypeView(PermissionRequiredMixin, generic.UpdateView):
+class KoujiTypeUpdateView(PermissionRequiredMixin, generic.UpdateView):
     """修繕費支出項目マスターを修正する"""
 
     model = MasterKoujiType
@@ -111,7 +111,7 @@ class UpdateKoujiTypeView(PermissionRequiredMixin, generic.UpdateView):
         return context
 
 
-class CreateMasterUnitView(PermissionRequiredMixin, generic.CreateView):
+class MasterUnitCreateView(PermissionRequiredMixin, generic.CreateView):
     """数量単位マスターを登録する。
     マスターデータは、数が多くはないので表示しながら入力formを表示させる。
     データが存在すれば表示し、修正か新規登録させる。

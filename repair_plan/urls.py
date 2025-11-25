@@ -6,68 +6,73 @@ app_name = "repair_plan"
 urlpatterns = [
     # マスタープランの表示
     path(
-        "repair_masterplan_list/",
+        "masterplan_list/",
         master_data_views.MasterPlanListView.as_view(),
-        name="repair_masterplan_list",
+        name="masterplan_list",
     ),
     # 修繕計画のリスト表示
     path(
-        "repair_plan_list/",
+        "repairplan_list/",
         list_views.RepairPlanListView.as_view(),
-        name="repair_plan_list",
+        name="repairplan_list",
     ),
+    # 年度別修繕計画の表示
     path(
-        "repair_plan_by_year/<int:year>/<int:ver>",
+        "repairplan_by_year/<int:year>/<int:ver>",
         list_views.RepairPlanByYearView.as_view(),
-        name="repair_plan_by_year",
+        name="repairplan_by_year",
     ),
+    # 工事種別別修繕計画の表示
     path(
-        "repair_plan_by_koujitype/",
+        "repairplan_by_koujitype/",
         list_views.RepairPlanByKoujitypeView.as_view(),
-        name="repair_plan_by_koujitype",
+        name="repairplan_by_koujitype",
     ),
     # 修繕計画のテーブル表示
     path(
-        "repair_plan_table/",
+        "repairplan_table/",
         table_views.RepairPlanTableView.as_view(),
-        name="repair_plan_table",
+        name="repairplan_table",
     ),
+    # 簡易版修繕計画表の表示
     path(
-        "repair_plan_simpletable/",
+        "repairplan_simpletable/",
         table_views.RepairPlanSimpleTableView.as_view(),
-        name="repair_plan_simpletable",
+        name="repairplan_simpletable",
     ),
-    # データの登録
+    # マスタデータの登録
     path(
         "create_master_plan/",
         data_views.MasterPlanCreateView.as_view(),
         name="create_master_plan",
     ),
+    # 修繕計画データの登録
     path(
         "add_repair_plan/",
         data_views.ReparPlanCreateView.as_view(),
         name="add_repair_plan",
     ),
-    # データの修正
+    # 計画初年度の修繕費会計残高の修正
     path(
         "update_master_plan/<int:pk>",
         data_views.MasterPlanUpdateView.as_view(),
         name="update_master_plan",
     ),
+    # 長期修繕計画のデータ編集用一覧表
     path(
-        "update_repair_plan_list/",
+        "repairplan_update_list/",
         data_views.RepairPlanUpdateListView.as_view(),
-        name="update_repair_plan_list",
+        name="repairplan_update_list",
     ),
     path(
-        "update_repair_plan_list/<int:version>/<int:kouji_type>",
+        "repairplan_update_list/<int:version>/<int:kouji_type>",
         data_views.RepairPlanUpdateListView.as_view(),
-        name="update_repair_plan_list",
+        name="repairplan_update_list",
     ),
     path(
-        "update_repair_plan/<int:pk>",
+        "repairplan_update/<int:pk>",
         data_views.RepairPlanUpdateView.as_view(),
-        name="update_repair_plan",
+        name="repairplan_update",
     ),
     # データ削除
     path(
@@ -89,23 +94,23 @@ urlpatterns = [
     # マスタデータの作成
     path(
         "create_koujitype/",
-        master_data_views.CreateKoujiTypeView.as_view(),
+        master_data_views.KoujiTypeCreateView.as_view(),
         name="create_koujitype",
     ),
     path(
         "update_koujitype/<int:pk>",
-        master_data_views.UpdateKoujiTypeView.as_view(),
+        master_data_views.KoujiTypeUpdateView.as_view(),
         name="update_koujitype",
     ),
     path(
         "create_unitname/",
-        master_data_views.CreateMasterUnitView.as_view(),
+        master_data_views.MasterUnitCreateView.as_view(),
         name="create_unitname",
     ),
     # 長期修繕計画データのインポート
     path(
         "import_repair_plan/",
-        master_data_views.ImportRepairPlanDataView.as_view(),
+        master_data_views.RepairPlanImportView.as_view(),
         name="import_repair_plan",
     ),
 ]

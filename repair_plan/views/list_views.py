@@ -23,10 +23,10 @@ class RepairPlanListView(LoginRequiredMixin, generic.TemplateView):
     def get_template_names(self):
         """templateファイルをuser agentで切り替える"""
         if self.request.user_agent_flag == "mobile":
-            template_name = "repair_plan/repair_plan_pc.html"
-            # template_name = "repair_plan/repair_plan_mobile.html"
+            template_name = "repair_plan/repairplan_pc.html"
+            # template_name = "repair_plan/repairplan_mobile.html"
         else:
-            template_name = "repair_plan/repair_plan_pc.html"
+            template_name = "repair_plan/repairplan_pc.html"
         return [template_name]
 
     def get_context_data(self, **kwargs):
@@ -61,7 +61,7 @@ class RepairPlanListView(LoginRequiredMixin, generic.TemplateView):
 
         # formに初期値を渡す。
         form = RepairPlanListForm(is_manager, initial={"koujitype": koujitype, "version": ver})
-        context["repair_plan_list"] = repair_plan
+        context["repairplan_list"] = repair_plan
         context["form"] = form
         context["start_year"] = -settings.INITIAL_YEAR
         context["total"] = int(total)
@@ -72,7 +72,7 @@ class RepairPlanByYearView(PermissionRequiredMixin, generic.TemplateView):
     """年度を指定して長期修繕計画を表示"""
 
     model = KoujiName
-    template_name = "repair_plan/repair_plan_by_year.html"
+    template_name = "repair_plan/repairplan_by_year.html"
     permission_required = "repair_plan.add_koujiname"
 
     def get_context_data(self, **kwargs):
@@ -95,7 +95,7 @@ class RepairPlanByYearView(PermissionRequiredMixin, generic.TemplateView):
             #     continue
             total = total + (item.unit_price * item.kouji_quantity)
 
-        context["repair_plan_by_year"] = repair_plan
+        context["repairplan_by_year"] = repair_plan
         context["start_year"] = -settings.INITIAL_YEAR
         context["total"] = int(total)
         return context
@@ -108,7 +108,7 @@ class RepairPlanByKoujitypeView(PermissionRequiredMixin, generic.TemplateView):
     """
 
     model = KoujiName
-    template_name = "repair_plan/repair_plan_by_koujitype.html"
+    template_name = "repair_plan/repairplan_by_koujitype.html"
     permission_required = "repair_plan.add_koujiname"
 
     def get_context_data(self, **kwargs):
@@ -139,7 +139,7 @@ class RepairPlanByKoujitypeView(PermissionRequiredMixin, generic.TemplateView):
         # forms.pyのKeikakuListFormに初期値を設定する．http://i2bskn.hateblo.jp/entry/20120826/1345936779
         form = RepairPlanListForm(is_manager, initial={"version": ver})
         context["ver"] = ver
-        context["repair_plan_by_koujitype"] = qs
+        context["repairplan_by_koujitype"] = qs
         context["form"] = form
         context["start_year"] = -settings.INITIAL_YEAR
         context["total"] = int(total)

@@ -74,7 +74,7 @@ class RepairPlanView(LoginRequiredMixin, generic.TemplateView):
         """templateファイルを切り替える"""
         if self.request.user_agent_flag == "mobile":
             template_name = "register/repair_plan/repair_plan.html"
-            # template_name = "register/repair_plan/repair_plan_mobile.html"
+            # template_name = "register/repair_plan/repairplan_mobile.html"
         else:
             template_name = "register/repair_plan/repair_plan.html"
         return [template_name]

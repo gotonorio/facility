@@ -66,13 +66,6 @@ class SimulateDataForm(forms.Form):
             )
             self.fields["keikaku_ver"].choices = [(v, v) for v in versions]
 
-            # --------------------------
-            # ★ 最大 version を初期値に設定
-            # --------------------------
-            if versions:
-                max_version = versions[0]  # order_by('-version') のため先頭が最大
-                self.initial["keikaku_ver"] = max_version
-
         except Exception:
             # DB未マイグレート or モデルが空の時でもエラーにしない
             self.fields["keikaku_ver"].choices = []
