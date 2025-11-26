@@ -38,7 +38,7 @@
             <hr class="dropdown-divider">
             <a class="navbar-item" href="{% url 'register:user_list' %}">登録者一覧</a>
             <a class="navbar-item" href="{% url 'register:pwd_update' user.pk %}">パスワード変更</a>
-            {% comment %} <a class="navbar-item" href="{% url 'control:control_list' %}">コントロールデータ修正</a> {% endcomment %}
+            <a class="navbar-item" href="{% url 'control:control_list' %}">コントロールデータ修正</a>
           </div>
         </div>
       {% endif %}

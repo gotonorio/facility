@@ -27,4 +27,5 @@ urlpatterns = [
     path("parking/", include("parking.urls")),
     path("bicycle/", include("bicycle.urls")),
     path("motorcycle/", include("motorcycle.urls")),
+    path("control/", include("control.urls", namespace="control")),
 ]

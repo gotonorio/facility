@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     "parking.apps.ParkingConfig",
     "bicycle.apps.BicycleConfig",
     "motorcycle.apps.MotorcycleConfig",
+    "control.apps.ControlConfig",
 ]
 
 MIDDLEWARE = [

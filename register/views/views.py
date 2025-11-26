@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views import generic
+
+from control.models import ControlRecord
 from register.forms import LoginForm
 
 User = get_user_model()
@@ -14,13 +16,13 @@ class Login(LoginView):
     form_class = LoginForm
     template_name = "register/login.html"
 
-    # def get_context_data(self, **kwargs):
-    #     """ログインページで仮登録メニューを表示させる"""
-    #     context = super().get_context_data(**kwargs)
-    #     qs = ControlRecord.objects.values("tmp_user_flg")
-    #     if qs.exists():
-    #         context["tmp_user_flg"] = qs[0]["tmp_user_flg"]
-    #     return context
+    def get_context_data(self, **kwargs):
+        """ログインページで仮登録メニューを表示させる"""
+        context = super().get_context_data(**kwargs)
+        qs = ControlRecord.objects.values("tmp_user_flg")
+        if qs.exists():
+            context["tmp_user_flg"] = qs[0]["tmp_user_flg"]
+        return context
 
 
 class Logout(LoginRequiredMixin, LogoutView):
