@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+{% load my_templatetags %}
+{% load humanize %}
+
+{% block title %}
+駐輪場 一覧
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black  is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <form class="navbar-item" action="" method="get">
+      {{form.year}}{{form.month}}
+      <button type="submit" class="button is-primary is-size-7">表示</button>
+    </form>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+      {% if perms.bicycle.add_bicyclespace %}
+        <a class="navbar-item" href="{% url 'bicycle:roomlist' %}">住戸別駐輪場</a>
+        <a class="navbar-item" href="{% url 'bicycle:contract_num' %}">住戸別契約数</a>
+      {% endif %}
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'bicycle:list' %}">【戻る】</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container is-fluid">
+
+  <div class="content">
+    <h4>{{title}} 駐輪場 (利用状況 = {{count_use}})</h4>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">部屋番号</th>
+          <th class="has-text-centered">契約数</th>
+          <th class="has-text-centered">使用料金</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for list in bicycle_list %}
+        <tr>
+          <td class="has-text-right">{{list.room_number}}</td>
+          <td class="has-text-right">{{list.num}}</td>
+          <td class="has-text-right">{{list.fee}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <br>
+</div>
+{% endblock %}

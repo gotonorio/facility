@@ -36,18 +36,16 @@
           {% endif %}
         </div>
       </div>
-      {% comment %}
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link is-size-6">駐輪場</a>
         <div class="navbar-dropdown">
           <a href="{% url 'bicycle:list' %}" class="navbar-item">使用状況</a>
           {% if perms.parking.add_parkingspace %}
-            <a class="navbar-item" href="{% url 'kurasel_translator:read_bicycle' %}">kuraselチェック</a>
+            {% comment %} <a class="navbar-item" href="{% url 'kurasel_translator:read_bicycle' %}">kuraselチェック</a> {% endcomment %}
           {% endif %}
         </div>
       </div>
       <a href="{% url 'motorcycle:list' %}" class="navbar-item">バイク置場</a>
-      {% endcomment %}
     </div>
     <div class="navbar-end">
     <div class="navbar-item">

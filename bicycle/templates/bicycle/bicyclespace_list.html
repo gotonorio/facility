@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load static %}
+{% load my_templatetags %}
+{% load humanize %}
+
+{% block title %}
+駐輪場 一覧
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black  is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <form class="navbar-item" action="{% url 'bicycle:list'%}" method="get">
+      {{form.year}}{{form.month}}
+      <button type="submit" class="button is-primary is-size-7">表示</button>
+    </form>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+      {% if perms.parking.add_parkingspace %}
+        <a class="navbar-item" href="{% url 'bicycle:roomlist' %}">住戸別駐輪場</a>
+        <a class="navbar-item" href="{% url 'bicycle:contract_num' %}">住戸別契約数</a>
+      {% endif %}
+    </div>
+    <div class="navbar-end">
+      {% if perms.parking.add_parkingspace %}
+        {% comment %} <a class="navbar-item" href="{% url 'bicycle:export' year=year month=month %}">駐輪場データ出力</a> {% endcomment %}
+        <a class="navbar-item" href="{% url 'bicycle:monthly_process' %}">月次処理</a>
+      {% endif %}
+      <a class="navbar-item" href="{% url 'register:facility' %}">【戻る】</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content has-text-centered">
+    <h4>{{title}} 駐輪場 利用状況</h4>
+    {% if perms.parking.add_parkingspace %}
+      <p>使用料合計 {{total|intcomma}}円</p>
+    {% endif %}
+  </div>
+  <div class='columns'>
+    <div class='column is-3'>
+      <div class="content has-text-centered">
+        <h5>平置き1〜45</h5>
+      </div>
+      <div class="table-container">
+        <table class="table table_center_nowrap is-striped is-narrow">
+          <thead>
+            <tr>
+              <th class="has-text-centered">No</th>
+              {% if perms.parking.add_parkingspace %}
+                <th class="has-text-centered">室番</th>
+              {% else %}
+                <th class="has-text-centered">場所</th>
+              {% endif %}
+              <th class="has-text-centered">状況</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for list in space1 %}
+            <tr>
+              {% if perms.parking.add_parkingspace %}
+                <td class="has-text-centered">
+                  <a href="{% url 'bicycle:update' list.3 %}">{{list.0}}</a>
+                </td>
+                <td class="has-text-centered">{{list.4}}</td>
+              {% else %}
+                <td class="has-text-centered">{{list.0}}</td>
+                <td class="has-text-centered">{{list.1}}</td>
+              {% endif %}
+              {% if list.2 == '空き' %}
+                <td class="has-text-centered"></td>
+              {% else %}
+                <td class="has-text-centered">{{list.2}}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class='column is-3'>
+      <div class="content has-text-centered">
+        <h5>棟前101〜227</h5>
+      </div>
+      <div class="table-container">
+        <table class="table table_center_nowrap is-striped is-narrow">
+          <thead>
+            <tr>
+              <th class="has-text-centered">No</th>
+              {% if perms.parking.add_parkingspace %}
+                <th class="has-text-centered">室番</th>
+              {% else %}
+                <th class="has-text-centered">場所</th>
+              {% endif %}
+              <th class="has-text-centered">状況</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for list in space2 %}
+            <tr>
+              {% if perms.parking.add_parkingspace %}
+                <td class="has-text-centered">
+                  <a href="{% url 'bicycle:update' list.3 %}">{{list.0}}</a>
+                </td>
+                <td class="has-text-centered">{{list.4}}</td>
+              {% else %}
+                <td class="has-text-centered">{{list.0}}</td>
+                <td class="has-text-centered">{{list.1}}</td>
+              {% endif %}
+              {% if list.2 == '空き' %}
+                <td class="has-text-centered"></td>
+              {% else %}
+                <td class="has-text-centered">{{list.2}}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+    <div class='column is-3'>
+      <div class="content has-text-centered">
+        <h5>棟東301〜416</h5>
+      </div>
+      <div class="table-container">
+        <table class="table table_center_nowrap is-striped is-narrow">
+          <thead>
+            <tr>
+              <th class="has-text-centered">No</th>
+              {% if perms.parking.add_parkingspace %}
+                <th class="has-text-centered">室番</th>
+              {% else %}
+                <th class="has-text-centered">場所</th>
+              {% endif %}
+              <th class="has-text-centered">状況</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for list in space3 %}
+            <tr>
+              {% if perms.parking.add_parkingspace %}
+                <td class="has-text-centered">
+                  <a href="{% url 'bicycle:update' list.3 %}">{{list.0}}</a>
+                </td>
+                <td class="has-text-centered">{{list.4}}</td>
+              {% else %}
+                <td class="has-text-centered">{{list.0}}</td>
+                <td class="has-text-centered">{{list.1}}</td>
+              {% endif %}
+              {% if list.2 == '空き' %}
+                <td class="has-text-centered"></td>
+              {% else %}
+                <td class="has-text-centered">{{list.2}}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+    <div class='column is-3'>
+      <div class="content has-text-centered">
+        <h5>棟北501〜592</h5>
+      </div>
+      <div class="table-container">
+        <table class="table table_center_nowrap is-striped is-narrow">
+          <thead>
+            <tr>
+              <th class="has-text-centered">No</th>
+              {% if perms.parking.add_parkingspace %}
+                <th class="has-text-centered">室番</th>
+              {% else %}
+                <th class="has-text-centered">場所</th>
+              {% endif %}
+              <th class="has-text-centered">状況</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for list in space4 %}
+            <tr>
+              {% if perms.parking.add_parkingspace %}
+                <td class="has-text-centered">
+                  <a href="{% url 'bicycle:update' list.3 %}">{{list.0}}</a>
+                </td>
+                <td class="has-text-centered">{{list.4}}</td>
+              {% else %}
+                <td class="has-text-centered">{{list.0}}</td>
+                <td class="has-text-centered">{{list.1}}</td>
+              {% endif %}
+              {% if list.2 == '空き' %}
+                <td class="has-text-centered"></td>
+              {% else %}
+                <td class="has-text-centered">{{list.2}}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <br>
+</div>
+{% endblock %}

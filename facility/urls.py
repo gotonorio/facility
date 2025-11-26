@@ -25,4 +25,6 @@ urlpatterns = [
     path("repair_plan_simulator/", include("repair_plan_simulator.urls", namespace="repair_plan_simulator")),
     path("repair_plan_cycle/", include("repair_plan_cycle.urls", namespace="repair_plan_cycle")),
     path("parking/", include("parking.urls")),
+    path("bicycle/", include("bicycle.urls")),
+    path("motorcycle/", include("motorcycle.urls")),
 ]
