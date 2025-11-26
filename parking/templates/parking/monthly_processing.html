@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% load my_templatetags %}
+{% load humanize %}
+
+{% block title %}
+駐車場月次処理
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black  is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <div class="navbar-item" >【月次処理】</div>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'parking:list' %} ">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>{{title}} 駐車場 月次処理</h4>
+  </div>
+</div>
+    <br>
+<div class="container is-fluid">
+  <div class="content">
+    <form method='POST' enctype="multipart/form-data">
+      {% csrf_token %}
+      <table>
+      {{form}}
+      </table>
+      <button type="submit" class="button is-primary">開始</button>
+      <a class="button is-danger" href="javascript:void(0);" onclick="window.history.back();">戻る</a>
+    </form>
+  </div>
+  <br>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow ">
+      <thead>
+        <tr>
+          <th class="has-text-centered">年月</th>
+          <th class="has-text-centered">空き駐車場</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in list %}
+        <tr>
+          <td class="has-text-centered">{{d.payment_date}}</td>
+          <td class="has-text-centered">{{d.count}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+{% load my_templatetags %}
+{% load humanize %}
+{% load static %} {# {% static  を使うため必要 #}
+
+{% block title %}
+駐車場稼働率
+{% endblock title %}
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <form class="navbar-item" action="" method="get">
+      {{form.year}}{{form.month}}
+      <button type="submit" class="button is-primary is-size-7">表示</button>
+    </form>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'parking:list' %}">【戻る】</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>{{title}}</h4>
+    <ul>
+      <li>ゴミ置き場側の機械式下段駐車場の11台は使用中止（埋め戻し予定） </li>
+    </ul>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">場所</th>
+          <th class="has-text-centered">区画数</th>
+          <th class="has-text-centered">使用中</th>
+          <th class="has-text-centered">空き</th>
+          <th class="has-text-centered">稼働率</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="has-text-centered">{{plain.0}}</td>
+          <td class="has-text-right">{{plain.1}} 台</td>
+          <td class="has-text-right">{{plain.3}} 台</td>
+          <td class="has-text-right">{{plain.2}} 台</td>
+          <td class="has-text-right">{{plain.4}} %</td>
+        </tr>
+        <tr>
+          <td class="has-text-centered">{{machine_up.0}}</td>
+          <td class="has-text-right">{{machine_up.1}} 台</td>
+          <td class="has-text-right">{{machine_up.3}} 台</td>
+          <td class="has-text-right">{{machine_up.2}} 台</td>
+          <td class="has-text-right">{{machine_up.4}} %</td>
+        </tr>
+        <tr>
+          <td class="has-text-centered">{{machine_down.0}}</td>
+          <td class="has-text-right">{{machine_down.1}} 台</td>
+          <td class="has-text-right">{{machine_down.3}} 台</td>
+          <td class="has-text-right">{{machine_down.2}} 台</td>
+          <td class="has-text-right">{{machine_down.4}} %</td>
+        </tr>
+        <tr>
+          <td class="has-text-centered">合計</td>
+          <td class="has-text-right">{{plain.1|add:machine_up.1|add:machine_down.1}} 台</td>
+          <td class="has-text-right">{{plain.3|add:machine_up.3|add:machine_down.3}} 台</td>
+          <td class="has-text-right">{{plain.2|add:machine_up.2|add:machine_down.2}} 台</td>
+          <td class="has-text-right">{{utilization_rate}} %</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <br>
+</div>
+<br>
+{% endblock %}

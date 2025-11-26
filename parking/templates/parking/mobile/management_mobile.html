@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+{% load my_templatetags %}
+{% load humanize %}
+
+{% block title %}
+駐車場 管理
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <div class="navbar-item" >【駐車場 管理】</div>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+      {% if not update %}
+        <div class="navbar-item">
+          <form class="navbar-item" action="" method="get">
+            {{form.year}}{{form.month}}{{form.parking_type}}
+            <button type="submit" class="button is-primary is-size-7">表示</button>
+          </form>
+        </div>
+      {% endif %}
+    </div>
+    <div class="navbar-end">
+      {% comment %} 月次処理はmanager {% endcomment %}
+      {% if perms.parking.add_parkingspace %}
+        <a class="navbar-item" href="{% url 'parking:monthly' %}">月次処理</a>
+      {% endif %}
+    <a class="navbar-item" href="{% url 'parking:list' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<!-- メッセージフレームワーク -->
+{% if messages %}
+<div class="container" style="margin-top:1rem;">
+  <div class="notification is-info">
+    <button class="delete" type="button"></button>
+    {% for message in messages %}
+    <p> {{ message }}</p>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+<br>
+<div class="container">
+  <div class="content has-text-centered">
+    <h4>{{title}} 利用状況</h4>
+  </div>
+  <div class="table-container">
+    <table class="table table_center_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">No</th>
+          <th class="has-text-centered">部屋番号</th>
+          <th class="has-text-centered">氏名</th>
+          <th class="has-text-centered">備考</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for list in parking_list %}
+        <tr>
+          <td class="has-text-centered">
+            <a href="{% url 'parking:update' list.pk %}">
+            {{list.no}}
+            </a>
+          </td>
+          <td class="has-text-right">{{list.room_number}}</td>
+          {% if list.name is None %}
+          <td class="has-text-centered"></td>
+          {% else %}
+          <td class="has-text-centered">{{list.name}}</td>
+          {% endif %}
+          <td class="has-text-left is-size-7">{{list.comment}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <br>
+</div>
+{% endblock %}

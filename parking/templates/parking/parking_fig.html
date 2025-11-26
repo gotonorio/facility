@@ -1,0 +1,254 @@
+{% extends "base_fig.html" %}
+{% load static %}
+
+{% block title %}
+駐車場 状況図
+{% endblock title %}
+{% block head %}
+<link href="{% static 'parking/parking_fig.css' %}" rel="stylesheet">
+<style>
+    .set_right {
+        text-align: right;
+    }
+    .td_crlf {
+        width: 26px;
+        height: 26px;
+    }
+</style>
+{% endblock head %}
+
+{% block content %}
+<div class="topnav">
+    <form action="{% url 'parking:fig'%}" method="get">
+        <div class="menu_container">
+            <div class="grid1">
+                {{form.year}}
+                {{form.month}}
+                <button class="button_form" type="submit">表示</button>
+            </div>
+            <div class="grid2">
+                <a href="{% url 'parking:list' %}" class="button_form">リスト表示</a>
+                <a class="button_form" href="{% url 'register:facility' %}">戻る</a>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="inline_block">
+    <h3>{{title}}</h3>
+</div>
+<table class="table_center_nowrap table_fix">
+    <tr>
+        <td colspan="12" class="set_right">凡例 :</td>
+        <td class="td_w" colspan="2">使用中</td>
+        <td class="td_w_empty" colspan="2">空き</td>
+        <td class="td_w_cancel" colspan="2">解約予定</td>
+        <td class="td_w_reserve" colspan="2">予約中</td>
+    </tr>
+    <tr>
+        <td class="td_crlf"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="td_trash" rowspan="4" colspan="3">ゴミ置き場</td>
+        <td class="td_trash" rowspan="4" colspan="3">駐輪場</td>
+        <td {% if sect11.status_of_use == '空き' %} class="td_w_empty"{% elif sect11.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect11.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">11</td>
+        <td rowspan="4" colspan="3"></td>
+        <td {% if sect15.status_of_use == '空き' %} class="td_w_empty"{% elif sect15.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect15.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">15</td>
+        <td {% if sect19.status_of_use == '空き' %} class="td_w_empty"{% elif sect19.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect19.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">19</td>
+        <td colspan="3"></td>
+        <td {% if sect23.status_of_use == '空き' %} class="td_w_empty"{% elif sect23.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect23.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">23</td>
+        <td class="td_w" rowspan="2" colspan="4"></td>
+    </tr>
+    <tr>
+        <td {% if sect1.status_of_use == '空き' %} class="td_h_empty"{% elif sect1.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect1.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">1</td>
+        <td {% if sect2.status_of_use == '空き' %} class="td_h_empty"{% elif sect2.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect2.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">2</td>
+        <td {% if sect3.status_of_use == '空き' %} class="td_h_empty"{% elif sect3.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect3.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">3</td>
+        <td {% if sect4.status_of_use == '空き' %} class="td_h_empty"{% elif sect4.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect4.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">4</td>
+        <td {% if sect5.status_of_use == '空き' %} class="td_h_empty"{% elif sect5.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect5.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">5</td>
+        <td {% if sect6.status_of_use == '空き' %} class="td_h_empty"{% elif sect6.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect6.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">6</td>
+        <td {% if sect12.status_of_use == '空き' %} class="td_w_empty"{% elif sect12.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect12.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">12</td>
+        <td {% if sect16.status_of_use == '空き' %} class="td_w_empty"{% elif sect16.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect16.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">16</td>
+        <td {% if sect20.status_of_use == '空き' %} class="td_w_empty"{% elif sect20.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect20.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">20</td>
+        <td colspan="3"></td>
+        <td {% if sect24.status_of_use == '空き' %} class="td_w_empty"{% elif sect24.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect24.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">24</td>
+    </tr>
+    <tr>
+        <td {% if sect13.status_of_use == '空き' %} class="td_w_empty"{% elif sect13.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect13.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">13</td>
+        <td {% if sect17.status_of_use == '空き' %} class="td_w_empty"{% elif sect17.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect17.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">17</td>
+        <td {% if sect21.status_of_use == '空き' %} class="td_w_empty"{% elif sect21.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect21.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">21</td>
+        <td colspan="3"></td>
+        <td {% if sect25.status_of_use == '空き' %} class="td_w_empty"{% elif sect25.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect25.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">25</td>
+        <td {% if sect27.status_of_use == '空き' %} class="td_h_empty"{% elif sect27.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect27.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">27</td>
+        <td {% if sect28.status_of_use == '空き' %} class="td_h_empty"{% elif sect28.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect28.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">28</td>
+        <td {% if sect29.status_of_use == '空き' %} class="td_h_empty"{% elif sect29.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect29.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">29</td>
+        <td {% if sect30.status_of_use == '空き' %} class="td_h_empty"{% elif sect30.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect30.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">30</td>
+    </tr>
+    <tr>
+		<td rowspan="4" colspan="6"></td>
+        <td {% if sect14.status_of_use == '空き' %} class="td_w_empty"{% elif sect14.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect14.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">14</td>
+        <td {% if sect18.status_of_use == '空き' %} class="td_w_empty"{% elif sect18.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect18.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">18</td>
+        <td {% if sect22.status_of_use == '空き' %} class="td_w_empty"{% elif sect22.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect22.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">22</td>
+        <td colspan="3"></td>
+        <td {% if sect26.status_of_use == '空き' %} class="td_w_empty"{% elif sect26.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect26.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">26</td>
+    </tr>
+    <tr>
+        <td colspan="24"></td>
+        <td {% if sect31.status_of_use == '空き' %} class="td_w_empty"{% elif sect31.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect31.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">31</td>
+    </tr>
+    <tr>
+        <td colspan="24"></td>
+        <td {% if sect32.status_of_use == '空き' %} class="td_w_empty"{% elif sect32.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect32.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">32</td>
+    </tr>
+    <tr>
+        <td colspan="11">機械式駐車場（下段 No.44〜No.64 使用中止）</td>
+        <td colspan="13"></td>
+        <td {% if sect33.status_of_use == '空き' %} class="td_w_empty"{% elif sect33.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect33.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">33</td>
+    </tr>
+    <tr>
+        <td rowspan="2" colspan="3"></td>
+        <td rowspan="6" colspan="3"></td>
+        <td {% if sect43.status_of_use == '空き' %} class="td_sh_empty"{% elif sect43.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect43.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_h"{% endif %} rowspan="2">43</td>
+        <td {% if sect45.status_of_use == '空き' %} class="td_sh_empty"{% elif sect45.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect45.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_h"{% endif %} rowspan="2">45</td>
+        <td {% if sect47.status_of_use == '空き' %} class="td_sh_empty"{% elif sect47.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect47.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_h"{% endif %} rowspan="2">47</td>
+        <td {% if sect49.status_of_use == '空き' %} class="td_sh_empty"{% elif sect49.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect49.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_h"{% endif %} rowspan="2">49</td>
+        <td {% if sect51.status_of_use == '空き' %} class="td_sh_empty"{% elif sect51.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect51.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_h"{% endif %} rowspan="2">51</td>
+        <td {% if sect53.status_of_use == '空き' %} class="td_sh_empty"{% elif sect53.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect53.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_h"{% endif %} rowspan="2">53</td>
+        <td {% if sect55.status_of_use == '空き' %} class="td_sh_empty"{% elif sect55.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect55.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_h"{% endif %} rowspan="2">55</td>
+        <td {% if sect57.status_of_use == '空き' %} class="td_sh_empty"{% elif sect57.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect57.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_h"{% endif %} rowspan="2">57</td>
+        <td {% if sect59.status_of_use == '空き' %} class="td_sh_empty"{% elif sect59.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect59.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_h"{% endif %} rowspan="2">59</td>
+        <td {% if sect61.status_of_use == '空き' %} class="td_sh_empty"{% elif sect61.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect61.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_h"{% endif %} rowspan="2">61</td>
+        <td {% if sect63.status_of_use == '空き' %} class="td_sh_empty"{% elif sect63.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect63.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_h"{% endif %} rowspan="2">63</td>
+        <td rowspan="2"></td>
+        <td {% if sect87.status_of_use == '空き' %} class="td_h_empty"{% elif sect87.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect87.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">87</td>
+        <td {% if sect88.status_of_use == '空き' %} class="td_h_empty"{% elif sect88.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect88.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">88</td>
+        <td {% if sect89.status_of_use == '空き' %} class="td_h_empty"{% elif sect89.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect89.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">89</td>
+        <td {% if sect90.status_of_use == '空き' %} class="td_h_empty"{% elif sect90.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect90.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">90</td>
+        <td {% if sect91.status_of_use == '空き' %} class="td_h_empty"{% elif sect91.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect91.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">91</td>
+        <td {% if sect92.status_of_use == '空き' %} class="td_h_empty"{% elif sect92.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect92.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">92</td>
+        <td {% if sect93.status_of_use == '空き' %} class="td_h_empty"{% elif sect93.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect93.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">93</td>
+        <td {% if sect94.status_of_use == '空き' %} class="td_h_empty"{% elif sect94.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect94.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">94</td>
+        <td {% if sect95.status_of_use == '空き' %} class="td_h_empty"{% elif sect95.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect95.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">95</td>
+        <td {% if sect96.status_of_use == '空き' %} class="td_h_empty"{% elif sect96.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect96.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">96</td>
+        <td rowspan="4" colspan="2"></td>
+        <td {% if sect34.status_of_use == '空き' %} class="td_w_empty"{% elif sect34.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect34.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">34</td>
+    </tr>
+    <tr>
+        {% comment %}
+        <td class="td_sh has-text-danger">44</td>
+        <td class="td_sh has-text-danger">46</td>
+        <td class="td_sh has-text-danger">48</td>
+        <td class="td_sh has-text-danger">50</td>
+        <td class="td_sh has-text-danger">52</td>
+        <td class="td_sh has-text-danger">54</td>
+        <td class="td_sh has-text-danger">56</td>
+        <td class="td_sh has-text-danger">58</td>
+        <td class="td_sh has-text-danger">60</td>
+        <td class="td_sh has-text-danger">62</td>
+        <td class="td_sh has-text-danger">64</td>
+        {% endcomment %}
+        <td {% if sect35.status_of_use == '空き' %} class="td_w_empty"{% elif sect35.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect35.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">35</td>
+    </tr>
+    <tr>
+        <td rowspan="4"></td>
+        <td {% if sect107.status_of_use == '空き' %} class="td_w_empty"{% elif sect107.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect107.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">107</td>
+        <td {% if sect65.status_of_use == '空き' %} class="td_sh_empty"{% elif sect65.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect65.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>65</td>
+        <td {% if sect67.status_of_use == '空き' %} class="td_sh_empty"{% elif sect67.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect67.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>67</td>
+        <td {% if sect69.status_of_use == '空き' %} class="td_sh_empty"{% elif sect69.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect69.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>69</td>
+        <td {% if sect71.status_of_use == '空き' %} class="td_sh_empty"{% elif sect71.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect71.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>71</td>
+        <td {% if sect73.status_of_use == '空き' %} class="td_sh_empty"{% elif sect73.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect73.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>73</td>
+        <td {% if sect75.status_of_use == '空き' %} class="td_sh_empty"{% elif sect75.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect75.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>75</td>
+        <td {% if sect77.status_of_use == '空き' %} class="td_sh_empty"{% elif sect77.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect77.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>77</td>
+        <td {% if sect79.status_of_use == '空き' %} class="td_sh_empty"{% elif sect79.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect79.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>79</td>
+        <td {% if sect81.status_of_use == '空き' %} class="td_sh_empty"{% elif sect81.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect81.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>81</td>
+        <td {% if sect83.status_of_use == '空き' %} class="td_sh_empty"{% elif sect83.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect83.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>83</td>
+        <td {% if sect85.status_of_use == '空き' %} class="td_sh_empty"{% elif sect85.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect85.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>85</td>
+        <td rowspan="2"></td>
+        <td {% if sect97.status_of_use == '空き' %} class="td_h_empty"{% elif sect97.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect97.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">97</td>
+        <td {% if sect98.status_of_use == '空き' %} class="td_h_empty"{% elif sect98.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect98.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">98</td>
+        <td {% if sect99.status_of_use == '空き' %} class="td_h_empty"{% elif sect99.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect99.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">99</td>
+        <td {% if sect100.status_of_use == '空き' %} class="td_h_empty"{% elif sect100.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect100.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">100</td>
+        <td {% if sect101.status_of_use == '空き' %} class="td_h_empty"{% elif sect101.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect101.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">101</td>
+        <td {% if sect102.status_of_use == '空き' %} class="td_h_empty"{% elif sect102.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect102.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">102</td>
+        <td {% if sect103.status_of_use == '空き' %} class="td_h_empty"{% elif sect103.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect103.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">103</td>
+        <td {% if sect104.status_of_use == '空き' %} class="td_h_empty"{% elif sect104.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect104.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">104</td>
+        <td {% if sect105.status_of_use == '空き' %} class="td_h_empty"{% elif sect105.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect105.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">105</td>
+        <td {% if sect106.status_of_use == '空き' %} class="td_h_empty"{% elif sect106.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect106.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">106</td>
+        <td {% if sect36.status_of_use == '空き' %} class="td_w_empty"{% elif sect36.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect36.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">36</td>
+    </tr>
+    <tr>
+        <td {% if sect108.status_of_use == '空き' %} class="td_w_empty"{% elif sect108.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect108.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">108</td>
+        <td {% if sect66.status_of_use == '空き' %} class="td_sh_empty"{% elif sect66.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect66.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>66</td>
+        <td {% if sect68.status_of_use == '空き' %} class="td_sh_empty"{% elif sect68.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect68.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>68</td>
+        <td {% if sect70.status_of_use == '空き' %} class="td_sh_empty"{% elif sect70.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect70.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>70</td>
+        <td {% if sect72.status_of_use == '空き' %} class="td_sh_empty"{% elif sect72.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect72.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>72</td>
+        <td {% if sect74.status_of_use == '空き' %} class="td_sh_empty"{% elif sect74.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect74.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>74</td>
+        <td {% if sect76.status_of_use == '空き' %} class="td_sh_empty"{% elif sect76.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect76.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>76</td>
+        <td {% if sect78.status_of_use == '空き' %} class="td_sh_empty"{% elif sect78.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect78.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>78</td>
+        <td {% if sect80.status_of_use == '空き' %} class="td_sh_empty"{% elif sect80.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect80.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>80</td>
+        <td {% if sect82.status_of_use == '空き' %} class="td_sh_empty"{% elif sect82.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect82.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>82</td>
+        <td {% if sect84.status_of_use == '空き' %} class="td_sh_empty"{% elif sect84.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect84.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>84</td>
+        <td {% if sect86.status_of_use == '空き' %} class="td_sh_empty"{% elif sect86.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect86.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}>86</td>
+        <td {% if sect37.status_of_use == '空き' %} class="td_w_empty"{% elif sect37.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect37.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">37</td>
+    </tr>
+    <tr>
+        <td {% if sect109.status_of_use == '空き' %} class="td_w_empty"{% elif sect109.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect109.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">109</td>
+        <td rowspan="2" colspan="24"></td>
+        <td {% if sect38.status_of_use == '空き' %} class="td_w_empty"{% elif sect38.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect38.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">38</td>
+    </tr>
+    <tr>
+        <td {% if sect110.status_of_use == '空き' %} class="td_w_empty"{% elif sect110.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect110.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">110</td>
+        <td {% if sect39.status_of_use == '空き' %} class="td_w_empty"{% elif sect39.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect39.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">39</td>
+    </tr>
+    <tr>
+        <td rowspan="2" colspan="1"></td>
+        <td class="td_trash" rowspan="2" colspan="2">外階段</td>
+        <td rowspan="2" colspan="1"></td>
+        <td {% if sect111.status_of_use == '空き' %} class="td_h_empty"{% elif sect111.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect111.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">111</td>
+        <td {% if sect112.status_of_use == '空き' %} class="td_h_empty"{% elif sect112.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect112.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">112</td>
+        <td {% if sect113.status_of_use == '空き' %} class="td_h_empty"{% elif sect113.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect113.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">113</td>
+        <td {% if sect114.status_of_use == '空き' %} class="td_h_empty"{% elif sect114.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect114.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">114</td>
+        <td {% if sect115.status_of_use == '空き' %} class="td_h_empty"{% elif sect115.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect115.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">115</td>
+        <td {% if sect116.status_of_use == '空き' %} class="td_h_empty"{% elif sect116.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect116.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">116</td>
+        <td {% if sect117.status_of_use == '空き' %} class="td_h_empty"{% elif sect117.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect117.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">117</td>
+        <td {% if sect118.status_of_use == '空き' %} class="td_h_empty"{% elif sect118.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect118.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">118</td>
+        <td {% if sect119.status_of_use == '空き' %} class="td_h_empty"{% elif sect119.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect119.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">119</td>
+        <td {% if sect120.status_of_use == '空き' %} class="td_h_empty"{% elif sect120.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect120.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">120</td>
+        <td {% if sect121.status_of_use == '空き' %} class="td_h_empty"{% elif sect121.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect121.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">121</td>
+        <td {% if sect122.status_of_use == '空き' %} class="td_h_empty"{% elif sect122.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect122.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">122</td>
+        <td {% if sect123.status_of_use == '空き' %} class="td_h_empty"{% elif sect123.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect123.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">123</td>
+        <td {% if sect124.status_of_use == '空き' %} class="td_h_empty"{% elif sect124.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect124.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">124</td>
+        <td {% if sect125.status_of_use == '空き' %} class="td_h_empty"{% elif sect125.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect125.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">125</td>
+        <td {% if sect126.status_of_use == '空き' %} class="td_h_empty"{% elif sect126.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect126.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">126</td>
+        <td {% if sect127.status_of_use == '空き' %} class="td_h_empty"{% elif sect127.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect127.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">127</td>
+        <td {% if sect128.status_of_use == '空き' %} class="td_h_empty"{% elif sect128.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect128.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">128</td>
+        <td {% if sect129.status_of_use == '空き' %} class="td_h_empty"{% elif sect129.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect129.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">129</td>
+        <td rowspan="2" colspan="1"></td>
+        <td {% if sect130.status_of_use == '空き' %} class="td_h_empty"{% elif sect130.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect130.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">130</td>
+        <td {% if sect131.status_of_use == '空き' %} class="td_h_empty"{% elif sect131.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect131.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2">131</td>
+        <td {% if sect132.status_of_use == '空き' %} class="td_w_empty"{% elif sect132.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect132.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">132</td>
+        <td rowspan="3" colspan="2"></td>
+        <td {% if sect40.status_of_use == '空き' %} class="td_w_empty"{% elif sect40.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect40.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">40</td>
+    </tr>
+    <tr>
+        <td {% if sect133.status_of_use == '空き' %} class="td_w_empty"{% elif sect133.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect133.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">133</td>
+        <td {% if sect41.status_of_use == '空き' %} class="td_w_empty"{% elif sect41.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect41.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">41</td>
+    </tr>
+    <tr>
+        <td class="text_centered" colspan="4"></td>
+        <td class="text_centered" colspan="19">マンション側 駐輪場</td>
+        <td class="text_centered"></td>
+        <td class="td_trash" rowspan="3" colspan="2">外階段</td>
+        <td {% if sect134.status_of_use == '空き' %} class="td_w_empty"{% elif sect134.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect134.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">134</td>
+        <td {% if sect42.status_of_use == '空き' %} class="td_w_empty"{% elif sect42.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect42.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">42</td>
+    </tr>
+    <tr>
+        <td class="text_centered" colspan="24">通路</td>
+    </tr>
+</table>
+<br>
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% load static %}
+{% load my_templatetags %}
+{% load humanize %}
+
+{% block title %}
+駐車場 一覧
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black  is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <form class="navbar-item" action="" method="get">
+      {{form.year}}{{form.month}}
+      <button type="submit" class="button is-primary is-size-7">表示</button>
+    </form>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+      <a href="{% url 'parking:rirekilist' %}" class="navbar-item">収入履歴</a>
+      <a href="{% url 'parking:utilization_rate' %}" class="navbar-item">稼働率</a>
+      <a href="{% url 'parking:fig' %}" class="navbar-item">駐車場状況図</a>
+    </div>
+    <div class="navbar-end">
+      {% if perms.parking.add_parkingspace %}
+        <a class="navbar-item is-size-6" href="{% url 'parking:management'%}">管理者用</a>
+      {% endif %}
+      <a class="navbar-item" href="{% url 'register:facility' %}">【戻る】</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content has-text-centered">
+    <h5>{{title}} 利用状況</h5>
+    <p>使用料合計 {{total|intcomma}}円</p>
+  </div>
+  <div class='columns'>
+    <div class='column is-4'>
+      <div class="content has-text-centered">
+        <h5>平置1〜42</h5>
+      </div>
+      <div class="table-container">
+        <table class="table table_center_nowrap is-striped is-narrow">
+          <thead>
+            <tr>
+              <th class="has-text-centered">No</th>
+              <th class="has-text-centered">タイプ</th>
+              <th class="has-text-centered">状況</th>
+              <th class="has-text-centered">使用料</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for list in space1 %}
+            <tr>
+              <td class="has-text-centered">{{list.0}}</td>
+              <td class="has-text-centered">{{list.1}}</td>
+              {% if list.2 == '使用中'%}
+                <td class="has-text-centered">{{list.2}}</td>
+                <td class="has-text-right">{{list.3|intcomma}}</td>
+              {% elif list.2 == '予約中' %}
+                <td class="has-text-centered has-text-weight-bold has-text-danger">{{list.2}}</td>
+                <td class="has-text-right">-----</td>
+              {% elif list.2 == '解約予定' %}
+                <td class="has-text-centered has-text-weight-bold has-text-danger">{{list.2}}</td>
+                <td class="has-text-right">{{list.3|intcomma}}</td>
+              {% elif list.2 == '使用中止' %}
+                <td class="has-text-centered">{{list.2}}</td>
+                <td class="has-text-centerd">使用中止</td>
+              {% else %}
+                <td class="has-text-centered has-text-danger has-text-weight-bold">{{list.2}}</td>
+                <td class="has-text-right has-text-danger has-text-weight-bold">-----</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class='column is-4'>
+      <div class="content has-text-centered">
+        <h5>機械式43〜86</h5>
+      </div>
+      <div class="table-container">
+        <table class="table table_center_nowrap is-striped is-narrow">
+          <thead>
+            <tr>
+              <th class="has-text-centered">No</th>
+              <th class="has-text-centered">タイプ</th>
+              <th class="has-text-centered">状況</th>
+              <th class="has-text-centered">使用料</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for list in space2 %}
+            <tr>
+              <td class="has-text-centered">{{list.0}}</td>
+              <td class="has-text-centered">{{list.1}}</td>
+              {% if list.2 == '使用中'%}
+                <td class="has-text-centered">{{list.2}}</td>
+                <td class="has-text-right">{{list.3|intcomma}}</td>
+              {% elif list.2 == '予約中' %}
+                <td class="has-text-centered has-text-weight-bold has-text-danger">{{list.2}}</td>
+                <td class="has-text-right">-----</td>
+              {% elif list.2 == '解約予定' %}
+                <td class="has-text-centered has-text-weight-bold has-text-danger">{{list.2}}</td>
+                <td class="has-text-right">{{list.3|intcomma}}</td>
+              {% elif list.2 == '使用中止' %}
+                <td class="has-text-centered">{{list.2}}</td>
+                <td class="has-text-right">使用中止</td>
+              {% else %}
+                <td class="has-text-centered has-text-danger has-text-weight-bold">{{list.2}}</td>
+                <td class="has-text-right has-text-danger has-text-weight-bold">-----</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class='column is-4'>
+      <div class="content has-text-centered">
+        <h5>平置87〜134</h5>
+      </div>
+      <div class="table-container">
+        <table class="table table_center_nowrap is-striped is-narrow">
+          <thead>
+            <tr>
+              <th class="has-text-centered">No</th>
+              <th class="has-text-centered">タイプ</th>
+              <th class="has-text-centered">状況</th>
+              <th class="has-text-centered">使用料</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for list in space3 %}
+            <tr>
+              <td class="has-text-centered">{{list.0}}</td>
+              <td class="has-text-centered">{{list.1}}</td>
+              {% if list.2 == '使用中'%}
+                <td class="has-text-centered">{{list.2}}</td>
+                <td class="has-text-right">{{list.3|intcomma}}</td>
+              {% elif list.2 == '予約中' %}
+                <td class="has-text-centered has-text-weight-bold has-text-danger">{{list.2}}</td>
+                <td class="has-text-right">-----</td>
+              {% elif list.2 == '解約予定' %}
+                <td class="has-text-centered has-text-weight-bold has-text-danger">{{list.2}}</td>
+                <td class="has-text-right">{{list.3|intcomma}}</td>
+              {% elif list.2 == '使用中止' %}
+                <td class="has-text-centered">{{list.2}}</td>
+                <td class="has-text-right">使用中止</td>
+              {% else %}
+                <td class="has-text-centered has-text-danger has-text-weight-bold">{{list.2}}</td>
+                <td class="has-text-right has-text-danger has-text-weight-bold">-----</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <br>
+</div>
+{% endblock %}

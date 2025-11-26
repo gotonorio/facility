@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% load my_templatetags %}
+{% load humanize %}
+{% load static %} {# {% static  を使うため必要 #}
+
+{% block title %}
+駐車場 収入履歴
+{% endblock title %}
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+<script src="{% static 'parking/parking_chart.js' %}"></script>
+<link href="{% static 'mycss/graph.css' %}" rel="stylesheet">
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <form class="navbar-item" action="" method="get">
+      {{form.year}}
+      <button type="submit" class="button is-primary is-size-7">表示</button>
+    </form>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'parking:list' %}">【戻る】</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+{% block content %}
+<div class="container is-fluid">
+  <br>
+  <div class="content">
+    <h5>収入履歴</h5>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">年月</th>
+          <th class="has-text-centered">利用数</th>
+          <th class="has-text-centered">収入</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for list in parking %}
+        <tr>
+          <td class="has-text-centered">{{list.payment_date|date:"Y-m-d"}}</td>
+          <td class="has-text-centered">{{list.uses}}</td>
+          <td class="has-text-right">{{list.income|intcomma}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="has-text-right">{{total|intcomma}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <br>
+</div>
+<div class="graph_container">
+  <canvas id="stage" width="160" height="100"></canvas>
+</div>
+
+{% comment %}
+<script type="text/javascript">
+  var data = [];
+</script>
+{% for dat in parking %}
+<script type="text/javascript">
+  var list = [];
+  y_date = "{{dat.payment_date|date:'Y-M'}}"
+  list.push(y_date);
+  list.push("{{dat.uses}}");
+  data.push(list);
+</script>
+{% endfor %}
+<script type="text/javascript">
+  console.log(data);
+  parkingChart(data.reverse());
+</script>
+{% endcomment %}
+<br>
+{% endblock %}

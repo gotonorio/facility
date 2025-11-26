@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "repair_plan.apps.RepairPlanConfig",
     "repair_plan_simulator.apps.RepairPlanSimulatorConfig",
     "repair_plan_cycle.apps.RepairPlanCycleConfig",
+    "parking.apps.ParkingConfig",
 ]
 
 MIDDLEWARE = [

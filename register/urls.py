@@ -12,8 +12,8 @@ urlpatterns = [
     path("logout/", views.Logout.as_view(), name="logout"),
     # メインページ
     path("mypage", views.MypageView.as_view(), name="mypage"),
-    # # 設備台帳メインページ
-    # path("facility", views.FacilityView.as_view(), name="facility"),
+    # 設備台帳メインページ
+    path("facility", views.FacilityView.as_view(), name="facility"),
     # 長期修繕計画メインページ
     path("repair_plan", views.RepairPlanView.as_view(), name="repair_plan"),
     # 長期修繕計画データ管理ページ
