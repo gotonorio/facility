@@ -38,10 +38,18 @@ class RepairPlanTableView(PermissionRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        ver = self.request.GET.get("version", False)
+        # update後にget_success_url()で遷移する場合、kwargsにデータが渡される。typeはint)
+        if kwargs:
+            ver = str(kwargs.get("version"))
+        else:
+            ver = self.request.GET.get("version", False)
 
         # 修繕計画のバージョンとユーザの管理者権限
         latest_version, is_manager = utils.get_latest_version(self.request.user)
+
+        # バージョン選択の処理
+        if ver is False or ver is None:
+            ver = latest_version
 
         # formに初期値を設定する
         form = RepairPlanTableForm(

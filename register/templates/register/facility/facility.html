@@ -32,7 +32,7 @@
           <a class="navbar-item" href="{% url 'parking:fig' %}">使用状況図</a>
           <a class="navbar-item" href="{% url 'parking:list' %}">使用状況リスト</a>
           {% if perms.parking.add_parkingspace %}
-            <a class="navbar-item" href="{% url 'kurasel_translator:read_parking' %}">kuraselチェック</a>
+            {% comment %} <a class="navbar-item" href="{% url 'kurasel_translator:read_parking' %}">kuraselチェック</a> {% endcomment %}
           {% endif %}
         </div>
       </div>
