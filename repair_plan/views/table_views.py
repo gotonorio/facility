@@ -1,12 +1,11 @@
 import logging
 
-from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views import generic
+from facility.services import get_latest_version
 
 # from repair_plan_simulator.models import Shuuzenhi_income
 from repair_plan.forms import RepairPlanTableForm
-from repair_plan.lib import utils
 from repair_plan.models import KoujiName
 
 logger = logging.getLogger(__name__)
@@ -45,7 +44,7 @@ class RepairPlanTableView(PermissionRequiredMixin, generic.TemplateView):
             ver = self.request.GET.get("version", False)
 
         # 修繕計画のバージョンとユーザの管理者権限
-        latest_version, is_manager = utils.get_latest_version(self.request.user)
+        latest_version, is_manager = get_latest_version(self.request.user)
 
         # バージョン選択の処理
         if ver is False or ver is None:

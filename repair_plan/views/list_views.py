@@ -5,8 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.db.models import F, IntegerField
 from django.db.models.aggregates import Sum
 from django.views import generic
+from facility.services import get_latest_version
 from repair_plan.forms import RepairPlanListForm
-from repair_plan.lib import utils
 from repair_plan.models import KoujiName, MasterPlan
 
 logger = logging.getLogger(__name__)
@@ -41,7 +41,7 @@ class RepairPlanListView(LoginRequiredMixin, generic.TemplateView):
             koujitype = self.request.GET.get("koujitype", False)
 
         # 修繕計画のバージョンとユーザの管理者権限
-        latest_version, is_manager = utils.get_latest_version(self.request.user)
+        latest_version, is_manager = get_latest_version(self.request.user)
         # バージョン選択の処理
         if ver is False or ver is None:
             ver = latest_version
@@ -117,7 +117,7 @@ class RepairPlanByKoujitypeView(PermissionRequiredMixin, generic.TemplateView):
         ver = self.request.GET.get("version", False)
 
         # 修繕計画のバージョンとユーザの管理者権限
-        latest_version, is_manager = utils.get_latest_version(self.request.user)
+        latest_version, is_manager = get_latest_version(self.request.user)
         # バージョン選択の処理
         if ver is False:
             ver = latest_version
@@ -156,7 +156,7 @@ class MasterPlanListView(LoginRequiredMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
 
         # 修繕計画のバージョンとユーザの管理者権限
-        _, is_manager = utils.get_latest_version(self.request.user)
+        _, is_manager = get_latest_version(self.request.user)
 
         # 管理者のみ全データ
         if is_manager:

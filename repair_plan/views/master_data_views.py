@@ -5,12 +5,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
+from facility.services import get_latest_version
 from repair_plan.forms import (
     ImportRepairPlanDataForm,
     MasterKoujiTypeForm,
     MasterUnitForm,
 )
-from repair_plan.lib import utils
 from repair_plan.models import MasterKoujiType, MasterPlan, MasterUnit
 
 logger = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ class MasterPlanListView(LoginRequiredMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
 
         # 修繕計画のバージョンとユーザの管理者権限
-        _, is_manager = utils.get_latest_version(self.request.user)
+        _, is_manager = get_latest_version(self.request.user)
 
         # 管理者のみ全データ
         if is_manager:

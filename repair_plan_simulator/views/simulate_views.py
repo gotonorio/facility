@@ -8,7 +8,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView
-from repair_plan.lib import utils
+from facility.services import get_latest_version
 from repair_plan.models import KoujiName, MasterPlan
 
 from repair_plan_simulator.forms import SimulateDataForm
@@ -26,7 +26,7 @@ class SimulateView(LoginRequiredMixin, FormView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        _, self.only_manager = utils.get_latest_version(self.request.user)
+        _, self.only_manager = get_latest_version(self.request.user)
         kwargs["only_manager"] = self.only_manager
         return kwargs
 
