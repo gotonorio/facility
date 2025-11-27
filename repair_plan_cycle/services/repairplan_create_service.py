@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------
 
 
-def create_repair_plan_from_basic_data(self, data_list, start_year, last_year, limmit_num=100):
+def create_repair_plan_from_basic_data(data_list, start_year, last_year, limmit_num=100):
     """
     長期修繕計画データを基本データから作成する
     - 工事名毎に最大100回分の工事予定を作成.
@@ -20,14 +20,14 @@ def create_repair_plan_from_basic_data(self, data_list, start_year, last_year, l
                 break
             else:
                 # 工事データをplan_listに追加して、次の工事予定年（西暦）を求める
-                yyyy = self.add_planlist(row, yyyy, start_year, plan_list)
+                yyyy = add_planlist(row, yyyy, start_year, plan_list)
                 # 周期（row[4]）が0なら1回だけの工事なのでbreakして抜ける
                 if int(row[4]) < 1:
                     break
     return plan_list
 
 
-def add_planlist(self, row, yyyy, start_year, plan_list):
+def add_planlist(row, yyyy, start_year, plan_list):
     """
     修繕計画データリストに追加する処理
     """
@@ -49,7 +49,7 @@ def add_planlist(self, row, yyyy, start_year, plan_list):
     return yyyy
 
 
-def fill_dummydata(self, plan_list, start_year, last_year):
+def fill_dummydata(plan_list, start_year, last_year):
     """
     抜けている年のデータ（ダミーデータ）を追加する
     - 長期修繕計画では期間中の工事予定が無い年のデータも必要

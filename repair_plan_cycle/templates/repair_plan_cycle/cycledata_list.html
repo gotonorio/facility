@@ -52,11 +52,11 @@
       <tbody>
         {% for item in cycledata_list %}
         <tr>
-            <td class="has-text-centered">
-              <a href="{% url 'repair_plan_cycle:update_basicplandata' item.pk %}">{{item.version}}</a>
-            </td>
+            <td class="has-text-centered">{{item.version}}</td>
             <td class="has-text-left">{{item.kouji_type}}</td>
-            <td class="has-text-left">{{item.kouji_name}}</td>
+            <td class="has-text-left">
+              <a href="{% url 'repair_plan_cycle:update_basicplandata' item.pk %}">{{item.kouji_name}}</a>
+            </td>
             <td class="has-text-right">{{item.first_year}}</td>
             <td class="has-text-right">{{item.repeat_cycle}}</td>
             <td class="has-text-right">{{item.cost|intcomma}}</td>
