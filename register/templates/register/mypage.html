@@ -34,7 +34,7 @@
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link is-size-6">管理者専用</a>
           <div class="navbar-dropdown">
-            {% comment %} <a class="navbar-item" href="{% url 'control:backupDB' %}" >DBバックアップ</a> {% endcomment %}
+            <a class="navbar-item" href="{% url 'control:backupDB' %}" >DBバックアップ</a>
             <hr class="dropdown-divider">
             <a class="navbar-item" href="{% url 'register:user_list' %}">登録者一覧</a>
             <a class="navbar-item" href="{% url 'register:pwd_update' user.pk %}">パスワード変更</a>
