@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     "bicycle.apps.BicycleConfig",
     "motorcycle.apps.MotorcycleConfig",
     "control.apps.ControlConfig",
+    "shoukaki.apps.ShoukakiConfig",
 ]
 
 MIDDLEWARE = [

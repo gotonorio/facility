@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %} {# {% staticを使うため必要 #}
+
+{% block title %}
+消火器
+{% endblock title %}
+
+{% block head %}
+{% endblock head %}
+
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black  is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <form class="navbar-item" action="" method="get">
+      <div class="navbar-item has-text-white">{{form.order.label}}</div>
+      {{form.order}}
+      <button type="submit" class="button is-primary is-size-7">表示</button>
+    </form>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+      {% comment %} <a class="navbar-item" href="{% url 'shoukaki:inspect' %}">点検消火器</a> {% endcomment %}
+      <a class="navbar-item" href="{% url 'shoukaki:disposal' %}">廃棄消火器</a>
+    </div>
+    <div class="navbar-end">
+      {% if perms.parking.add_parkingspace %}
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">管理者用</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="{% url 'shoukaki:create'%}">消火器データ登録</a>
+            <a class="navbar-item" href="{% url 'shoukaki:update_list'%}">消火器データ修正</a>
+            <hr class="navbar-divider">
+            <a class="navbar-item" href="{% url 'shoukaki:typecreate'%}">消火器種別データ登録</a>
+            <a class="navbar-item" href="{% url 'shoukaki:typelist'%}">消火器種別データ修正</a>
+          </div>
+        </div>
+      {% endif %}
+      <a class="navbar-item" href="{% url 'register:facility' %}">【戻る】</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>消火器一覧</h4>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow  ">
+      <thead>
+        <tr>
+          <th class="has-text-centered">No</th>
+          <th class="has-text-centered">配置場所</th>
+          <th class="has-text-centered">製造年</th>
+          <th class="has-text-centered">設置日</th>
+          <th class="has-text-centered">品番</th>
+          <th class="has-text-centered">製造会社</th>
+          <th class="has-text-centered">形式</th>
+          <th class="has-text-centered">最終点検</th>
+          <th class="has-text-centered">製造番号</th>
+          <th class="has-text-centered">備考</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for list in shoukaki_list %}
+        <tr>
+          {% if update %}
+            <td class="has-text-centered"><a href="{% url 'shoukaki:update' list.pk %}">{{list.code}}</a></td>
+          {% else %}
+            <td class="has-text-centered">{{forloop.counter}}</a></td>
+          {% endif %}
+          <td class="has-text-centered">{{list.location}}</td>
+          <td class="has-text-centered">{{list.made_year}}</td>
+          <td class="has-text-centered">{{list.installation_date|date:"Y-m"}}</td>
+          <td class="has-text-centered">{{list.shoukaki.name}}</td>
+          <td class="has-text-centered">{{list.shoukaki.maker}}</td>
+          <td class="has-text-left">{{list.shoukaki.shoukaki_type}}</td>
+          <td class="has-text-centered">{{list.inspection_date|date:"Y-m"}}</td>
+          <td class="has-text-centered">{{list.made_no}}</td>
+          <td class="has-text-left">{{ list.comment}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <br>
+</div>
+{% endblock %}

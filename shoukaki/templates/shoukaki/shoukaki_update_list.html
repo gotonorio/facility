@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %} {# {% staticを使うため必要 #}
+
+{% block title %}
+消火器
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black  is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <div class="navbar-item">【 SG 消火器 】</div>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+      {% if not update %}
+        <div class="navbar-item">
+          <form class="navbar-item" action="" method="get">
+            <div class="has-text-white">{{form.order.label}}</div>
+            {{form.order}}
+            <button type="submit" class="button is-primary is-size-7">表示</button>
+          </form>
+        </div>
+      {% endif %}
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'shoukaki:list' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container">
+  <div class="content">
+    <h4>消火器データの修正</h4>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow  ">
+      <thead>
+        <tr>
+          <th class="has-text-centered">No</th>
+          <th class="has-text-centered">有効</th>
+          <th class="has-text-centered">配置場所</th>
+          <th class="has-text-centered">品番</th>
+          <th class="has-text-centered">製造会社</th>
+          <th class="has-text-centered">形式</th>
+          <th class="has-text-centered">設置日</th>
+          <th class="has-text-centered">最終点検</th>
+          <th class="has-text-centered">製造年</th>
+          <th class="has-text-centered">製造番号</th>
+          <th class="has-text-centered">備考</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for list in shoukaki_list %}
+        <tr>
+          <td class="has-text-centered"><a href="{% url 'shoukaki:update' list.pk %}">{{list.code}}</a></td>
+          {% if list.alive %}
+            <td class="has-text-centered">
+          {% else %}
+            <td class="has-text-centered is-danger">
+          {% endif %}
+          {{list.alive}}</td>
+          <td class="has-text-centered">{{list.location}}</td>
+          <td class="has-text-centered">{{list.shoukaki.name}}</td>
+          <td class="has-text-centered">{{list.shoukaki.maker}}</td>
+          <td class="has-text-left">{{list.shoukaki.shoukaki_type}}</td>
+          <td class="has-text-centered">{{list.installation_date|date:"Y-m"}}</div></td>
+          <td class="has-text-centered">{{list.inspection_date|date:"Y-m"}}</div></td>
+          <td class="has-text-centered">{{list.made_year}}</div></td>
+          <td class="has-text-centered">{{list.made_no}}</td>
+          <td class="has-text-left">{{ list.comment}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <br>
+</div>
+{% endblock %}

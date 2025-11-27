@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+消火器
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <div class="navbar-item">【SG 消火器】</div>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="javascript:void(0);" onclick="window.history.back();">【戻る】</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>消火器種類一覧</h4>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow  ">
+      <thead>
+        <tr>
+          <th class="has-text-centered">品番</th>
+          <th class="has-text-centered">種類</th>
+          <th class="has-text-centered">形式番号</th>
+          <th class="has-text-centered">製造会社</th>
+          <th class="has-text-centered">有効期間</th>
+          <th class="has-text-centered">購入価格</th>
+          <th class="has-text-centered">有効</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for list in shoukakitype_list %}
+        <tr>
+          <td class="has-text-centered"><a href="{% url 'shoukaki:typeupdate' list.pk %}">{{list.name}}</a></td>
+          <td class="has-text-centered">{{list.shoukaki_type}}</td>
+          <td class="has-text-centered">{{list.keisiki}}</td>
+          <td class="has-text-centered">{{list.maker}}</td>
+          <td class="has-text-centered">{{list.valid_period}}</td>
+          <td class="has-text-centered">{{list.price}}</div></td>
+          <td class="has-text-centered">{{list.alive}}</div></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
