@@ -33,7 +33,6 @@ class CycleDataUpdateView(PermissionRequiredMixin, generic.UpdateView):
 
     model = KoujiCycleData
     form_class = CycleDataForm
-    # template_name = "koujicycledata_form.html"
     template_name = "repair_plan_cycle/koujicycledata_form.html"
     permission_required = "repair_plan.add_koujiname"
 
@@ -49,7 +48,6 @@ class CycleDataCreateView(PermissionRequiredMixin, generic.CreateView):
 
     model = KoujiCycleData
     form_class = CycleDataForm
-    # template_name = "koujicycledata_form.html"
     template_name = "repair_plan_cycle/koujicycledata_form.html"
     success_url = reverse_lazy("repair_plan_cycle:")
     permission_required = "repair_plan.add_koujiname"
@@ -57,16 +55,16 @@ class CycleDataCreateView(PermissionRequiredMixin, generic.CreateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["masterlist"] = MasterPlan.objects.all().order_by("-version")
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context["masterlist"] = MasterPlan.objects.all().order_by("-version")
+    #     return context
 
 
 class RepairplanCreateView(PermissionRequiredMixin, generic.FormView):
     """長期修繕計画データを周期データから新規作成"""
 
-    template_name = "repair_plan_cycle/koujicycledata_form.html"
+    template_name = "repair_plan_cycle/koujicycledata_convert_form.html"
     form_class = RepairPlanCreateForm
     success_url = reverse_lazy("repair_plan_cycle:")
     permission_required = "repair_plan.add_koujiname"

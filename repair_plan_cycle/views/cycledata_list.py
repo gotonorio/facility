@@ -31,10 +31,8 @@ class KoujiCycleDataListView(PermissionRequiredMixin, generic.ListView):
         # バージョン選択の処理
         if ver is False or ver is None:
             ver = latest_version
-        # qs = KoujiCycleData.objects.filter(version=version_id).order_by("kouji_type", "first_year")
         qs = KoujiCycleData.objects.filter(version=ver).order_by("kouji_type", "first_year")
 
-        # form = CycleDataListForm(initial={"version": version_id})
         form = CycleDataListForm(initial={"version": ver})
         context["form"] = form
         # 追加したいデータをcontextへセット

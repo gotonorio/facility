@@ -10,11 +10,11 @@ logger = logging.getLogger(__name__)
 
 
 class CycleDataListForm(forms.Form):
-    """工事周期データ選択用Form"""
+    """工事周期データ一覧Form"""
 
     version = forms.ModelChoiceField(
         queryset=KoujiCycleData.objects.values_list("version", flat=True).distinct().order_by("-version"),
-        label="計画 Ver.",
+        label="工事周期データ",
         empty_label="選択してください",
         required=True,
         widget=forms.Select(attrs={"class": "select-css is-size-7"}),
@@ -24,13 +24,24 @@ class CycleDataListForm(forms.Form):
 class CycleDataForm(forms.ModelForm):
     """工事周期データ用Form"""
 
-    version = forms.ModelChoiceField(
-        label="計画バージョン",
-        empty_label="選択してください",
-        to_field_name="version",
-        queryset=MasterPlan.objects.all(),
+    version = forms.ChoiceField(
+        choices=[
+            (v, v)
+            for v in KoujiCycleData.objects.values_list("version", flat=True).distinct().order_by("-version")
+        ],
+        label="工事周期データ",
+        required=True,
         widget=forms.Select(attrs={"class": "select-css is-size-6"}),
     )
+
+    # version = forms.ModelChoiceField(
+    #     label="工事周期データ Ver.",
+    #     empty_label="選択してください",
+    #     to_field_name="version",
+    #     # queryset=MasterPlan.objects.all(),
+    #     queryset=KoujiCycleData.objects.all().values("version").distinct().order_by("-version"),
+    #     widget=forms.Select(attrs={"class": "select-css is-size-6"}),
+    # )
 
     # ModelFormの場合にはMetaクラスが必要。Formクラスでは使用できない
     class Meta:
