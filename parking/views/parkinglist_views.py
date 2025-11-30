@@ -13,7 +13,8 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.timezone import localtime
 from django.views.generic import ListView, TemplateView
-from parking.forms import ParkingRirekiForm, ParkingSpaceFigForm, ParkingSpaceListForm
+from facility.forms import IncomeHistoryForm
+from parking.forms import ParkingSpaceFigForm, ParkingSpaceListForm
 from parking.models import ParkingSpace, ParkingType
 
 logger = logging.getLogger(__name__)
@@ -117,7 +118,7 @@ class IncomeRirekiView(LoginRequiredMixin, ListView):
             total += d["income"]
             noincome += d["noincome"]
         # form既定値
-        form = ParkingRirekiForm(
+        form = IncomeHistoryForm(
             initial={
                 "year": year,
             }

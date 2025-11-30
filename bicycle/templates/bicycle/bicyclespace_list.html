@@ -25,6 +25,7 @@
   <div id="navbarMainMenu" class="navbar-menu">
     <div class="navbar-start">
       {% if perms.parking.add_parkingspace %}
+        <a href="{% url 'bicycle:incomelist' %}" class="navbar-item">収入履歴</a>
         <a class="navbar-item" href="{% url 'bicycle:roomlist' %}">住戸別駐輪場</a>
         <a class="navbar-item" href="{% url 'bicycle:contract_num' %}">住戸別契約数</a>
       {% endif %}

@@ -37,3 +37,16 @@ class YearMonthForm(forms.Form):
         choices=MONTH,
         required=True,
     )
+
+
+class IncomeHistoryForm(forms.Form):
+    """駐車場・駐輪場・バイク置き場の収入履歴表示用Form"""
+
+    year = forms.IntegerField(
+        label="西暦",
+        widget=forms.NumberInput(attrs={"style": "width: 12ch"}),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["year"].widget.attrs["class"] = "input is-size-7"

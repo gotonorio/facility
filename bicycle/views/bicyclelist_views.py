@@ -10,7 +10,8 @@ from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.utils import timezone
 from django.utils.timezone import localtime
-from django.views.generic import TemplateView
+from django.views.generic import ListView, TemplateView
+from facility.forms import IncomeHistoryForm
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +87,7 @@ class BicycleSpaceListView(LoginRequiredMixin, TemplateView):
 
     def make_query_set(self, year, month):
         """querysetを生成"""
-        qs = BicycleSpace.get_bicycle_space(year, month, "").order_by("no")
+        qs = BicycleSpace.objects.get_bicycle_space(year, month, "").order_by("no")
         count_use = qs.filter(Q(status_of_use="使用中") | Q(status_of_use="解約予定")).count()
         return qs, count_use, "queryset"
 
@@ -122,6 +123,34 @@ class BicycleSpaceFeeByRoomView(BicycleSpaceListView):
         qs = qs.values("room_number").annotate(num=Count("no"), fee=Count("no") * settings.BICYCLE_USAGE_FEE)
         count_use = qs.filter(status_of_use="使用中").count()
         return qs, count_use, "dict"
+
+
+class BicycleIncomeHistoryView(LoginRequiredMixin, ListView):
+    """駐輪場収入履歴一覧"""
+
+    model = BicycleSpace
+    template_name = "bicycle/bicycleincome_history.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        local_now = localtime(timezone.now())
+        year = str(self.request.GET.get("year", local_now.year))
+        qs = BicycleSpace.objects.get_bicycle_incomehistory(year)
+        # 駐車場使用料の合計を計算
+        total = 0
+        for d in qs:
+            total += d["income"]
+
+        # form既定値
+        form = IncomeHistoryForm(
+            initial={
+                "year": year,
+            }
+        )
+        context["bicycle"] = qs.order_by("-date")
+        context["form"] = form
+        context["total"] = total
+        return context
 
 
 @permission_required("parking.add_parkingspace")

@@ -5,7 +5,7 @@
 {% load static %} {# {% static  を使うため必要 #}
 
 {% block title %}
-駐車場 収入履歴
+駐輪場 収入履歴
 {% endblock title %}
 {% block head %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
@@ -39,7 +39,7 @@
 <div class="container is-fluid">
   <br>
   <div class="content">
-    <h5>駐車場 収入履歴</h5>
+    <h5>駐輪場 収入履歴</h5>
   </div>
   <div class="table-container">
     <table class="table table_nowrap is-striped is-narrow">
@@ -51,9 +51,9 @@
         </tr>
       </thead>
       <tbody>
-        {% for list in parking %}
+        {% for list in bicycle %}
         <tr>
-          <td class="has-text-centered">{{list.payment_date|date:"Y-m-d"}}</td>
+          <td class="has-text-centered">{{list.date|date:"Y-m-d"}}</td>
           <td class="has-text-centered">{{list.uses}}</td>
           <td class="has-text-right">{{list.income|intcomma}}</td>
         </tr>
@@ -71,24 +71,5 @@
 <div class="graph_container">
   <canvas id="stage" width="160" height="100"></canvas>
 </div>
-
-{% comment %}
-<script type="text/javascript">
-  var data = [];
-</script>
-{% for dat in parking %}
-<script type="text/javascript">
-  var list = [];
-  y_date = "{{dat.payment_date|date:'Y-M'}}"
-  list.push(y_date);
-  list.push("{{dat.uses}}");
-  data.push(list);
-</script>
-{% endfor %}
-<script type="text/javascript">
-  console.log(data);
-  parkingChart(data.reverse());
-</script>
-{% endcomment %}
 <br>
 {% endblock %}

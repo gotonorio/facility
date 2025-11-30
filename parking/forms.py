@@ -105,22 +105,3 @@ class ParkingUpdateForm(forms.ModelForm):
         help_texts = {
             "room_number": "* 「空き」の場合は「0」にしてください。",
         }
-
-
-class ParkingRirekiForm(forms.Form):
-    """デフォルトは全データを表示
-    widgetをTextInputにすることでフィールド長さを調整できるが、IntegerFieldと
-    しての増減矢印が表示できなくなる。
-    style属性で変更することはできた。
-    year初期値はviewで設定する。
-    """
-
-    year = forms.IntegerField(
-        label="西暦",
-        widget=forms.NumberInput(attrs={"style": "width: 12ch"}),
-    )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["year"].widget.attrs["class"] = "input is-size-7"
-        # self.fields['year'].initial = year
