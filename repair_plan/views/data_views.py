@@ -56,7 +56,7 @@ class RepairPlanUpdateListView(RepairPlanListView):
     """長期修繕計画の編集用list表示
     - ToDo
     - templateファイルで管理者の場合、「編集・削除」ボタンを表示するようにすれば、
-      わざわざ編集用のVieteファイルを表示するだけのviewクラスを作成する必要はない。どちらがスマートか？
+        わざわざ編集用のVieteファイルを表示するだけのviewクラスを作成する必要はない。どちらがスマートか？
     """
 
     def get_template_names(self):
