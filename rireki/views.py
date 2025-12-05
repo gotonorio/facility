@@ -106,7 +106,7 @@ class KoujiRirekiCreateView(PermissionRequiredMixin, generic.CreateView):
     model = KoujiRireki
     form_class = KoujiRirekiCreateForm
     template_name = "rireki/kouji_rireki_form.html"
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     success_url = reverse_lazy("rireki:rireki_list")
 
     def get_context_data(self, **kwargs):
@@ -130,7 +130,7 @@ class KoujiRirekiCreateView(PermissionRequiredMixin, generic.CreateView):
 class RirekiUpdateListView(PermissionRequiredMixin, generic.ListView):
     model = KoujiRireki
     template_name = "rireki/update_list.html"
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     queryset = KoujiRireki.objects.all().order_by("-year")
 
     def get_context_data(self, **kwargs):
@@ -183,7 +183,7 @@ class RirekiUpdateView(PermissionRequiredMixin, generic.UpdateView):
     form_class = KoujiRirekiCreateForm
     template_name = "rireki/kouji_rireki_form.html"
     # 必要な権限（データ登録できる権限は共通）
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
     raise_exception = True
     # 必要なクラス変数を宣言しておく。
@@ -212,5 +212,5 @@ class RirekiDeleteView(PermissionRequiredMixin, generic.DeleteView):
 
     model = KoujiRireki
     template_name = "rireki/confirm_delete.html"
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     success_url = reverse_lazy("rireki:rireki_list")  # 削除成功後のリダイレクト先

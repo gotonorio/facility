@@ -24,7 +24,7 @@
       </form>
     </div>
     <div class="navbar-end">
-      {% if perms.plan.add_koujiname and qs.pk %}
+      {% if perms.repair_plan.add_koujiname and qs.pk %}
         <a class="navbar-item" href="{% url 'control:description_update' qs.pk %}">修正</a>
         <a class="navbar-item" href="{% url 'control:description_delete' qs.pk %}">削除</a>
       {% endif %}

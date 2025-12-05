@@ -95,7 +95,7 @@ class DescriptionCreateView(PermissionRequiredMixin, generic.CreateView):
 
     model = Description
     form_class = DescriptionCreateForm
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     template_name = "control/description_form.html"
     success_url = reverse_lazy("register:repair_plan")
 
@@ -105,7 +105,7 @@ class DescriptionUpdateView(PermissionRequiredMixin, generic.UpdateView):
 
     model = Description
     form_class = DescriptionCreateForm
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     template_name = "control/description_form.html"
     success_url = reverse_lazy("control:description")
 
@@ -113,7 +113,7 @@ class DescriptionUpdateView(PermissionRequiredMixin, generic.UpdateView):
 class DescriptionDeleteView(PermissionRequiredMixin, generic.DeleteView):
     model = Description
     template_name = "control/description_delete_confirm.html"
-    permission_required = "plan.add_koujiname"
+    permission_required = "repair_plan.add_koujiname"
     success_url = reverse_lazy("control:description")
 
     # def get_success_url(self):
