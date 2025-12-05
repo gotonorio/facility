@@ -1,0 +1,58 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #} 
+{% load my_templatetags %}
+                                            
+{% block title %}                           
+個別工事支出                                      
+{% endblock title %}                        
+                                            
+{% block head %}                            
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/a11y-dark.min.css">
+  <link href="{% static 'rireki/blog.css' %}" rel="stylesheet">
+  <link href="{% static 'rireki/my_markdown.css' %}" rel="stylesheet">
+{% endblock head %}                         
+                                            
+{% block navbar %}                          
+<nav class="navbar is-fixed-top is-black"   role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">                
+    <a href="{% url 'rireki:rireki_list' %}" class="navbar-item">戻る</a>
+  </div>                                    
+  <div class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <br>
+  <div class="content">
+    <h4>工事詳細</h4>
+  </div>
+  <div class="has-text-left">西暦：</div>
+  <div class="has-text-left post">{{ kouji_detail.year }}</div>
+  <br>
+  <div class="has-text-left">工事名：</div>
+  <div class="has-text-left post">{{kouji_detail.koujimei}}</a></div>
+  <br>
+  <div class="has-text-left">工事金額：</div>
+  <div class="has-text-left post">{{ kouji_detail.cost|intcomma }}</div>
+  <br>
+  <div class="has-text-left">施工業者：</div>
+  <div class="has-text-left post">{{ kouji_detail.constractor }}</div>
+  <br>
+  {% if kouji_detail.comment %}
+  <div class="has-text-left">コメント：</div>
+  <div class="post">
+    {{ kouji_detail.comment | markdown_to_html}}
+  </div>
+  {% endif %}
+</div>
+<br>
+{% endblock content %}

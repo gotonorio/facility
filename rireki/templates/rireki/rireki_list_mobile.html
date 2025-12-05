@@ -1,0 +1,70 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #}
+
+{% block title %}
+個別工事支出
+{% endblock title %}
+
+{% block head %}
+{# javascriptファイルを取り込む #}
+<!--<script src='{% static 'js/moment-with-locales.js' %}'></script>-->
+{% endblock head %}
+
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <form class="navbar-item" action="{% url 'rireki:rireki_list'%}" method="get">
+      {{form.kouji_type}}{{form.year}}
+      <button type="submit" class="button is-primary is-size-7">表示</button>
+    </form>
+    {% comment %} <a class="navbar-item" href="{% url 'register:mypage' %}">【SG川崎】</a> {% endcomment %}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a href="{% url 'register:mypage' %}" class="navbar-item">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <br>
+  <div class="content has-text-centered">
+    <h4>工事リスト</h4>
+  </div>
+  <div class="table-container">
+    <table class="table table_center_nowrap is-narrow">
+      <thead>
+        <tr class="has-background-grey-lighter">
+          <th class="has-text-centered">工事名</th>
+          <th class="has-text-centered">工事金額</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rireki in rirekilist %}
+        <tr>
+          <td class="has-text-left"><a href="{% url 'rireki:rireki_detail' rireki.pk %}">{{rireki.koujimei}}</a></td>
+          <td class="has-text-right">{{ rireki.cost|intcomma }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td class="has-text-right">合計</td>
+          <td class="has-text-right">{{total|intcomma}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <br>
+</div>
+{% endblock content %}

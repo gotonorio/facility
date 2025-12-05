@@ -1,0 +1,98 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  {{title}}
+{% endblock title %}
+
+{% block head %}
+  {% comment %} <link href="{% static 'repair_plan/repair.css' %}" rel="stylesheet"> {% endcomment %}
+{% endblock head%}
+
+{% block content %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a href="{% url 'register:repair_plan_data' %}" class="navbar-item">戻る</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container is-fluid">
+  <br>
+  <div class="content has-text-centered">
+    <h4>{{title}}</h4>
+  </div>
+  <form action="" method='POST' enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if form.errors %}
+      <div class="errorlist">
+        {% for errors in form.errors.values %}
+          {% for error in errors %}
+            {{ error }}<br>
+          {% endfor %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    {# 年月 #}
+    <div class="my_field">
+      <div class="columns">
+        <div class="column is-4">
+          {{ form.year.label_tag }}
+          {{ form.year }}
+        </div>
+        <div class="column is-4">
+          {{ form.month.label_tag }}
+          {{ form.month }}
+        </div>
+      </div>
+    </div>
+    {# 工事種類 #}
+    <div class="my_field">
+      {{ form.koujitype.label_tag }}
+      {{ form.koujitype }}
+    </div>
+    {# 工事名 #}
+    <div class="my_field">
+      {{ form.koujimei.label_tag }}
+      {{ form.koujimei }}
+    </div>
+    {# 工事費 #}
+    <div class="my_field">
+      {{ form.cost.label_tag }}
+      {{ form.cost }}
+    </div>
+    {# 施工業者 #}
+    <div class="my_field">
+      {{ form.constractor.label_tag }}
+      {{ form.constractor }}
+    </div>
+    {# 会計区分 #}
+    <div class="my_field">
+      {{ form.account_type.label_tag }}
+      {{ form.account_type }}
+    </div>
+    {# 備考 #}
+    <div class="my_field">
+      {{ form.comment.label_tag }}
+      {{ form.comment }}
+    </div>
+    <br>
+    <div class="content">
+      <button type="submit" class="button is-primary is-size-7">登録</button>
+      <a class="button is-info is-size-7" href="javascript:void(0);" onclick="window.history.back();">キャンセル</a>
+    </div>
+  </form>
+</div>
+{% endblock content %}

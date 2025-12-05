@@ -33,10 +33,11 @@ class RepairPlanListView(LoginRequiredMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
         # 値が''の場合は、そのまま''が設定されてしまう。
         if kwargs:
-            # update後にget_success_url()で遷移する場合、kwargsにデータが渡される。typeはint)
+            # ビューが渡す場合、URLから渡されたpkなどはkwargsでデータが渡される。
             ver = str(kwargs.get("version"))
             koujitype = str(kwargs.get("kouji_type"))
         else:
+            # formから渡された場合、GETパラメータで取得する。
             ver = self.request.GET.get("version", False)
             koujitype = self.request.GET.get("koujitype", False)
 

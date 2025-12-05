@@ -29,4 +29,5 @@ urlpatterns = [
     path("motorcycle/", include("motorcycle.urls")),
     path("control/", include("control.urls")),
     path("shoukaki/", include("shoukaki.urls")),
+    path("rireki/", include("rireki.urls")),
 ]

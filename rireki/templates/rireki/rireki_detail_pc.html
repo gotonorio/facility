@@ -1,0 +1,69 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #} 
+{% load my_templatetags %}
+                                            
+{% block title %}                           
+個別工事支出                                      
+{% endblock title %}                        
+                                            
+{% block head %}                            
+{# javascriptファイルを取り込む #}                   
+<!--<script src='{% static 'js/moment-with  -locales.js' %}'></script>-->
+{% endblock head %}                         
+                                            
+{% block navbar %}                          
+<nav class="navbar is-fixed-top is-black"   role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">                
+    <a class="navbar-item" href="{% url 'register:mypage' %}">【SG川崎】</a>
+    <a role="button" class="navbar-burger   " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>      
+      <span aria-hidden="true"></span>      
+      <span aria-hidden="true"></span>      
+    </a>                                    
+  </div>                                    
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a href="{% url 'rireki:rireki_list' %}" class="navbar-item">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <br>
+  <div class="content">
+    <h4>工事詳細</h4>
+  </div>
+  <table class="table is-narrow">
+    <thead>
+      <tr class="has-background-grey-lighter">
+        <th class="has-text-centered">西暦</th>
+        <th class="has-text-centered">工事名</th>
+        <th class="has-text-centered">工事金額</th>
+        <th class="has-text-centered">施工業者</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="has-text-centered">{{ kouji_detail.year }}</td>
+        <td class="has-text-left">{{kouji_detail.koujimei}}</a></td>
+        <td class="has-text-right">{{ kouji_detail.cost|intcomma }}</td>
+        <td class="has-text-left">{{ kouji_detail.constractor }}</td>
+      </tr>
+      <tr>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <div class="content">
+    <div class="textarea">{{kouji_detail.comment|markdown_to_html}}</div>
+  </div>
+</div>
+{% endblock content %}
