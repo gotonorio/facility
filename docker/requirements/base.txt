@@ -1,10 +1,9 @@
 # common
-Django==5.2.9
+Django==6.0
 django-environ==0.12.0
 Markdown==3.10
 user-agents==2.2.0
 # special
-plotly==6.4.0
 python-dateutil==2.9.0
 django-cleanup==9.0.0
 jpholiday==1.0.2
