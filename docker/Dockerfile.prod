@@ -10,4 +10,4 @@ WORKDIR /code
 COPY requirements /code/requirements
 # pipでpythonパッケージをインストールする。
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir --requirement requirements/prod.txt
+    pip install --no-cache-dir -r requirements/prod.txt
