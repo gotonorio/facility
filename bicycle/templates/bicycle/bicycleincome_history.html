@@ -7,11 +7,10 @@
 {% block title %}
 駐輪場 収入履歴
 {% endblock title %}
+
 {% block head %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
-<script src="{% static 'parking/parking_chart.js' %}"></script>
-<link href="{% static 'mycss/graph.css' %}" rel="stylesheet">
 {% endblock head %}
+
 {% block navbar %}
 <nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
@@ -67,9 +66,6 @@
     </table>
   </div>
   <br>
-</div>
-<div class="graph_container">
-  <canvas id="stage" width="160" height="100"></canvas>
 </div>
 <br>
 {% endblock %}

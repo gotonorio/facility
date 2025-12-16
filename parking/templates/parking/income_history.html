@@ -7,11 +7,10 @@
 {% block title %}
 駐車場 収入履歴
 {% endblock title %}
+
 {% block head %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
-<script src="{% static 'parking/parking_chart.js' %}"></script>
-<link href="{% static 'mycss/graph.css' %}" rel="stylesheet">
 {% endblock head %}
+
 {% block navbar %}
 <nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
@@ -71,24 +70,5 @@
 <div class="graph_container">
   <canvas id="stage" width="160" height="100"></canvas>
 </div>
-
-{% comment %}
-<script type="text/javascript">
-  var data = [];
-</script>
-{% for dat in parking %}
-<script type="text/javascript">
-  var list = [];
-  y_date = "{{dat.payment_date|date:'Y-M'}}"
-  list.push(y_date);
-  list.push("{{dat.uses}}");
-  data.push(list);
-</script>
-{% endfor %}
-<script type="text/javascript">
-  console.log(data);
-  parkingChart(data.reverse());
-</script>
-{% endcomment %}
 <br>
 {% endblock %}
