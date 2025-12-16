@@ -50,9 +50,9 @@ function koujiShubetuChart(data){
     // (3) チャートオプション
     // http://www.chartjs.org/docs/#chart-configuration-tooltip-configuration
     var myChartOption = {
-        responsive:true,   // canvasサイズを固定する。(trueの場合windowの大きさに連動する)
+        responsive:true,    // canvasサイズを固定する。(trueの場合windowの大きさに連動する)
         maintainAspectRatio: true,
-        indexAxis: 'y',
+        indexAxis: 'y',     // 棒グラフを横向きにする。
 
         plugins: {
             title: {

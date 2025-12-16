@@ -63,23 +63,6 @@ function simulateShuuzenhiChart(data){
                 data: expenseData,
                 yAxisID: "y-axis",
             },
-            // 残高のチャートは表示しない。2024-02-09
-            // {
-            //     type: 'line',
-            //     fill: false,                    // 面を非表示 trueの場合backgroundColorを指定すること。
-            //     label: '資産残高(右目盛り)',
-            //     borderWidth: 2,                 // 線の太さ
-            //     borderColor: "green",           // 線の色
-            //     tension:0,                      // 線は直線
-            //     pointBorderColor: "green",      // ポイント線の色
-            //     pointBackgroundColor: "green",  // ポイント面の色
-            //     pointRadius: 2,                 // ポイントサイズ
-            //     pointHoverRadius: 6,            // ホバーした時のポイントサイズ
-            //     pointHitRadius: 8,              // カーソルのヒットエリア
-            //     backgroundColor: "green",
-            //     data: differenceData,
-            //     yAxisID: "y-axis-difference"
-            // }
         ]
     };
     // (3) チャートオプション
@@ -116,29 +99,6 @@ function simulateShuuzenhiChart(data){
                         }
                     }
                 },
-                // 残高のチャートは表示しない。2024-02-09
-                // {
-                //     id: "y-axis-difference",
-                //     type: "linear",
-                //     position: "right", // 目盛りは右側に表示。
-                //     scaleLabel:{
-                //         display:true,
-                //         fontSize:10,
-                //         fontStyle:"bold",
-                //         labelString:"単位 (円)",
-                //     },
-                //     gridLines: {    // 横軸グリッドラインを表示にする。
-                //         drawOnChartArea: false,
-                //     },
-                //     ticks:{ // Y軸目盛を3桁区切りにする。
-                //         callback: function (value) {
-                //             // ブラウザがHTML5対応していれば以下でオーケー。
-                //             return value.toLocaleString();
-                //             // 正規表現による3桁区切り。ブラウザがHTML5非対応の場合
-                //             // return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                //         }
-                //     }
-                // }
             ],
             xAxes: [{
                 display: true,
@@ -185,8 +145,6 @@ function simulateShuuzenhiChart(data){
         },
     };
     // (4) チャート描画。
-    var ctx = document.getElementById('simulate_graph').getContext('2d');
-    clearCanvas();
     // chartをグローバル変数とする。http://mussyu1204.myhome.cx/wordpress/it/?p=322
     shuuzenhichart = new Chart(ctx, {
         type: 'line',               // datasetでグラフtypeを指定するだけではチャートが表示できない！？
