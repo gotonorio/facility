@@ -18,8 +18,6 @@ class RepairPlanListView(LoginRequiredMixin, generic.TemplateView):
     使わずTemplateViewを継承して処理する。
     """
 
-    model = KoujiName
-
     def get_template_names(self):
         """templateファイルをuser agentで切り替える"""
         if self.request.user_agent_flag == "mobile":

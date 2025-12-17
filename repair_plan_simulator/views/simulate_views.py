@@ -22,7 +22,6 @@ class SimulateView(LoginRequiredMixin, FormView):
 
     template_name = "repair_plan_simulator/simulate_pc.html"
     form_class = SimulateDataForm
-    only_manager = False
 
     def get_form_kwargs(self):
         """TemplateView以外でFormに渡す引数を追加"""
@@ -38,8 +37,13 @@ class SimulateView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        ver_str = self.request.GET.get("keikaku_ver")
+        # ver_str = self.request.GET.get("keikaku_ver")
+        if kwargs:
+            # ビューが渡す場合、URLから渡されたpkなどはkwargsでデータが渡される。
+            ver_str = str(kwargs.get("keikaku_ver"))
+        else:
+            # formから渡された場合、GETパラメータで取得する。
+            ver_str = self.request.GET.get("keikaku_ver", False)
 
         if ver_str:
             plan = MasterPlan.objects.get(version=int(ver_str))
