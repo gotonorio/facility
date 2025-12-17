@@ -147,14 +147,6 @@ class RirekiUpdateListView(PermissionRequiredMixin, generic.ListView):
             year = self.request.GET.get("year", yyyy)
             kouji_type = self.request.GET.get("kouji_type")
 
-        # # ''が返された時の処理
-        # if kouji_type == "":
-        #     kouji_type = None
-        # if ac_type == "":
-        #     ac_type = None
-        # if year == "":
-        #     year = None
-
         # Qオブジェクト作成
         koujitype_q = Q()
         actype_q = Q()
@@ -192,7 +184,6 @@ class RirekiUpdateView(PermissionRequiredMixin, generic.UpdateView):
     kouji_type = 0
 
     def get_success_url(self):
-        logger.debug(self.kouji_type)
         return reverse_lazy(
             "rireki:update_list",
             kwargs={"account_type": self.ac_type, "year": self.year, "kouji_type": self.kouji_type},

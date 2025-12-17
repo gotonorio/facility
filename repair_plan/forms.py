@@ -16,7 +16,7 @@ class RepairPlanBaseForm(forms.Form):
     """修繕計画表示用のベースForm"""
 
     version = forms.ModelChoiceField(
-        # ダミーのqueryset。必要なquerysetは__init__()でグループにより表示を変えている。
+        # ダミーのqueryset。必要なquerysetは継承クラスのinit__()でグループにより表示を変える。
         queryset=MasterPlan.objects.none(),
         label="計画 Ver.",
         required=True,
@@ -42,28 +42,35 @@ class RepairPlanListForm(RepairPlanBaseForm):
         widget=forms.Select(attrs={"class": "select-css is-size-7"}),
     )
 
-    def __init__(self, only_manager, *args, **kwargs):
-        """viewがら渡されたonly_managerフラグでquerysetを変更させる
-        - querysetはversionのリストを表示させる。
+    def __init__(self, is_manager, *args, **kwargs):
+        """viewがら渡されたis_managerフラグでquerysetを変更させる
+        querysetはversionのリストを表示させる。
+        forms.Formの定義時に initial=Model.objects.get(...) のように DBに即時アクセスすると、
+        migrate時にDBが存在しないためエラーが発生する。--> 遅延評価するため__init__()で処理する。
+        only_maagerがFalseなら、verの初期値は設定しない。
         """
         super(RepairPlanListForm, self).__init__(*args, **kwargs)
-        if only_manager:
-            # 管理者には全ての修繕計画versionを表示。
-            versions = (
-                KoujiName.objects.values_list("version__version", flat=True)
-                .order_by("-version")
-                .distinct()
-            )
-            self.fields["version"].choices = [(v, v) for v in versions]
-        else:
-            # 管理者以外にはonly_managerフラグがFalseの修繕計画versionを表示。
-            versions = (
-                KoujiName.objects.filter(version__only_manager=False)
-                .values_list("version__version", flat=True)
-                .order_by("-version")
-                .distinct()
-            )
-            self.fields["version"].choices = [(v, v) for v in versions]
+        try:
+            if is_manager:
+                # 管理者には全ての修繕計画versionを表示。
+                versions = (
+                    KoujiName.objects.values_list("version__version", flat=True)
+                    .order_by("-version")
+                    .distinct()
+                )
+                self.fields["version"].choices = [(v, v) for v in versions]
+            else:
+                # 管理者以外にはonly_managerフラグがFalseの修繕計画versionを表示。
+                versions = (
+                    KoujiName.objects.filter(version__only_manager=False)
+                    .values_list("version__version", flat=True)
+                    .order_by("-version")
+                    .distinct()
+                )
+                self.fields["version"].choices = [(v, v) for v in versions]
+        except Exception as e:
+            logger.error(f"RepairPlanListForm init error: {e}")
+            self.fields["keikaku_ver"].choices = []
 
         # --------------------------
         # ★ 最大 version を初期値に設定
@@ -78,18 +85,16 @@ class RepairPlanTableForm(RepairPlanBaseForm):
     http://www.subthread.co.jp/blog/20160531/
     """
 
-    def __init__(self, only_manager, *args, **kwargs):
+    def __init__(self, is_manager, *args, **kwargs):
         """viewがら渡されたonly_managerフラグでquerysetを変更させる
         - querysetはversionのリストを表示させる。
         """
         super(RepairPlanTableForm, self).__init__(*args, **kwargs)
 
-        if only_manager:
+        if is_manager:
             # 管理者には全ての修繕計画versionを表示。
             versions = (
-                KoujiName.objects.values_list("version__version", flat=True)
-                .order_by("-version")
-                .distinct()
+                KoujiName.objects.values_list("version__version", flat=True).order_by("-version").distinct()
             )
             self.fields["version"].choices = [(v, v) for v in versions]
         else:
@@ -157,9 +162,7 @@ class ImportRepairPlanDataForm(forms.Form):
         file = self.cleaned_data["file"]
         # (1) ファイル名のチェック。
         if not file.name.endswith(".csv"):
-            raise forms.ValidationError(
-                "拡張子がcsvのファイルをアップロードしてください"
-            )
+            raise forms.ValidationError("拡張子がcsvのファイルをアップロードしてください")
         # (2) ファイルの中身をチェックするため、読み込みをここで行う。
         csvfile = io.TextIOWrapper(file, encoding="utf-8")
         reader = csv.reader(csvfile)
@@ -172,11 +175,7 @@ class ImportRepairPlanDataForm(forms.Form):
             # enumerateを使って読み込んだ行番号を取得する。
             for i, row in enumerate(reader):
                 # (1) 先頭行でヘッダーの存在をチェック。
-                if (
-                    str(row[0]).isdecimal
-                    and str(row[1]).isdecimal
-                    and str(row[6]).isdecimal
-                ):
+                if str(row[0]).isdecimal and str(row[1]).isdecimal and str(row[6]).isdecimal:
                     pass
                 else:
                     raise forms.ValidationError("ヘッダーは削除してください")
@@ -197,9 +196,7 @@ class ImportRepairPlanDataForm(forms.Form):
                 # (4) 修繕計画マスタのversion番号をチェックする。
                 chk_version = KoujiName.objects.filter(version__version=row[0])
                 if len(chk_version) > 0:
-                    raise forms.ValidationError(
-                        f"バージョン番号{row[0]}は、既に存在しています"
-                    )
+                    raise forms.ValidationError(f"バージョン番号{row[0]}は、既に存在しています")
                 # (5) 「予算」「実支出」で数字のカンマがあれば削除する。
                 if row[6].find(",") > 0:
                     row[6] = int(row[6].replace(",", ""))
@@ -241,9 +238,7 @@ class ImportRepairPlanDataForm(forms.Form):
                 )
                 self._instances.append(koujiname)
         except UnicodeDecodeError:
-            raise forms.ValidationError(
-                "データを確認するか、管理者に連絡してください。"
-            )
+            raise forms.ValidationError("データを確認するか、管理者に連絡してください。")
         return file
 
     def save(self):
@@ -325,9 +320,7 @@ class MasterPlanCreateForm(forms.ModelForm):
                     "class": "select-css",
                 }
             ),
-            "comment": forms.Textarea(
-                attrs={"class": "textarea", "rows": "4", "required": False}
-            ),
+            "comment": forms.Textarea(attrs={"class": "textarea", "rows": "4", "required": False}),
         }
 
 

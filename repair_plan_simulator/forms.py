@@ -49,25 +49,36 @@ class SimulateDataForm(forms.Form):
         required=False,
     )
 
-    def __init__(self, only_manager, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         forms.Formの定義時に initial=Model.objects.get(...) のように DBに即時アクセスすると、
         migrate時にDBが存在しないためエラーが発生する。--> 遅延評価するため__init__()で処理する。
-        only_maagerがFalseなら、verの初期値は設定しない。
+        only_managerがFalseなら、verの初期値は設定しない。
         """
+        # ビューから渡された引数を取り出す（親クラスに渡す前に消す必要がある）
+        self.is_manager = kwargs.pop("is_manager", False)
         super(SimulateDataForm, self).__init__(*args, **kwargs)
-
         try:
-            # 選択肢を抽出
-            versions = (
-                KoujiName.objects.values_list("version__version", flat=True)
-                .distinct()
-                .order_by("-version__version")
-            )
-            self.fields["keikaku_ver"].choices = [(v, v) for v in versions]
-
-        except Exception:
+            if self.is_manager:
+                # 管理者には全ての修繕計画versionを表示。
+                versions = (
+                    KoujiName.objects.values_list("version__version", flat=True)
+                    .order_by("-version")
+                    .distinct()
+                )
+                self.fields["keikaku_ver"].choices = [(v, v) for v in versions]
+            else:
+                # 管理者以外にはonly_managerフラグがFalseの修繕計画versionを表示。
+                versions = (
+                    KoujiName.objects.filter(version__only_manager=False)
+                    .values_list("version__version", flat=True)
+                    .order_by("-version")
+                    .distinct()
+                )
+                self.fields["keikaku_ver"].choices = [(v, v) for v in versions]
+        except Exception as e:
             # DB未マイグレート or モデルが空の時でもエラーにしない
+            logger.error(f"RepairPlanListForm init error: {e}")
             self.fields["keikaku_ver"].choices = []
 
 

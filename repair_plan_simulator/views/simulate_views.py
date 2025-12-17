@@ -25,9 +25,10 @@ class SimulateView(LoginRequiredMixin, FormView):
     only_manager = False
 
     def get_form_kwargs(self):
+        """TemplateView以外でFormに渡す引数を追加"""
         kwargs = super().get_form_kwargs()
-        _, self.only_manager = get_latest_version(self.request.user)
-        kwargs["only_manager"] = self.only_manager
+        _, self.is_manager = get_latest_version(self.request.user)
+        kwargs["is_manager"] = self.is_manager
         return kwargs
 
     def get_template_names(self):
@@ -57,7 +58,6 @@ class SimulateView(LoginRequiredMixin, FormView):
             }
 
             form = SimulateDataForm(
-                self.only_manager,
                 initial={
                     "keikaku_ver": ver_str,
                     "expense_rate": sim_data["expense_rate"],
@@ -76,8 +76,6 @@ class SimulateView(LoginRequiredMixin, FormView):
             )
 
             balance = MasterPlan.objects.filter(version=ver_int).values("balance")[0]["balance"]
-            logger.debug(f"SimulateView get_context_data balance={balance}")
-
             simulate_data = simulator.add_income_list(expense, sim_data, balance)
             excluded_data = KoujiName.objects.filter(version__version=ver_int, do_calc=False)
 
