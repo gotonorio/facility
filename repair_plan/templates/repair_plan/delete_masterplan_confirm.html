@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if messages %}
+<div class="container" style="margin-top:1rem;">
+  <div class="notification is-info">
+    <button class="delete" type="button"></button>
+    {% for message in messages %}
+      <p>{{message}}</p>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+<div class="container">
+  <br>
+  <form action="" method="POST" enctype='multipart/form-data'>
+    <div class="content has-text-centered">
+      <p>計画バージョン:【 {{ masterplan.version }} 】</p>
+      <p>開始年:【 {{ masterplan.first_year }} 】</p>
+      <p>終了年:【 {{ masterplan.final_year }} 】</p>
+      <button type="submit" class="button is-danger">削除する</button>
+      <a class="button is-primary" href="{% url 'repair_plan:masterplan_list' %}" class="navbar-item">戻る</a>
+    </div>
+    {% csrf_token %}
+  </form>
+</div>
+{% endblock %}

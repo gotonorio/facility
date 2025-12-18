@@ -74,6 +74,7 @@
           <th class="has-text-centered">修繕会計残高</th>
           <th class="has-text-centered">管理者専用</th>
           <th class="has-text-centered">修正</th>
+          <th class="has-text-centered">削除</th>
         </tr>
       </thead>
       <tbody>
@@ -84,6 +85,7 @@
           <td class="has-text-centered">{{ list.balance|intcomma}}</td>
           <td class="has-text-centered">{{ list.only_manager}}</td>
           <td class="has-text-centered"><a href="{% url 'repair_plan:update_master_plan' list.pk%}">修正</a></td>
+          <td class="has-text-centered"><a href="{% url 'repair_plan:delete_master_plan' list.pk%}">削除</a></td>
         </tr>
         {% endfor %}
       </tbody>

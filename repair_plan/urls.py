@@ -69,16 +69,23 @@ urlpatterns = [
         data_views.RepairPlanUpdateView.as_view(),
         name="repairplan_update",
     ),
-    # データ削除
+    # 修繕計画のデータ削除
     path(
         "delete_repair_plan/<int:pk>",
         data_views.RepairPlanDeleteView.as_view(),
         name="delete_repair_plan",
     ),
+    # バージョンごとの修繕計画データ一括削除
     path(
         "delete_koujiname_ver/",
         data_views.KoujiNameDeleteView.as_view(),
         name="delete_koujiname_ver",
+    ),
+    # 修繕計画マスターデータの削除
+    path(
+        "delete_master_plan/<int:pk>/",
+        master_data_views.MasterPlanDeleteView.as_view(),
+        name="delete_master_plan",
     ),
     # データ複製
     path(
@@ -86,7 +93,7 @@ urlpatterns = [
         data_views.RepairPlanDuplicateView.as_view(),
         name="duplicate_repair_plan",
     ),
-    # マスタデータの作成
+    # 修繕計画マスタデータの作成
     path(
         "create_koujitype/",
         master_data_views.KoujiTypeCreateView.as_view(),

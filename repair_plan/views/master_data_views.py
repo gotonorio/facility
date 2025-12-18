@@ -143,3 +143,31 @@ class MasterUnitCreateView(PermissionRequiredMixin, generic.CreateView):
         context = super().get_context_data(**kwargs)
         context["masterlist"] = MasterUnit.objects.all()
         return context
+
+
+class MasterPlanDeleteView(PermissionRequiredMixin, generic.DeleteView):
+    """修繕計画マスタの削除View"""
+
+    model = MasterPlan
+    # 削除してよいか確認するためのtemplate
+    template_name = "repair_plan/delete_masterplan_confirm.html"
+    # 必要な権限（データ登録できる権限は共通）
+    permission_required = "repair_plan.add_koujiname"
+    # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
+    raise_exception = True
+    # 削除が成功した場合に遷移するurl
+    success_url = reverse_lazy("repair_plan:masterplan_list")
+
+    def form_valid(self, form):
+        # 削除対象のインスタンス
+        self.object = self.get_object()
+
+        # 削除前にチェック
+        if self.object.koujiname_set.exists():
+            messages.error(
+                self.request,
+                f"バージョン {self.object.version} には工事データが登録されているため削除できません。",
+            )
+            return self.render_to_response(self.get_context_data(form=form))
+
+        return super().form_valid(form)
