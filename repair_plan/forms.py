@@ -77,7 +77,7 @@ class RepairPlanListForm(RepairPlanBaseForm):
         # --------------------------
         if versions:
             max_version = versions[0]  # order_by('-version') のため先頭が最大
-            self.initial["keikaku_ver"] = max_version
+            self.initial["version"] = max_version
 
 
 class RepairPlanTableForm(RepairPlanBaseForm):
@@ -118,7 +118,7 @@ class RepairPlanTableForm(RepairPlanBaseForm):
         # --------------------------
         if versions:
             max_version = versions[0]  # order_by('-version') のため先頭が最大
-            self.initial["keikaku_ver"] = max_version
+            self.initial["version"] = max_version
 
 
 class DeleteKoujinameVerForm(RepairPlanBaseForm):

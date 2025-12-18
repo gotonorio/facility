@@ -9,11 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 class SimulateDataForm(forms.Form):
-    """修繕計画シミュレーション画面でのForm
-    - keikaku_verで初期値を取得するコードはデータベースの初期化でエラーがでるためコメントアウト
-    """
+    """修繕計画シミュレーション画面でのForm"""
 
-    keikaku_ver = forms.ModelChoiceField(
+    masterplan_ver = forms.ModelChoiceField(
         queryset=MasterPlan.objects.none(),
         label="計画 Ver.",
         required=True,
@@ -66,7 +64,7 @@ class SimulateDataForm(forms.Form):
                     .order_by("-version")
                     .distinct()
                 )
-                self.fields["keikaku_ver"].choices = [(v, v) for v in versions]
+                self.fields["masterplan_ver"].choices = [(v, v) for v in versions]
             else:
                 # 管理者以外にはonly_managerフラグがFalseの修繕計画versionを表示。
                 versions = (
@@ -75,11 +73,14 @@ class SimulateDataForm(forms.Form):
                     .order_by("-version")
                     .distinct()
                 )
-                self.fields["keikaku_ver"].choices = [(v, v) for v in versions]
+                self.fields["masterplan_ver"].choices = [(v, v) for v in versions]
         except Exception as e:
             # DB未マイグレート or モデルが空の時でもエラーにしない
             logger.error(f"RepairPlanListForm init error: {e}")
-            self.fields["keikaku_ver"].choices = []
+            self.fields["masterplan_ver"].choices = []
+
+        # cpi_flgの初期値をTrueに設定
+        self.fields["cpi_flg"].initial = True
 
 
 class ShuuzenhiIncomeCreateForm(forms.ModelForm):

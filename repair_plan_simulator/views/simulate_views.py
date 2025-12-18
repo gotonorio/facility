@@ -37,13 +37,12 @@ class SimulateView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # ver_str = self.request.GET.get("keikaku_ver")
         if kwargs:
             # ビューが渡す場合、URLから渡されたpkなどはkwargsでデータが渡される。
-            ver_str = str(kwargs.get("keikaku_ver"))
+            ver_str = str(kwargs.get("masterplan_ver"))
         else:
             # formから渡された場合、GETパラメータで取得する。
-            ver_str = self.request.GET.get("keikaku_ver", False)
+            ver_str = self.request.GET.get("masterplan_ver", False)
 
         if ver_str:
             plan = MasterPlan.objects.get(version=int(ver_str))
@@ -63,7 +62,7 @@ class SimulateView(LoginRequiredMixin, FormView):
 
             form = SimulateDataForm(
                 initial={
-                    "keikaku_ver": ver_str,
+                    "masterplan_ver": ver_str,
                     "expense_rate": sim_data["expense_rate"],
                     "sales_tax_rate": sim_data["sales_tax_rate"],
                     "shuuzenhi_rate": sim_data["shuuzenhi_rate"],
