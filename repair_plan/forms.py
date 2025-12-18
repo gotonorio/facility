@@ -250,15 +250,9 @@ class ImportRepairPlanDataForm(forms.Form):
             koujiname.save()
 
 
-class DeleteKoujinameVerForm(forms.Form):
+class DeleteKoujinameVerForm(RepairPlanBaseForm):
     """削除する工事計画Version用Form"""
 
-    keikaku_ver = forms.ModelChoiceField(
-        queryset=MasterPlan.objects.all(),
-        label="削除するVer.",
-        required=True,
-        widget=forms.Select(attrs={"class": "select-css is-size-7"}),
-    )
     confirm_flg = forms.NullBooleanField(
         label="削除確認.",
         initial=False,
@@ -266,6 +260,25 @@ class DeleteKoujinameVerForm(forms.Form):
             attrs={"class": "select-css"},
         ),
     )
+
+    def __init__(self, *args, **kwargs):
+        super(DeleteKoujinameVerForm, self).__init__(*args, **kwargs)
+        try:
+            # 1. KoujiNameに存在するMasterPlanのIDを取得
+            existing_version_ids = KoujiName.objects.values_list("version", flat=True).distinct()
+
+            # 2. 親クラスの version フィールドの queryset を直接書き換える
+            # これにより、バリデーションもこのQuerySetに基づいて行われます
+            self.fields["version"].queryset = MasterPlan.objects.filter(id__in=existing_version_ids).order_by(
+                "-version"
+            )
+
+            # 3. 表示名をカスタマイズしたい場合（例: "Ver.1" と出したい場合）
+            # self.fields["version"].label_from_instance = lambda obj: f"Ver.{obj.version}"
+
+        except Exception as e:
+            logger.error(f"Form init error: {e}")
+            self.fields["version"].queryset = MasterPlan.objects.none()
 
 
 # ----------------------------------------------------------------------------

@@ -50,7 +50,7 @@ class RepairPlanTableView(PermissionRequiredMixin, generic.TemplateView):
         if ver is False or ver is None:
             ver = latest_version
 
-        # formに初期値を設定する
+        # formに初期値を設定する（同時にTemplateViewdではここでis_managerを渡す）
         form = RepairPlanTableForm(
             is_manager,
             initial={

@@ -245,13 +245,16 @@ class KoujiNameDeleteView(PermissionRequiredMixin, generic.FormView):
     success_url = reverse_lazy("repair_plan:delete_koujiname_ver")
 
     def form_valid(self, form):
-        # フォームのデータを処理する
-        # このメソッドはPOSTリクエストが有効な場合に呼び出される
-        del_version = form.cleaned_data["keikaku_ver"]
+        # ModelChoiceFieldで選択されたMasterPlanオブジェクトを取得
+        version_obj = form.cleaned_data["version"]
         yesno = form.cleaned_data["confirm_flg"]
-        if yesno:
-            msg = KoujiName.objects.delete_koujiname_by_ver(del_version)
-            messages.success(self.request, msg)
-        else:
+        if not yesno:
             messages.success(self.request, "削除確認がありません")
+            return super().form_valid(form)
+        # 削除実行
+        deleted_count, _ = KoujiName.objects.filter(version=version_obj).delete()
+
+        messages.success(
+            self.request, f"バージョン {version_obj} のデータを {deleted_count} 件削除しました。"
+        )
         return super().form_valid(form)
