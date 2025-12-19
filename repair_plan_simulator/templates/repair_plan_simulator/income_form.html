@@ -73,9 +73,8 @@
           <th class="has-text-centered">西暦</th>
           <th class="has-text-centered">修繕積立金額</th>
           <th class="has-text-centered">駐車場収入</th>
-          {% comment %} <th class="has-text-centered">駐車場管理費</th> {% endcomment %}
           <th class="has-text-centered">その他収入</th>
-          <th class="has-text-centered">実収入</th>
+          <th class="has-text-centered">有効/無効</th>
           <th class="has-text-centered">備考</th>
           <th class="has-text-centered">修正</th>
         </tr>
@@ -86,9 +85,12 @@
           <td class="has-text-centered">{{ list.year }}</td>
           <td class="has-text-right">{{ list.income|intcomma }}</td>
           <td class="has-text-right">{{ list.parking_income|intcomma }}</td>
-          {% comment %} <td class="has-text-right">{{ list.parking_kanrihi|intcomma }}</td> {% endcomment %}
           <td class="has-text-right">{{ list.extra_income|intcomma }}</td>
-          <td class="has-text-centered">{{ list.real }}</td>
+          {% if list.real %}
+            <td class="has-text-centered">有効</td>
+          {% else %}
+            <td class="has-text-centered has-text-danger">以前有効</td>
+          {% endif %}
           <td class="has-text-left">{{ list.comment|default_if_none:""|markdown_to_html }}</td>
           <td class="has-text-centered"><a href="{% url 'repair_plan_simulator:update_income' list.pk %}">修正</a></td>
         </tr>

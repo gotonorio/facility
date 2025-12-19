@@ -22,7 +22,7 @@ def calc_cpi(plan_list):
 
 
 def calc_expense_list(ver, expense_rate, sales_tax_rate, cpi_flg):
-    """長期修繕計画を年度毎に集計したリストを返す
+    """長期修繕計画支出額を年度毎に集計したリストを返す
     - 完了工事の計画支出を0とする。
     - F()式の列が異なるデータ型(integer,float)のため、ExpressionWrapper()を使う。
     - (1) values().annotate()（SQLのBROUP BY）で計画支出金額、実支出金額の行集計を行う。
@@ -92,10 +92,17 @@ def add_income_list(shuuzenhi_expense, sim_data, zandaka):
     data_list = []
     ruikei = zandaka
 
-    # 最新の修繕会計収入データ
-    qs = Shuuzenhi_income.objects.filter(real=True).order_by("year")
-    income_last = qs.last()
-    last_year = income_last.year
+    # 最新の収入見込みデータ。real=Falseのデータがあればその年以降の収入データは無視する。
+    obj = Shuuzenhi_income.objects.filter(real=False).order_by("-year").first()
+    if obj:
+        qs = Shuuzenhi_income.objects.filter(year__lte=obj.year).order_by("year")
+        income_last = qs.last()
+        last_year = obj.year
+    else:
+        qs = Shuuzenhi_income.objects.filter(real=True).order_by("year")
+        income_last = qs.last()
+        last_year = income_last.year
+
     # 修繕積立金
     last_income = shuuzenhi_rate * income_last.income
     # 駐車場会計からの収入

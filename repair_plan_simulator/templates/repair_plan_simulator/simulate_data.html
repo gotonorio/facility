@@ -65,13 +65,14 @@
   <br>
   <br>
   <div class="content">
-    <h4>収入見込みデータ</h4>
+    <h4>収入見込みデータ（「無効」以降の収入データは考慮しない）</h4>
   </div>
   <div class="context">
     <table class="table table_nowrap is-striped is-narrow">
       <thead>
         <tr>
           <th class="has-text-centered">西暦</th>
+          <th class="has-text-centered">有効/無効</th>
           <th class="has-text-centered">修繕積立金</th>
           <th class="has-text-centered">駐車場会計より</th>
           <th class="has-text-centered">その他収入</th>
@@ -82,6 +83,11 @@
         {% for data in income_data %}
         <tr>
           <td class="has-text-centered">{{ data.year}}</td>
+          {% if data.real %}
+            <td class="has-text-centered">有効</td>
+          {% else %}
+            <td class="has-text-centered has-text-danger">以前有効</td>
+          {% endif %}
           <td class="has-text-right">{{ data.income|intcomma }}</td>
           <td class="has-text-right">{{ data.parking_income|intcomma }}</td>
           <td class="has-text-right">{{ data.extra_income|intcomma }}</td>
