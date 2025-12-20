@@ -71,7 +71,8 @@ class SimulateView(LoginRequiredMixin, FormView):
                 },
             )
 
-            expense = simulator.calc_expense_list(
+            # 長期修繕計画支出額を年度毎に集計したリスト
+            expense_list = simulator.calc_expense_list(
                 ver_str,
                 sim_data["expense_rate"],
                 sim_data["sales_tax_rate"],
@@ -79,7 +80,7 @@ class SimulateView(LoginRequiredMixin, FormView):
             )
 
             balance = MasterPlan.objects.filter(version=ver_int).values("balance")[0]["balance"]
-            simulate_data = simulator.add_income_list(expense, sim_data, balance)
+            simulate_data = simulator.add_income_list(expense_list, sim_data, balance)
             excluded_data = KoujiName.objects.filter(version__version=ver_int, do_calc=False)
 
             context.update(
