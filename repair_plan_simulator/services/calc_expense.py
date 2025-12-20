@@ -1,7 +1,7 @@
 import logging
 
 from django.db.models import ExpressionWrapper, F, IntegerField
-from django.db.models.aggregates import Sum
+from django.db.models.aggregates import Sum, Value
 from repair_plan.models import KoujiName
 from repair_plan_simulator.models import ConsumerPriceIndex
 
@@ -21,7 +21,7 @@ def calc_cpi(plan_list) -> list:
     return plan_list
 
 
-def calc_expense_list(ver, expense_rate, sales_tax_rate, cpi_flg) -> list:
+def calc_expense_list(ver, expense_rate, sales_tax_rate, cpi_flg, include_actual_cost=True) -> list:
     """長期修繕計画支出額を年度毎に集計したリストを返す
     - 完了工事の計画支出を0とする。
     - F()式の列が異なるデータ型(integer,float)のため、ExpressionWrapper()を使う。
@@ -29,19 +29,25 @@ def calc_expense_list(ver, expense_rate, sales_tax_rate, cpi_flg) -> list:
     - (2) values().annotate()で完了した工事について修繕計画の行集計を行う。
     - (3) 年度毎に「予定支出金額」から「実支出金額」を差し引く処理を行う。
     """
-    # (1) 長期修繕計画の計画支出、完了工事の実支出を年度毎に集計したリスト
+    # (1) 長期修繕計画の「予定支出額」と「完了工事の実支出額」を年度毎に集計したリスト
+    if include_actual_cost:
+        actual_cost_expr = Sum("actual_cost")
+    else:
+        actual_cost_expr = Value(0, output_field=IntegerField())
+
     plan_qs = (
         KoujiName.objects.filter(version__version=ver, do_calc=True)
         .values("kouji_year")
         .annotate(
             cost=ExpressionWrapper(Sum(F("unit_price") * F("kouji_quantity")), output_field=IntegerField()),
-            actual_cost=Sum("actual_cost"),
+            actual_cost=actual_cost_expr,
         )
     ).order_by("kouji_year")
+
     # querysetの結果をdict要素としたlistに変換
     plan_list = list(plan_qs)
 
-    # 計画値に物価指数を反映する。
+    # （1-1）支出額に物価指数を反映する。
     if cpi_flg == "on":
         plan_list = calc_cpi(plan_list)
 
@@ -53,15 +59,17 @@ def calc_expense_list(ver, expense_rate, sales_tax_rate, cpi_flg) -> list:
             cost=ExpressionWrapper(Sum(F("unit_price") * F("kouji_quantity")), output_field=IntegerField()),
         )
     )
+
     # querysetの結果をdict要素としたlistに変換
     complete_list = list(qs_complete)
 
     # (3) 完了した工事の計画支出額から完了工事の実支出金額を減じる。
-    for complete in complete_list:
-        for plan in plan_list:
-            if complete["kouji_year"] == plan["kouji_year"]:
-                plan["cost"] -= complete["cost"]
-                break
+    if include_actual_cost:
+        for complete in complete_list:
+            for plan in plan_list:
+                if complete["kouji_year"] == plan["kouji_year"]:
+                    plan["cost"] -= complete["cost"]
+                    break
 
     # (4) 経費と消費税を考慮した計画値と実支出額のリストを作成。
     ruikei = 0

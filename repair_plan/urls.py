@@ -65,6 +65,11 @@ urlpatterns = [
         name="repairplan_update_list",
     ),
     path(
+        "repairplan_update_list/<int:version>/<str:kouji_type>/",
+        data_views.RepairPlanUpdateListView.as_view(),
+        name="repairplan_update_list",
+    ),
+    path(
         "repairplan_update/<int:pk>",
         data_views.RepairPlanUpdateView.as_view(),
         name="repairplan_update",

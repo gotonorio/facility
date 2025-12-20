@@ -46,6 +46,11 @@ class SimulateDataForm(forms.Form):
         label="物価指数を考慮",
         required=False,
     )
+    # 完了工事を考慮するかどうか
+    include_actual_cost = forms.BooleanField(
+        label="完了工事を考慮",
+        required=False,
+    )
 
     def __init__(self, *args, **kwargs):
         """

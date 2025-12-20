@@ -58,6 +58,7 @@ class SimulateView(LoginRequiredMixin, FormView):
                 "shuuzenhi_rate": float(self.request.GET.get("shuuzenhi_rate")),
                 "parking_rate": float(self.request.GET.get("parking_rate")),
                 "cpi_flg": self.request.GET.get("cpi_flg"),
+                "include_actual_cost": self.request.GET.get("include_actual_cost"),
             }
 
             form = SimulateDataForm(
@@ -68,6 +69,7 @@ class SimulateView(LoginRequiredMixin, FormView):
                     "shuuzenhi_rate": sim_data["shuuzenhi_rate"],
                     "parking_rate": sim_data["parking_rate"],
                     "cpi_flg": sim_data["cpi_flg"],
+                    "include_actual_cost": sim_data["include_actual_cost"],
                 },
             )
 
@@ -77,6 +79,7 @@ class SimulateView(LoginRequiredMixin, FormView):
                 sim_data["expense_rate"],
                 sim_data["sales_tax_rate"],
                 sim_data["cpi_flg"],
+                include_actual_cost=sim_data["include_actual_cost"],
             )
 
             balance = MasterPlan.objects.filter(version=ver_int).values("balance")[0]["balance"]
