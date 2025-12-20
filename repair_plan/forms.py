@@ -42,7 +42,7 @@ class RepairPlanListForm(RepairPlanBaseForm):
         widget=forms.Select(attrs={"class": "select-css is-size-7"}),
     )
 
-    def __init__(self, is_manager, *args, **kwargs):
+    def __init__(self, is_manager, ver, *args, **kwargs):
         """viewがら渡されたis_managerフラグでquerysetを変更させる
         querysetはversionのリストを表示させる。
         forms.Formの定義時に initial=Model.objects.get(...) のように DBに即時アクセスすると、
@@ -73,50 +73,11 @@ class RepairPlanListForm(RepairPlanBaseForm):
             self.fields["version"].choices = []
 
         # --------------------------
-        # ★ 最大 version を初期値に設定
+        # 初期値の設定
         # --------------------------
-        if versions:
-            max_version = versions[0]  # order_by('-version') のため先頭が最大
-            self.initial["version"] = max_version
-
-
-class RepairPlanTableForm(RepairPlanBaseForm):
-    """修繕計画表用Form
-    http://www.subthread.co.jp/blog/20160531/
-    """
-
-    def __init__(self, is_manager, *args, **kwargs):
-        """viewがら渡されたonly_managerフラグでquerysetを変更させる
-        - querysetはversionのリストを表示させる。
-        """
-        super(RepairPlanTableForm, self).__init__(*args, **kwargs)
-
-        try:
-            if is_manager:
-                # 管理者には全ての修繕計画versionを表示。
-                versions = (
-                    KoujiName.objects.values_list("version__version", flat=True)
-                    .order_by("-version")
-                    .distinct()
-                )
-                self.fields["version"].choices = [(v, v) for v in versions]
-            else:
-                # 管理者以外にはonly_managerフラグがFalseの修繕計画versionを表示。
-                versions = (
-                    KoujiName.objects.filter(version__only_manager=False)
-                    .values_list("version__version", flat=True)
-                    .order_by("-version")
-                    .distinct()
-                )
-                self.fields["version"].choices = [(v, v) for v in versions]
-        except Exception as e:
-            logger.error(f"RepairPlanListForm init error: {e}")
-            self.fields["version"].choices = []
-
-        # --------------------------
-        # ★ 最大 version を初期値に設定
-        # --------------------------
-        if versions:
+        if ver:
+            self.initial["version"] = ver
+        else:
             max_version = versions[0]  # order_by('-version') のため先頭が最大
             self.initial["version"] = max_version
 

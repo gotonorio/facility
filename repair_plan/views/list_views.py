@@ -58,8 +58,10 @@ class RepairPlanListView(LoginRequiredMixin, generic.TemplateView):
         for item in repair_plan:
             total = total + (item.unit_price * item.kouji_quantity)
 
-        # TemplateViewでformに初期値を渡す。
-        form = RepairPlanListForm(is_manager, initial={"koujitype": koujitype, "version": ver})
+        # TemplateViewでformに初期値を渡す。verはRepairPlanListFormの__init__で処理する。
+        form = RepairPlanListForm(is_manager, ver, initial={"koujitype": koujitype})
+
+        # contextの設定
         context["repairplan_list"] = repair_plan
         context["form"] = form
         context["start_year"] = -settings.INITIAL_YEAR

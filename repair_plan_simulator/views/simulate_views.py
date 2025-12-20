@@ -12,7 +12,7 @@ from facility.services import get_latest_version
 from repair_plan.models import KoujiName, MasterPlan
 
 from repair_plan_simulator.forms import SimulateDataForm
-from repair_plan_simulator.services import simulator
+from repair_plan_simulator.services import calc_expense, calc_income
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +72,7 @@ class SimulateView(LoginRequiredMixin, FormView):
             )
 
             # 長期修繕計画支出額を年度毎に集計したリスト
-            expense_list = simulator.calc_expense_list(
+            expense_list = calc_expense.calc_expense_list(
                 ver_str,
                 sim_data["expense_rate"],
                 sim_data["sales_tax_rate"],
@@ -80,7 +80,7 @@ class SimulateView(LoginRequiredMixin, FormView):
             )
 
             balance = MasterPlan.objects.filter(version=ver_int).values("balance")[0]["balance"]
-            simulate_data = simulator.add_income_list(expense_list, sim_data, balance)
+            simulate_data = calc_income.add_income_list(expense_list, sim_data, balance)
             excluded_data = KoujiName.objects.filter(version__version=ver_int, do_calc=False)
 
             context.update(

@@ -5,7 +5,7 @@ from django.views import generic
 from facility.services import get_latest_version
 
 # from repair_plan_simulator.models import Shuuzenhi_income
-from repair_plan.forms import RepairPlanTableForm
+from repair_plan.forms import RepairPlanListForm
 from repair_plan.models import KoujiName
 
 logger = logging.getLogger(__name__)
@@ -51,8 +51,9 @@ class RepairPlanTableView(PermissionRequiredMixin, generic.TemplateView):
             ver = latest_version
 
         # formに初期値を設定する（同時にTemplateViewdではここでis_managerを渡す）
-        form = RepairPlanTableForm(
+        form = RepairPlanListForm(
             is_manager,
+            ver,
             initial={
                 "version": ver,
             },
