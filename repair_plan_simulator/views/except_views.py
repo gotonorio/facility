@@ -18,11 +18,11 @@ def reset_do_calc(request, pk):
     instance = get_object_or_404(KoujiName, pk=pk)
     instance.do_calc = 1
     instance.save()
-    return redirect("simulate:do_simulate")
+    return redirect("repair_plan_simulator:do_simulate")
 
 
 def unset_do_calc(request, pk):
     instance = get_object_or_404(KoujiName, pk=pk)
     instance.do_calc = 0
     instance.save()
-    return redirect("simulate:do_simulate")
+    return redirect("repair_plan_simulator:do_simulate")

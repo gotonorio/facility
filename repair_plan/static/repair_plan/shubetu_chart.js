@@ -49,10 +49,15 @@ function koujiShubetuChart(data){
     };
     // (3) チャートオプション
     // http://www.chartjs.org/docs/#chart-configuration-tooltip-configuration
-    var myChartOption = {
-        responsive:true,    // canvasサイズを固定する。(trueの場合windowの大きさに連動する)
+    const myChartOption = {
+        // canvasサイズを固定する。(trueの場合windowの大きさに連動する)
+        responsive:true,
+        // コンテナの幅に合わせて比率を維持する
         maintainAspectRatio: true,
-        indexAxis: 'y',     // 棒グラフを横向きにする。
+        // 比率の設定　2:3（幅が高さの1.5倍）にしたいので「1.5」を指定
+        aspectRatio: 1.5,
+        // 棒グラフを横向きにする。
+        indexAxis: 'y',
 
         plugins: {
             title: {

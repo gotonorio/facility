@@ -9,7 +9,6 @@
 
 {% block head %}
 {# javascriptファイルを取り込む #}
-{% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.min.js"></script> {% endcomment %}
 {% comment %} Chart.js  v4の使い方参考URL
 https://qiita.com/teddokano/items/207f6ccac4199f604eef
 https://github.com/chartjs/chartjs-adapter-date-fns
@@ -121,6 +120,8 @@ https://github.com/chartjs/chartjs-adapter-date-fns
     </table>
   </div>
   <br>
+
+  {# グラフ表示エリア #}
   <div class="graph_container">
     <canvas id="simulate_graph" width="420" height="270"></canvas>
   </div>

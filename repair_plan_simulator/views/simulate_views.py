@@ -32,7 +32,7 @@ class SimulateView(LoginRequiredMixin, FormView):
 
     def get_template_names(self):
         if self.request.user_agent_flag == "mobile":
-            return ["repair_plan_simulator/simulate_pc.html"]
+            return ["repair_plan_simulator/simulate_mobile.html"]
         return ["repair_plan_simulator/simulate_pc.html"]
 
     def get_context_data(self, **kwargs):

@@ -60,9 +60,14 @@ function simulateShuuzenhiChart(data) {
         ]
     };
 
+    // (3) チャートオプション
     const myChartOption = {
+        // canvasサイズを固定する。(trueの場合windowの大きさに連動する)
         responsive: true,
+        // コンテナの幅に合わせて比率を維持する
         maintainAspectRatio: true,
+        // 比率の設定　2:3（幅が高さの1.5倍）にしたいので「1.5」を指定
+        aspectRatio: 1.5,
 
         plugins: {
             title: {

@@ -138,7 +138,7 @@ class RepairPlanByKoujitypeView(PermissionRequiredMixin, generic.TemplateView):
             total = total + item["subtotal"]
 
         # forms.pyのKeikakuListFormに初期値を設定する．http://i2bskn.hateblo.jp/entry/20120826/1345936779
-        form = RepairPlanListForm(is_manager, initial={"version": ver})
+        form = RepairPlanListForm(is_manager, ver, initial={"version": ver})
         context["ver"] = ver
         context["repairplan_by_koujitype"] = qs
         context["form"] = form

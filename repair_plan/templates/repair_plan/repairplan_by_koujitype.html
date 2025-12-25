@@ -77,30 +77,30 @@ https://github.com/chartjs/chartjs-adapter-date-fns
       </tbody>
     </table>
   </div>
-</div>
-<br>
-{# グラフ表示エリア #}
-{# https://misc.0o0o.org/chartjs-doc-ja/general/responsive.html #}
-{# https://obel.hatenablog.jp/entry/20160626/1466937585 #}
-<div class="graph_container">
-  <canvas id="stage" width="300" height="200"></canvas>
-</div>
+  <br>
+  {# グラフ表示エリア #}
+  {# https://misc.0o0o.org/chartjs-doc-ja/general/responsive.html #}
+  {# https://obel.hatenablog.jp/entry/20160626/1466937585 #}
+  <div class="graph_container">
+    <canvas id="stage"></canvas>
+  </div>
 
-{# 以下でグラフ作成用のデータを生成する。 #}
-<script type="text/javascript">
-  var graph_data = [];
-</script>
-{% for data in repairplan_by_koujitype %}
-<script type="text/javascript">
-  var list = [];
-  list.push("{{data.kouji_type__master_name}}");
-  list.push("{{data.subtotal}}");
-  graph_data.push(list);
-</script>
-{% endfor %}
-<script type="text/javascript">
-  //console.log(graph_data);
-  koujiShubetuChart(graph_data);
-</script>
+  {# 以下でグラフ作成用のデータを生成する。 #}
+  <script type="text/javascript">
+    var graph_data = [];
+  </script>
+  {% for data in repairplan_by_koujitype %}
+  <script type="text/javascript">
+    var list = [];
+    list.push("{{data.kouji_type__master_name}}");
+    list.push("{{data.subtotal}}");
+    graph_data.push(list);
+  </script>
+  {% endfor %}
+  <script type="text/javascript">
+    //console.log(graph_data);
+    koujiShubetuChart(graph_data);
+  </script>
+</div>
 <br>
 {% endblock content %}
