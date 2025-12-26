@@ -85,18 +85,10 @@ function simulateShuuzenhiChart(data) {
                 }
             },
             tooltip: {
+                enabled: true,
                 mode: 'index',
-                callbacks: {
-                    label: function (context) {
-                        return (
-                            ' ' +
-                            context.dataset.label +
-                            ' : ' +
-                            context.parsed.y.toLocaleString() +
-                            ' 円'
-                        );
-                    }
-                }
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
             }
         },
 

@@ -62,6 +62,12 @@ function koujiShubetuChart(data){
                 display: true,
                 labels: { boxWidth:10, padding:20 }
             },
+            tooltip: {
+                enabled: true,
+                mode: 'index',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 12,
+            }
         },
 
         scales: {
