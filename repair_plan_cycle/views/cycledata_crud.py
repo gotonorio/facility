@@ -49,10 +49,11 @@ class CycleDataCreateView(PermissionRequiredMixin, generic.CreateView):
     model = KoujiCycleData
     form_class = CycleDataForm
     template_name = "repair_plan_cycle/koujicycledata_form.html"
-    success_url = reverse_lazy("repair_plan_cycle:")
+    success_url = reverse_lazy("repair_plan_cycle:cycledata_list")
     permission_required = "repair_plan.add_koujiname"
 
     def form_valid(self, form):
+        messages.success(self.request, "保存しました。")
         return super().form_valid(form)
 
     # def get_context_data(self, **kwargs):
