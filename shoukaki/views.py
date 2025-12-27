@@ -198,7 +198,7 @@ class ShoukakiDisposalView(LoginRequiredMixin, generic.TemplateView):
         qs = (
             Shoukaki.objects.select_related("shoukaki")
             .filter(alive=True)
-            .filter(made_year__lt=check)
+            .filter(made_year__lte=check)
             .order_by("made_year")
         )
         # form既定値
