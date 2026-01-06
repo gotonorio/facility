@@ -33,7 +33,6 @@
     <div class="navbar-end">
       {% comment %} 月次処理はmanager {% endcomment %}
       {% if perms.parking.add_parkingspace %}
-        <a class="navbar-item" href="{% url 'parking:export_parkingfee' title %}">駐車場データ出力</a>
         <a class="navbar-item" href="{% url 'parking:monthly' %}">月次処理</a>
       {% endif %}
     <a class="navbar-item" href="{% url 'parking:list' %}">【戻る】</a>
@@ -55,7 +54,7 @@
 </div>
 {% endif %}
 <br>
-<div class="containere is-fluid">
+<div class="container is-fluid">
   <div class="content">
     <h4>管理者用 {{title}} 現在 駐車場 利用状況</h4>
   </div>

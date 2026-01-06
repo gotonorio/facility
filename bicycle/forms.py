@@ -27,6 +27,25 @@ class BicycleSpaseListForm(YearMonthForm):
 class BicycleUpdateForm(forms.ModelForm):
     """駐輪場データの修正処理"""
 
+    def clean(self):
+        cleaned_data = super().clean()
+        no = cleaned_data.get("no")
+        room = cleaned_data.get("room_number")
+        status = cleaned_data.get("status_of_use")
+
+        # 整合性チェック
+        if room == 0 and status != "空き":
+            raise forms.ValidationError(
+                f"駐輪場 No.{no}の部屋番号が「0」なら使用状況は「空き」にしてください。"
+            )
+
+        if status == "空き" and room > 0:
+            raise forms.ValidationError(
+                f"駐輪場 No.{no}の使用状況が「空き」なら部屋番号は「0」にしてください。"
+            )
+
+        return cleaned_data
+
     class Meta:
         model = BicycleSpace
         fields = ("no", "location", "room_number", "date", "status_of_use", "comment")

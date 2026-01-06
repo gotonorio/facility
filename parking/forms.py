@@ -56,6 +56,28 @@ class ParkingUpdateForm(forms.ModelForm):
     - 駐車場Noはreadonly属性をTrueとする。
     """
 
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get("name")
+        room = cleaned_data.get("room_number")
+        status = cleaned_data.get("status_of_use")
+        no = cleaned_data.get("no")
+
+        # 整合性チェック
+        if room == 0 and status not in ["空き", "使用中止"]:
+            raise forms.ValidationError(f"駐車場 No.{no}の「部屋番号」を入力してください。")
+
+        if name is None and status not in ["空き", "使用中止"]:
+            raise forms.ValidationError(f"駐車場 No.{no}の「契約者」を入力してください。")
+
+        if status == "空き" and room > 0:
+            raise forms.ValidationError(f"使用状況が「空き」なら部屋番号{room}は0にしてください。")
+
+        if status == "空き" and name is not None:
+            raise forms.ValidationError("使用状況が「空き」なら契約者は「空白」にしてください。")
+
+        return cleaned_data
+
     class Meta:
         model = ParkingSpace
         fields = (
