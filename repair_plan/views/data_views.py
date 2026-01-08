@@ -1,10 +1,8 @@
-import logging
-
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db.models.aggregates import Max
-from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.shortcuts import redirect
+from django.urls import reverse, reverse_lazy
+from django.utils.http import urlencode
 from django.views import generic
 from repair_plan.forms import (
     DeleteKoujinameVerForm,
@@ -14,80 +12,54 @@ from repair_plan.forms import (
     RepairPlanUpdateForm,
 )
 from repair_plan.models import KoujiName, MasterPlan
-from repair_plan.views.list_views import RepairPlanListView
+from repair_plan.services.data_service import (
+    # bulk_delete_kouji_by_version,
+    duplicate_repair_plan,
+    get_max_master_version,
+)
 
-logger = logging.getLogger(__name__)
+
+# --- 共通設定の継承用クラス ---
+class RepairPlanAdminMixin(PermissionRequiredMixin):
+    permission_required = "repair_plan.add_koujiname"
+    raise_exception = True
 
 
-class ReparPlanCreateView(PermissionRequiredMixin, generic.CreateView):
-    """長期修繕計画データを登録する
-    http://k-mawa.hateblo.jp/entry/2017/10/20/181711
-    """
+# --- 工事データ操作 ---
+class ReparPlanCreateView(RepairPlanAdminMixin, generic.CreateView):
+    """工事データの登録"""
 
     model = KoujiName
     form_class = RepairPlanCreateForm
     template_name = "repair_plan/repair_plan_form.html"
-    # 必要な権限(admin以外で下記の権限を持つユーザーが利用可能)
-    permission_required = "repair_plan.add_koujiname"
-    # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
-    raise_exception = True
-    # 保存が成功した場合に遷移するurl。再度入力画面に遷移する。
     success_url = reverse_lazy("repair_plan:add_repair_plan")
+
+    def get_initial(self):
+        return {"version": get_max_master_version(), "kouji_quantity": 1, "unit": 1}
 
     def form_valid(self, form):
         messages.success(self.request, "保存しました。")
         return super().form_valid(form)
 
-    def form_invalid(self, form):
-        messages.warning(self.request, "保存できませんでした。")
-        return super().form_invalid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        title = "長期修繕計画データの登録"
-        context["title"] = title
-        # formに初期値を表示させる。
-        ver = MasterPlan.objects.aggregate(ver=Max("version"))["ver"]
-        context["form"] = RepairPlanCreateForm(initial={"version": ver, "kouji_quantity": 1, "unit": 1})
-        return context
-
-
-class RepairPlanUpdateListView(RepairPlanListView):
-    """長期修繕計画の編集用list表示
-    - ToDo
-    - templateファイルで管理者の場合、「編集・削除」ボタンを表示するようにすれば、
-        わざわざ編集用のVieteファイルを表示するだけのviewクラスを作成する必要はない。どちらがスマートか？
-    """
-
-    def get_template_names(self):
-        """templateファイルをuser agentで切り替える"""
-        if self.request.user_agent_flag == "mobile":
-            template_name = "repair_plan/repairplan_update_list.html"
-        else:
-            template_name = "repair_plan/repairplan_update_list.html"
-        return [template_name]
-
-
-class RepairPlanUpdateView(PermissionRequiredMixin, generic.UpdateView):
-    """長期修繕計画UPDATE"""
+class RepairPlanUpdateView(RepairPlanAdminMixin, generic.UpdateView):
+    """工事データの修正"""
 
     model = KoujiName
     form_class = RepairPlanUpdateForm
     template_name = "repair_plan/repair_plan_form.html"
-    # 必要な権限（データ登録できる権限は共通）
-    permission_required = "repair_plan.add_koujiname"
-    # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
-    raise_exception = True
 
-    # 保存が成功した場合に遷移するurl
     def get_success_url(self):
-        qs = KoujiName.objects.filter(pk=self.object.pk).values("version__version", "kouji_type")
-        ver = qs[0]["version__version"]
-        koujitype = qs[0]["kouji_type"]
-        return reverse_lazy(
-            "repair_plan:repairplan_update_list",
-            kwargs={"version": ver, "kouji_type": koujitype},
+        # 修正後、元のリスト画面（同じVer/種別）に戻す
+        base_url = reverse("repair_plan:repairplan_update_list")
+        # クエリパラメータを辞書形式で定義
+        params = urlencode(
+            {
+                "version": self.object.version.version,
+                "kouji_type": self.object.kouji_type,
+            }
         )
+        return f"{base_url}?{params}"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -96,93 +68,54 @@ class RepairPlanUpdateView(PermissionRequiredMixin, generic.UpdateView):
         return context
 
 
-class RepairPlanDeleteView(PermissionRequiredMixin, generic.DeleteView):
-    """個別工事項目の削除View"""
+class RepairPlanDuplicateView(RepairPlanAdminMixin, generic.FormView):
+    """修繕計画の複製作成（最重要ロジック）"""
 
-    model = KoujiName
-    # 削除してよいか確認するためのtemplate
-    template_name = "repair_plan/delete_confirm.html"
-    # 必要な権限（データ登録できる権限は共通）
-    permission_required = "repair_plan.add_koujiname"
-    # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
-    raise_exception = True
-    # 削除が成功した場合に遷移するurl
-    success_url = reverse_lazy("repair_plan:repairplan_update_list")
-
-
-class RepairPlanDuplicateView(PermissionRequiredMixin, generic.FormView):
     form_class = DuplicateRepairPlanForm
     template_name = "repair_plan/duplicate_plan_form.html"
     success_url = reverse_lazy("repair_plan:repairplan_list")
-    permission_required = "repair_plan.add_koujiname"
 
     def get_context_data(self, **kwargs):
-        """コンテキストデータにタイトルとマスタプランリストを追加
-        - formは自動で追加される。
-        - formだけならgetメソッドをオーバーライドしても良いが、今回はcontext_dataにまとめて追加する。
-            def get(self, request, *args, **kwargs):
-                form = self.form_class()
-                return render(request, self.template_name, {"form": form})
-        """
         context = super().get_context_data(**kwargs)
-        context["title"] = "長期修繕計画の複製作成"
         context["masterlist"] = MasterPlan.objects.all().order_by("-version")
         return context
 
-    def post(self, request, *args, **kwargs):
-        """フォームのPOSTデータを処理して長期修繕計画を複製する"""
-        # フォームのバリデーション
-        form = self.form_class(request.POST)
-        if not form.is_valid():
-            return render(request, self.template_name, {"form": form})
+    def form_valid(self, form):
+        source_ver = form.cleaned_data["source_ver"]
+        new_ver = form.cleaned_data["new_ver"]
 
-        # フォームから値を取得
-        source_master = form.cleaned_data["source_ver"]  # MasterPlan インスタンス
-        new_ver = form.cleaned_data["new_ver"]  # 整数
-
-        # 既存チェック
-        if MasterPlan.objects.filter(version=new_ver).exists():
-            messages.info(request, f"バージョン {new_ver} のデータは既に存在します。")
-            return redirect(self.get_success_url())
-
-        # 新 MasterPlan 作成
-        new_master = MasterPlan.objects.create(
-            version=new_ver,
-            first_year=source_master.first_year,
-            final_year=source_master.final_year,
-            balance=source_master.balance,
-            comment=source_master.comment,
+        # Service呼び出し
+        success = duplicate_repair_plan(
+            source_plan=source_ver,
+            new_version=new_ver,
+            author=self.request.user,
         )
-
-        # KoujiName の複製
-        old_kouji = KoujiName.objects.filter(version=source_master)
-        new_plan = []
-
-        for d in old_kouji:
-            new_plan.append(
-                KoujiName(
-                    version=new_master,
-                    do_calc=d.do_calc,
-                    kouji_type=d.kouji_type,
-                    kouji_name=d.kouji_name,
-                    kouji_spec=d.kouji_spec,
-                    kouji_quantity=d.kouji_quantity,
-                    unit=d.unit,
-                    unit_price=d.unit_price,
-                    kouji_year=d.kouji_year,
-                    comment=d.comment,
-                    actual_cost=d.actual_cost,
-                    complete=d.complete,
-                )
-            )
-
-        # 一括作成
-        KoujiName.objects.bulk_create(new_plan)
-
-        msg = f"バージョン {source_master.version} → {new_ver} の複製が完了しました"
-        messages.info(request, msg)
-
+        if success:
+            message = f"Ver.{source_ver} を Ver.{new_ver} として複製しました。"
+        else:
+            message = "複製に失敗しました"
+        messages.info(self.request, message)
         return redirect(self.get_success_url())
+
+
+# --- バージョン（一括）操作 ---
+class KoujiNameDeleteView(RepairPlanAdminMixin, generic.FormView):
+    """バージョン単位の一括削除"""
+
+    template_name = "repair_plan/delete_koujiname_ver.html"
+    form_class = DeleteKoujinameVerForm
+    success_url = reverse_lazy("repair_plan:delete_koujiname_ver")
+
+    def form_valid(self, form):
+        if not form.cleaned_data["confirm_flg"]:
+            messages.warning(self.request, "削除確認チェックを入れてください。")
+            return self.form_invalid(form)
+
+        # form.cleaned_data["version"]はバージョン番号
+        _ = KoujiName.objects.delete_koujiname_by_ver(form.cleaned_data["version"])
+        # count = bulk_delete_kouji_by_version(form.cleaned_data["version"])
+        messages.success(self.request, f"バージョン {form.cleaned_data['version']} を削除しました。")
+        return super().form_valid(form)
 
 
 class MasterPlanCreateView(PermissionRequiredMixin, generic.CreateView):
@@ -235,26 +168,33 @@ class MasterPlanUpdateView(PermissionRequiredMixin, generic.UpdateView):
         return context
 
 
-class KoujiNameDeleteView(PermissionRequiredMixin, generic.FormView):
-    """指定されたversionのKoujiNameデータを削除する"""
+# class RepairPlanUpdateListView(PermissionRequiredMixin, generic.TemplateView):
+#     """長期修繕計画の編集用list表示
+#     - ToDo
+#     - templateファイルで管理者の場合、「編集・削除」ボタンを表示するようにすれば、
+#         わざわざ編集用のVieteファイルを表示するだけのviewクラスを作成する必要はない。どちらがスマートか？
+#     """
 
-    template_name = "repair_plan/delete_koujiname_ver.html"
-    form_class = DeleteKoujinameVerForm
-    # 必要な権限（管理者権限）
+#     permission_required = "repair_plan.add_koujiname"
+
+#     def get_template_names(self):
+#         """templateファイルをuser agentで切り替える"""
+#         if self.request.user_agent_flag == "mobile":
+#             template_name = "repair_plan/repairplan_update_list.html"
+#         else:
+#             template_name = "repair_plan/repairplan_update_list.html"
+#         return [template_name]
+
+
+class RepairPlanDeleteView(PermissionRequiredMixin, generic.DeleteView):
+    """個別工事項目の削除View"""
+
+    model = KoujiName
+    # 削除してよいか確認するためのtemplate
+    template_name = "repair_plan/delete_confirm.html"
+    # 必要な権限（データ登録できる権限は共通）
     permission_required = "repair_plan.add_koujiname"
-    success_url = reverse_lazy("repair_plan:delete_koujiname_ver")
-
-    def form_valid(self, form):
-        # ModelChoiceFieldで選択されたMasterPlanオブジェクトを取得
-        version_obj = form.cleaned_data["version"]
-        yesno = form.cleaned_data["confirm_flg"]
-        if not yesno:
-            messages.success(self.request, "削除確認がありません")
-            return super().form_valid(form)
-        # 削除実行
-        deleted_count, _ = KoujiName.objects.filter(version=version_obj).delete()
-
-        messages.success(
-            self.request, f"バージョン {version_obj} のデータを {deleted_count} 件削除しました。"
-        )
-        return super().form_valid(form)
+    # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
+    raise_exception = True
+    # 削除が成功した場合に遷移するurl
+    success_url = reverse_lazy("repair_plan:repairplan_update_list")

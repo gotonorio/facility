@@ -1,10 +1,9 @@
 # from control.models import ControlRecord
+from control.models import ControlRecord
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views import generic
-
-from control.models import ControlRecord
 from register.forms import LoginForm
 
 User = get_user_model()
@@ -38,7 +37,6 @@ class MypageView(LoginRequiredMixin, generic.TemplateView):
         """templateファイルを切り替える"""
         if self.request.user_agent_flag == "mobile":
             template_name = "register/mypage.html"
-            # template_name = "register/mypage_mobile.html"
         else:
             template_name = "register/mypage.html"
         return [template_name]
@@ -57,7 +55,6 @@ class FacilityView(LoginRequiredMixin, generic.TemplateView):
         """templateファイルを切り替える"""
         if self.request.user_agent_flag == "mobile":
             template_name = "register/facility/facility.html"
-            # template_name = "register/facility/facility_mobile.html"
         else:
             template_name = "register/facility/facility.html"
         return [template_name]
@@ -76,7 +73,6 @@ class RepairPlanView(LoginRequiredMixin, generic.TemplateView):
         """templateファイルを切り替える"""
         if self.request.user_agent_flag == "mobile":
             template_name = "register/repair_plan/repair_plan.html"
-            # template_name = "register/repair_plan/repairplan_mobile.html"
         else:
             template_name = "register/repair_plan/repair_plan.html"
         return [template_name]

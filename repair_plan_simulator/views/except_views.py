@@ -5,7 +5,7 @@
 
 from django.shortcuts import get_object_or_404, redirect
 from repair_plan.models import KoujiName
-from repair_plan.views.data_views import RepairPlanUpdateListView
+from repair_plan.views.list_views import RepairPlanUpdateListView
 
 
 class SimulatePlanListView(RepairPlanUpdateListView):

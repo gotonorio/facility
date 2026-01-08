@@ -5,7 +5,7 @@ from repair_plan_cycle.views import cycledata_actions, cycledata_crud, cycledata
 app_name = "repair_plan_cycle"
 urlpatterns = [
     # 工事周期データの表示
-    path("cycledata_list/", cycledata_list.KoujiCycleDataListView.as_view(), name="cycledata_list"),
+    path("cycledata_list/", cycledata_list.CycleDataListView.as_view(), name="cycledata_list"),
     # 工事周期データの新規作成
     path(
         "create_cycledata/",

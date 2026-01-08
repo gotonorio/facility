@@ -16,16 +16,15 @@ from repair_plan.models import MasterKoujiType, MasterPlan, MasterUnit
 logger = logging.getLogger(__name__)
 
 
-class MasterPlanListView(LoginRequiredMixin, generic.TemplateView):
+class MasterPlanListView(LoginRequiredMixin, generic.ListView):
     """長期修繕計画マスタの一覧表示"""
 
-    model = MasterPlan
+    model = MasterPlan  # 主となるモデルを明示
     template_name = "repair_plan/masterplan_list.html"
+    context_object_name = "masterlist"  # テンプレートでの変数名を固定
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # 修繕計画のバージョンとユーザの管理者権限
+    def get_queryset(self):
+        # Service層で適切なバージョンオブジェクトと権限を取得
         _, is_manager = get_latest_version(self.request.user)
 
         # 管理者のみ全データ
@@ -34,8 +33,7 @@ class MasterPlanListView(LoginRequiredMixin, generic.TemplateView):
         else:
             qs = MasterPlan.objects.filter(only_manager=is_manager).order_by("-version")
 
-        context["masterlist"] = qs
-        return context
+        return qs
 
 
 class RepairPlanImportView(PermissionRequiredMixin, generic.FormView):

@@ -42,10 +42,10 @@
 {% endif %}
 <div class="container">
   <br>
-  <div class="content has-text-centered">
-    <h4>工事種別マスターの登録/修正aaa</h4>
+  <div class="content">
+    <h4>工事種別マスターの登録/修正</h4>
   </div>
-  <form method='POST' enctype='multipart/form-data' id='form_style'>
+  <form method='POST' enctype='multipart/form-data'>
     {{ form.non_field_errors }}
     {% for field in form %}
       <div class='field'>
@@ -69,14 +69,14 @@
     {% endfor %}
     {% csrf_token %}
     <br>
-    <div class='my_button has-text-centered'>
+    <div class='my_button'>
       <button type='submit' class='button is-danger has-text-weight-bold is-size-7'>読込み</button>
       <a class="button is-primary is-size-7 has-text-black has-text-weight-bold" href="javascript:void(0);" onclick="window.history.back();">キャンセル</a>
     </div>
   </form>
   <hr>
   <div class="table-container">
-    <table class="table table_center_nowrap is-narrow">
+    <table class="table table_nowrap is-narrow">
       <thead>
         <tr>
           <th class="has-text-centered">表示順序</th>

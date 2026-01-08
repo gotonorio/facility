@@ -2,7 +2,7 @@ import logging
 
 from django import forms
 from django.core.exceptions import ValidationError
-from repair_plan.models import KoujiName, MasterPlan
+from repair_plan.models import KoujiName
 
 from repair_plan_cycle.models import KoujiCycleData
 
