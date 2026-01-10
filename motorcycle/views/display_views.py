@@ -15,9 +15,9 @@ class MotorCycleSpaceListView(LoginRequiredMixin, TemplateView):
     def get_template_names(self):
         """デバイスに応じてテンプレートを切り替える（将来的な拡張性を維持）"""
         if self.request.user_agent_flag == "mobile":
-            template_name = "motorcycle/motorcyclespace_pc.html"
+            template_name = "motorcycle/motorcycle_list.html"
         else:
-            template_name = "motorcycle/motorcyclespace_pc.html"
+            template_name = "motorcycle/motorcycle_list.html"
         return [template_name]
 
     def get_context_data(self, **kwargs):

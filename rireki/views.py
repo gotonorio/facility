@@ -27,7 +27,6 @@ class RirekiListView(LoginRequiredMixin, generic.TemplateView):
         """templateファイルを切り替える"""
         if self.request.user_agent_flag == "mobile":
             template_name = "rireki/rireki_list_pc.html"
-            # template_name = "rireki/rireki_list_mobile.html"
         else:
             template_name = "rireki/rireki_list_pc.html"
         return [template_name]
@@ -91,7 +90,6 @@ class RirekiDetailView(LoginRequiredMixin, generic.DetailView):
         """templateファイルを切り替える"""
         if self.request.user_agent_flag == "mobile":
             template_name = "rireki/rireki_detail_pc.html"
-            # template_name = "rireki/rireki_detail_mobile.html"
         else:
             template_name = "rireki/rireki_detail_pc.html"
         return [template_name]

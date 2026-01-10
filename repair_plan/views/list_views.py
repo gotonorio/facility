@@ -15,7 +15,7 @@ class RepairPlanListView(LoginRequiredMixin, ListView):
     """長期修繕計画を表示"""
 
     model = KoujiName  # 主となるモデルを明示
-    template_name = "repair_plan/repairplan_pc.html"
+    template_name = "repair_plan/repairplan_list.html"
     context_object_name = "repairplan_list"  # テンプレートでの変数名を固定
 
     def get_queryset(self):
