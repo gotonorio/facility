@@ -1,7 +1,6 @@
 import logging
 
-from django.db.models import ExpressionWrapper, F, IntegerField
-from django.db.models.aggregates import Sum, Value
+from django.db.models import ExpressionWrapper, F, IntegerField, Sum, Value
 from repair_plan.models import KoujiName
 from repair_plan_simulator.models import ConsumerPriceIndex
 

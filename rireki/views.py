@@ -4,8 +4,7 @@ from datetime import datetime
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.db.models import Q
-from django.db.models.aggregates import Max, Sum
+from django.db.models import Max, Q, Sum
 from django.urls import reverse_lazy
 from django.views import generic
 

@@ -1,9 +1,11 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.http import urlencode
-from django.views import generic
+from django.views.generic import CreateView, DeleteView, FormView, UpdateView
 from repair_plan.forms import (
     DeleteKoujinameVerForm,
     DuplicateRepairPlanForm,
@@ -11,22 +13,25 @@ from repair_plan.forms import (
     RepairPlanCreateForm,
     RepairPlanUpdateForm,
 )
-from repair_plan.models import KoujiName, MasterPlan
+from repair_plan.models import KoujiName, MasterKoujiType, MasterPlan
 from repair_plan.services.data_service import (
-    # bulk_delete_kouji_by_version,
     duplicate_repair_plan,
     get_max_master_version,
 )
 
+logger = logging.getLogger(__name__)
+
 
 # --- 共通設定の継承用クラス ---
 class RepairPlanAdminMixin(PermissionRequiredMixin):
+    # 必要な権限（管理者権限）
     permission_required = "repair_plan.add_koujiname"
+    # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
     raise_exception = True
 
 
 # --- 工事データ操作 ---
-class ReparPlanCreateView(RepairPlanAdminMixin, generic.CreateView):
+class ReparPlanCreateView(RepairPlanAdminMixin, CreateView):
     """工事データの登録"""
 
     model = KoujiName
@@ -41,8 +46,14 @@ class ReparPlanCreateView(RepairPlanAdminMixin, generic.CreateView):
         messages.success(self.request, "保存しました。")
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        title = "長期修繕計画データの作成"
+        context["title"] = title
+        return context
 
-class RepairPlanUpdateView(RepairPlanAdminMixin, generic.UpdateView):
+
+class RepairPlanUpdateView(RepairPlanAdminMixin, UpdateView):
     """工事データの修正"""
 
     model = KoujiName
@@ -53,10 +64,12 @@ class RepairPlanUpdateView(RepairPlanAdminMixin, generic.UpdateView):
         # 修正後、元のリスト画面（同じVer/種別）に戻す
         base_url = reverse("repair_plan:repairplan_update_list")
         # クエリパラメータを辞書形式で定義
+        kouji_type_id = MasterKoujiType.get_koujitype_id(self.object.kouji_type)
+
         params = urlencode(
             {
                 "version": self.object.version.version,
-                "kouji_type": self.object.kouji_type,
+                "koujitype": kouji_type_id,
             }
         )
         return f"{base_url}?{params}"
@@ -68,7 +81,7 @@ class RepairPlanUpdateView(RepairPlanAdminMixin, generic.UpdateView):
         return context
 
 
-class RepairPlanDuplicateView(RepairPlanAdminMixin, generic.FormView):
+class RepairPlanDuplicateView(RepairPlanAdminMixin, FormView):
     """修繕計画の複製作成（最重要ロジック）"""
 
     form_class = DuplicateRepairPlanForm
@@ -99,8 +112,8 @@ class RepairPlanDuplicateView(RepairPlanAdminMixin, generic.FormView):
 
 
 # --- バージョン（一括）操作 ---
-class KoujiNameDeleteView(RepairPlanAdminMixin, generic.FormView):
-    """バージョン単位の一括削除"""
+class KoujiNameDeleteView(RepairPlanAdminMixin, FormView):
+    """バージョン単位の修繕計画データを一括削除"""
 
     template_name = "repair_plan/delete_koujiname_ver.html"
     form_class = DeleteKoujinameVerForm
@@ -113,21 +126,16 @@ class KoujiNameDeleteView(RepairPlanAdminMixin, generic.FormView):
 
         # form.cleaned_data["version"]はバージョン番号
         _ = KoujiName.objects.delete_koujiname_by_ver(form.cleaned_data["version"])
-        # count = bulk_delete_kouji_by_version(form.cleaned_data["version"])
         messages.success(self.request, f"バージョン {form.cleaned_data['version']} を削除しました。")
         return super().form_valid(form)
 
 
-class MasterPlanCreateView(PermissionRequiredMixin, generic.CreateView):
-    """計画初年度の修繕費会計残高を登録/修正する"""
+class MasterPlanCreateView(RepairPlanAdminMixin, CreateView):
+    """修繕計画マスタプランの登録/修正"""
 
     model = MasterPlan
     form_class = MasterPlanCreateForm
     template_name = "repair_plan/masterplan_form.html"
-    # 必要な権限（管理者権限）
-    permission_required = "repair_plan.add_koujiname"
-    # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
-    raise_exception = True
 
     # 保存が成功した場合に遷移するurl
     def get_success_url(self):
@@ -147,16 +155,12 @@ class MasterPlanCreateView(PermissionRequiredMixin, generic.CreateView):
         return context
 
 
-class MasterPlanUpdateView(PermissionRequiredMixin, generic.UpdateView):
+class MasterPlanUpdateView(RepairPlanAdminMixin, UpdateView):
     """計画初年度の修繕費会計残高を修正する"""
 
     model = MasterPlan
     form_class = MasterPlanCreateForm
     template_name = "repair_plan/masterplan_form.html"
-    # 必要な権限（管理者権限）
-    permission_required = "repair_plan.add_koujiname"
-    # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
-    raise_exception = True
 
     # 保存が成功した場合に遷移するurl
     def get_success_url(self):
@@ -168,33 +172,30 @@ class MasterPlanUpdateView(PermissionRequiredMixin, generic.UpdateView):
         return context
 
 
-# class RepairPlanUpdateListView(PermissionRequiredMixin, generic.TemplateView):
-#     """長期修繕計画の編集用list表示
-#     - ToDo
-#     - templateファイルで管理者の場合、「編集・削除」ボタンを表示するようにすれば、
-#         わざわざ編集用のVieteファイルを表示するだけのviewクラスを作成する必要はない。どちらがスマートか？
-#     """
-
-#     permission_required = "repair_plan.add_koujiname"
-
-#     def get_template_names(self):
-#         """templateファイルをuser agentで切り替える"""
-#         if self.request.user_agent_flag == "mobile":
-#             template_name = "repair_plan/repairplan_update_list.html"
-#         else:
-#             template_name = "repair_plan/repairplan_update_list.html"
-#         return [template_name]
-
-
-class RepairPlanDeleteView(PermissionRequiredMixin, generic.DeleteView):
+class RepairPlanDeleteView(RepairPlanAdminMixin, DeleteView):
     """個別工事項目の削除View"""
 
     model = KoujiName
     # 削除してよいか確認するためのtemplate
     template_name = "repair_plan/delete_confirm.html"
-    # 必要な権限（データ登録できる権限は共通）
-    permission_required = "repair_plan.add_koujiname"
-    # 権限がない場合、Forbidden 403を返す。これがない場合はログイン画面に飛ばす。
-    raise_exception = True
     # 削除が成功した場合に遷移するurl
-    success_url = reverse_lazy("repair_plan:repairplan_update_list")
+    # success_url = reverse_lazy("repair_plan:repairplan_update_list")
+
+    def get_success_url(self):
+        # 修正後、元のリスト画面（同じVer/種別）に戻す
+        base_url = reverse("repair_plan:repairplan_update_list")
+        # クエリパラメータを辞書形式で定義
+        kouji_type_id = MasterKoujiType.get_koujitype_id(self.object.kouji_type)
+        params = urlencode(
+            {
+                "version": self.object.version.version,
+                "koujitype": kouji_type_id,
+            }
+        )
+        return f"{base_url}?{params}"
+
+    def form_valid(self, request, *args, **kwargs):
+        # 削除実行時にメッセージを表示させる（オプション）
+        result = super().delete(request, *args, **kwargs)
+        messages.success(self.request, "データを削除しました。")
+        return result

@@ -20,13 +20,9 @@ class CycleDataDuplicateView(PermissionRequiredMixin, generic.FormView):
     """周期データをバージョンを指定して丸ごと複製するビュー"""
 
     form_class = CycleDataDuplicateForm
-    template_name = "repair_plan_cycle/koujicycledata_duplicate_form.html"
+    template_name = "repair_plan_cycle/duplicate_form.html"
     success_url = reverse_lazy("repair_plan_cycle:cycledata_list")
     permission_required = "repair_plan.add_koujiname"
-
-    # def get(self, request, *args, **kwargs):
-    #     form = CycleDataDuplicateForm()
-    #     return render(request, self.template_name, {"form": form})
 
     def get_context_data(self, **kwargs):
         """コンテキストデータにタイトルとマスタプランリストを追加

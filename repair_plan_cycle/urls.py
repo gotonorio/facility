@@ -18,7 +18,7 @@ urlpatterns = [
         cycledata_crud.CycleDataUpdateView.as_view(),
         name="update_basicplandata",
     ),
-    # 工事周期データからの長期修繕計画けータ作成
+    # 工事周期データからの長期修繕計画データ作成
     path("create_repairplan/", cycledata_crud.RepairplanCreateView.as_view(), name="create_repairplan"),
     # 工事周期データの複製
     path(
@@ -26,10 +26,16 @@ urlpatterns = [
         cycledata_actions.CycleDataDuplicateView.as_view(),
         name="duplicate_koujicycledata",
     ),
-    # 工事周期データの削除
+    # 工事周期データの一括削除
     path(
         "delete_koujicycledata/",
         cycledata_crud.CycleDataDeleteView.as_view(),
         name="delete_koujicycledata",
+    ),
+    # 工事周期データの削除
+    path(
+        "delete_cycledata_item/<int:pk>",
+        cycledata_crud.DataItemDeleteView.as_view(),
+        name="delete_cycledata_item",
     ),
 ]

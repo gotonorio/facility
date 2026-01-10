@@ -1,8 +1,7 @@
 import logging
 
 from django.db import models
-from django.db.models import F, IntegerField
-from django.db.models.aggregates import Case, Max, Min, Sum, When
+from django.db.models import Case, F, IntegerField, Max, Min, Sum, When
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +35,11 @@ class MasterKoujiType(models.Model):
 
     def __str__(self):
         return self.master_name
+
+    @classmethod
+    def get_koujitype_id(cls, kouji_type):
+        """工事種別名からidを返す"""
+        return cls.objects.filter(master_name=kouji_type).first().id
 
 
 class MasterUnit(models.Model):

@@ -1,7 +1,7 @@
 import logging
 
 from django.db import transaction
-from django.db.models.aggregates import Max
+from django.db.models import Max
 
 from repair_plan.models import (
     KoujiName,
@@ -65,10 +65,3 @@ def duplicate_repair_plan(*, source_plan: MasterPlan, new_version: int, author=N
         )
 
     return new_plan
-
-
-# def bulk_delete_kouji_by_version(version_name):
-#     """指定バージョンの工事データを一括削除"""
-#     # deleted_count, _ = KoujiName.objects.filter(version=version_obj).delete()
-#     msg = KoujiName.objects.delete_koujiname_by_ver(version_name)
-#     return msg

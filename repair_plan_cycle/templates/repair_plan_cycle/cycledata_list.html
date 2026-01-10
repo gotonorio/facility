@@ -57,6 +57,7 @@
           <th class="has-text-centered">周期（年）</th>
           <th class="has-text-centered">金額</th>
           <th class="has-text-centered">備考</th>
+          {% comment %} <th class="has-text-centered">#</th> {% endcomment %}
         </tr>
       </thead>
       <tbody>
@@ -71,6 +72,9 @@
             <td class="has-text-right">{{item.repeat_cycle}}</td>
             <td class="has-text-right">{{item.cost|intcomma}}</td>
             <td class="has-text-left is-size-7">{{ item.comment|markdown_to_html }}</td>
+            <td class="has-text-centered button is-small">
+              {% comment %} <a href="{% url 'repair_plan_cycle:delete_cycledata_item' item.pk %}">削除</a> {% endcomment %}
+            </td>
         </tr>
         {% endfor %}
       </tbody>

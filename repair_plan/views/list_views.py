@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.views import generic
+from django.views.generic import ListView
 from repair_plan.forms import RepairPlanListForm
 from repair_plan.models import KoujiName
 from repair_plan.services.list_service import (
@@ -11,7 +11,7 @@ from repair_plan.services.list_service import (
 )
 
 
-class RepairPlanListView(LoginRequiredMixin, generic.ListView):
+class RepairPlanListView(LoginRequiredMixin, ListView):
     """長期修繕計画を表示"""
 
     model = KoujiName  # 主となるモデルを明示
@@ -50,7 +50,7 @@ class RepairPlanListView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class RepairPlanByYearView(PermissionRequiredMixin, generic.ListView):
+class RepairPlanByYearView(PermissionRequiredMixin, ListView):
     """シミュレーションにおいて年度を指定して長期修繕計画を表示"""
 
     model = KoujiName  # 主となるモデルを明示
@@ -84,7 +84,7 @@ class RepairPlanByYearView(PermissionRequiredMixin, generic.ListView):
         return context
 
 
-class RepairPlanByKoujitypeView(PermissionRequiredMixin, generic.ListView):
+class RepairPlanByKoujitypeView(PermissionRequiredMixin, ListView):
     """工事種別ごとに集計表示"""
 
     model = KoujiName  # 主となるモデルを明示

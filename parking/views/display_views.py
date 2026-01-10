@@ -20,7 +20,7 @@ class ParkingSpaceListView(LoginRequiredMixin, ListView):
     """一般ユーザ用 駐車場リスト表示"""
 
     model = ParkingSpace
-    template_name = "parking/parkingspace_list.html"
+    template_name = "parking/parking_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

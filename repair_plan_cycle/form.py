@@ -126,12 +126,12 @@ class CycleDataDuplicateForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["new_version"].widget.attrs["style"] = "width: 160px;"
 
         # BasicPlanData に存在する version の一覧を取得し ChoiceField にセット
         versions = (
             KoujiCycleData.objects.all().order_by("-version").values_list("version", flat=True).distinct()
         )
-
         self.fields["source_version"].choices = [(v, v) for v in versions]
 
 

@@ -3,7 +3,7 @@ from repair_plan.models import MasterKoujiType
 
 
 class KoujiCycleData(models.Model):
-    """長期修繕計画用の基本データ"""
+    """長期修繕計画用の「工事周期データ」"""
 
     version = models.IntegerField(verbose_name="バージョン番号", default=0)
     kouji_type = models.ForeignKey(MasterKoujiType, on_delete=models.PROTECT, verbose_name="工事種別")

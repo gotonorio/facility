@@ -1,8 +1,7 @@
 import logging
 
 from django.db import models
-from django.db.models import Count, Q
-from django.db.models.aggregates import Sum
+from django.db.models import Count, Q, Sum
 from django.utils import timezone
 from facility.services import select_period
 

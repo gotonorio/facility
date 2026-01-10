@@ -1,6 +1,6 @@
 import calendar
 
-from django.db.models.aggregates import Max
+from django.db.models import Max
 from django.utils import timezone
 from register.models import User
 from repair_plan.models import MasterPlan

@@ -28,17 +28,6 @@
         <a class="button is-dark" href="{% url 'register:user_list' %}">戻る</a>
       </div>
     </form>
-    {% comment %}
-    <form method='post' action="">
-      {% csrf_token %}
-      <table class="table" >
-        {{form}}
-      </table>
-      <hr>
-      <button type="submit" name='next' value='{{next}}' class="button is-danger">更新</button>
-      <a class="button is-dark" href="javascript:void(0);" onclick="window.history.back();">戻る</a>
-    </form>
-    {% endcomment %}
   </div>
 </div>
 {% endblock %}

@@ -8,6 +8,15 @@ class MasterPlanCreateForm(forms.ModelForm):
         model = MasterPlan
         fields = ("version", "first_year", "final_year", "balance", "only_manager", "comment")
 
+    def __init__(self, *args, **kwargs):
+        """classはここで設定するのが楽。checkboxはcssで変更は不可能みたい"""
+        super().__init__(*args, **kwargs)
+        self.fields["version"].widget.attrs["class"] = "input"
+        self.fields["first_year"].widget.attrs["class"] = "input"
+        self.fields["final_year"].widget.attrs["class"] = "input"
+        self.fields["balance"].widget.attrs["class"] = "input"
+        self.fields["comment"].widget.attrs["class"] = "textarea"
+
 
 class MasterKoujiTypeForm(forms.ModelForm):
     class Meta:

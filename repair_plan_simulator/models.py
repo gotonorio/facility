@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from django.db import models
-from django.db.models.aggregates import Max
+from django.db.models import Max
 
 
 class Shuuzenhi_income(models.Model):

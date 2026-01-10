@@ -45,7 +45,6 @@
       </div>
     </div>
     <div class="navbar-end">
-      {% comment %} {% if perms.register.add_user %} {% endcomment %}
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">マスタデータ</a>
         <div class="navbar-dropdown">
@@ -54,16 +53,13 @@
           <a href="{% url 'repair_plan:create_unitname' %}" class="navbar-item">数量単位データの登録</a>
           <div class="navbar-divider"></div>
           <a href="{% url 'repair_plan_cycle:cycledata_list' %}" class="navbar-item">工事周期データ一覧</a>
-          <a href="{% url 'repair_plan_cycle:create_cycledata' %}" class="navbar-item">工事周期データの編集</a>
+          <a href="{% url 'repair_plan_cycle:create_cycledata' %}" class="navbar-item">工事周期データの作成</a>
           <a href="{% url 'repair_plan_cycle:duplicate_koujicycledata' %}" class="navbar-item">工事周期データの複製</a>
           <a href="{% url 'repair_plan_cycle:delete_koujicycledata' %}" class="navbar-item">工事周期データ削除</a>
           <a href="{% url 'repair_plan_cycle:create_repairplan' %}" class="navbar-item">工事周期データの変換</a>
         </div>
       </div>
-      {% comment %} {% endif %} {% endcomment %}
-      <div class="navbar-item">
-        <a class="button is-light is-small" href="{% url 'register:repair_plan' %}" >戻る</a>
-      </div>
+      <a class="button is-light is-small" href="{% url 'register:repair_plan' %}" >戻る</a>
     </div>
   </div>
 </nav>

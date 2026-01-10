@@ -50,19 +50,10 @@
 
     </div>
     <div class="navbar-end">
-      {% comment %} <a href="{% url 'control:description' %}" class="navbar-item">ヘルプ</a> {% endcomment %}
       {% if perms.repair_plan.add_koujiname %}
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link is-size-6">管理者用</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="{% url 'register:repair_plan_data' %}">データ管理</a>
-            {% comment %} <a class="navbar-item" href="{% url 'control:description_create' %}">ヘルプの作成</a> {% endcomment %}
-          </div>
-        </div>
+        <a class="navbar-item" href="{% url 'register:repair_plan_data' %}">データ管理</a>
       {% endif %}
-      <div class="navbar-item">
-        <a href="{% url 'register:mypage' %}" class="navbar-item">戻る</a>
-      </div>
+      <a href="{% url 'register:mypage' %}" class="navbar-item">戻る</a>
     </div>
   </div>
 </nav>

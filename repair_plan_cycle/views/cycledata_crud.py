@@ -37,10 +37,16 @@ class CycleDataUpdateView(PermissionRequiredMixin, generic.UpdateView):
     permission_required = "repair_plan.add_koujiname"
 
     def get_success_url(self):
-        # version_id = self.object.version
-        # base_url = reverse_lazy("repair_plan_cycle:")
-        # return f"{base_url}?version={version_id}"
         return reverse_lazy("repair_plan_cycle:cycledata_list")
+
+    def get_context_data(self, **kwargs):
+        # まず、既存のコンテキスト（formやobjectなど）を取得
+        context = super().get_context_data(**kwargs)
+
+        # テンプレートに送りたい変数を追加
+        context["page_title"] = "周期データの編集"
+
+        return context
 
 
 class CycleDataCreateView(PermissionRequiredMixin, generic.CreateView):
@@ -56,16 +62,16 @@ class CycleDataCreateView(PermissionRequiredMixin, generic.CreateView):
         messages.success(self.request, "保存しました。")
         return super().form_valid(form)
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context["masterlist"] = MasterPlan.objects.all().order_by("-version")
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "周期データの追加作成"
+        return context
 
 
 class RepairplanCreateView(PermissionRequiredMixin, generic.FormView):
     """長期修繕計画データを周期データから新規作成"""
 
-    template_name = "repair_plan_cycle/koujicycledata_convert_form.html"
+    template_name = "repair_plan_cycle/convert_form.html"
     form_class = RepairPlanCreateForm
     success_url = reverse_lazy("repair_plan_cycle:")
     permission_required = "repair_plan.add_koujiname"
@@ -142,7 +148,7 @@ class RepairplanCreateView(PermissionRequiredMixin, generic.FormView):
 
 
 class CycleDataDeleteView(PermissionRequiredMixin, generic.FormView):
-    """指定されたversionのKoujiCycleDataを削除する"""
+    """指定されたversionのKoujiCycleDataを全て削除する"""
 
     template_name = "repair_plan_cycle/koujicycledata_delete_form.html"
     form_class = CycleDataDeleteForm
@@ -165,3 +171,12 @@ class CycleDataDeleteView(PermissionRequiredMixin, generic.FormView):
         else:
             messages.success(self.request, "削除確認がありません")
         return super().form_valid(form)
+
+
+class DataItemDeleteView(PermissionRequiredMixin, generic.DeleteView):
+    """一覧表示で削除ボタンを押された項目を削除する"""
+
+    model = KoujiCycleData
+    template_name = "repair_plan_cycle/delete_confirm.html"
+    permission_required = "repair_plan.add_koujiname"
+    success_url = reverse_lazy("repair_plan_cycle:cycledata_list")

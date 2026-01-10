@@ -39,16 +39,13 @@
         <div class="navbar-dropdown">
           <a href="{% url 'bicycle:list' %}" class="navbar-item">使用状況</a>
           {% if perms.parking.add_parkingspace %}
-            {% comment %} <a class="navbar-item" href="{% url 'kurasel_translator:read_bicycle' %}">kuraselチェック</a> {% endcomment %}
           {% endif %}
         </div>
       </div>
       <a href="{% url 'motorcycle:list' %}" class="navbar-item">バイク置場</a>
     </div>
     <div class="navbar-end">
-    <div class="navbar-item">
-      <a href="{% url 'register:mypage' %}" class="navbar-item">戻る</a>
-    </div>
+    <a href="{% url 'register:mypage' %}" class="navbar-item">戻る</a>
     </div>
   </div>
 </nav>

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container is-fluid">
+  <br>
+  <form action="" method="POST" enctype='multipart/form-data'>
+    <div class="content">
+      <h4>削除確認</h4>
+      <p>バージョン:【 {{ koujicycledata.version }} 】</p>
+      <p>工事種類:【 {{ koujicycledata.kouji_type }} 】</p>
+      <p>工事名:【 {{ koujicycledata.kouji_name }} 】</p>
+      <button type="submit" class="button is-small is-danger">削除する</button>
+      <a class="button is-small is-primary" href="javascript:void(0);" onclick="window.history.back();">戻る</a>
+    </div>
+    {% csrf_token %}
+  </form>
+</div>
+{% endblock %}
