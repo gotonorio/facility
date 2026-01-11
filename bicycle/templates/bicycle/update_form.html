@@ -36,26 +36,31 @@
 </div>
 {% endif %}}
 <div class="container is-fluid">
-  <form method='POST' enctype='multipart/form-data'>
-    {{ form.non_field_errors }}
-    {% for field in form %}
-      <div class='field'>
-        <div class='control'>
-          <div class='label'>{{ field.label_tag }}</div>
-          {% if field.help_text %}
-            <span class='helptext'>{{ field.help_text }}</span>
-          {% endif %}
-          {{ field.errors }}
-          <div class='my_field'>{{ field }}</div>
+  <div class="content">
+    <h4>駐輪場</h4>
+  </div>
+  <div class="columns">
+    <form method='POST' enctype='multipart/form-data'>
+      {{ form.non_field_errors }}
+      {% for field in form %}
+        <div class='field'>
+          <div class='control'>
+            <div class='label'>{{ field.label_tag }}</div>
+            {% if field.help_text %}
+              <span class='helptext'>{{ field.help_text }}</span>
+            {% endif %}
+            {{ field.errors }}
+            <div class='my_field'>{{ field }}</div>
+          </div>
         </div>
+      {% endfor %}
+      {% csrf_token %}
+      <br>
+      <div class='my_button has-text-centered'>
+        <button type='submit' class='button is-primary is-size-7'>登録</button>
+        <a class='button is-danger is-size-7' href="{% url 'bicycle:list' %}">戻る</a>
       </div>
-    {% endfor %}
-    {% csrf_token %}
-    <br>
-    <div class='my_button has-text-centered'>
-      <button type='submit' class='button is-primary is-size-7'>登録</button>
-      <a class='button is-danger is-size-7' href="{% url 'bicycle:list' %}">戻る</a>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>
 {% endblock content %}

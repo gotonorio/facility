@@ -89,41 +89,27 @@ class ParkingUpdateForm(forms.ModelForm):
             "comment",
         )
         widgets = {
-            "no": forms.NumberInput(
-                attrs={
-                    "class": "input",
-                    "readonly": True,
-                }
-            ),
+            "no": forms.NumberInput(attrs={"class": "input", "readonly": True}),
             "name": forms.TextInput(
-                attrs={
-                    "class": "input",
-                    "placeholder": "契約者名",
-                }
+                attrs={"class": "input", "placeholder": "契約者名"},
             ),
-            "room_number": forms.NumberInput(
-                attrs={
-                    "class": "input",
-                }
-            ),
-            "payment_date": forms.DateInput(
-                attrs={
-                    "class": "input",
-                    "readonly": True,
-                }
-            ),
-            "status_of_use": forms.Select(
-                attrs={
-                    "class": "select-css",
-                }
-            ),
-            "comment": forms.Textarea(
-                attrs={
-                    "class": "textarea",
-                    "rows": "2",
-                }
-            ),
+            "room_number": forms.NumberInput(attrs={"class": "input"}),
+            "payment_date": forms.DateInput(attrs={"class": "input", "readonly": True}),
+            "status_of_use": forms.Select(attrs={"class": "select-css"}),
+            "comment": forms.Textarea(attrs={"class": "textarea", "rows": "2"}),
         }
+        # widgets = {
+        #     "no": forms.NumberInput(attrs={"class": "input", "readonly": True, "style": "width: 12ch"}),
+        #     "name": forms.TextInput(
+        #         attrs={"class": "input", "placeholder": "契約者名", "style": "width: 24ch"},
+        #     ),
+        #     "room_number": forms.NumberInput(attrs={"class": "input", "style": "width: 12ch"}),
+        #     "payment_date": forms.DateInput(
+        #         attrs={"class": "input", "readonly": True, "style": "width: 16ch"}
+        #     ),
+        #     "status_of_use": forms.Select(attrs={"class": "select-css"}),
+        #     "comment": forms.Textarea(attrs={"class": "textarea", "rows": "2"}),
+        # }
         help_texts = {
             "room_number": "* 「空き」の場合は「0」にしてください。",
         }
