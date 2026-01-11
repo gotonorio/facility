@@ -122,14 +122,3 @@ class KoujiRirekiCreateForm(forms.ModelForm):
                 }
             ),
         }
-
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['year'].widget.attrs["class"] = "input"
-    #     self.fields['month'].widget.attrs["class"] = "input"
-    #     self.fields['koujitype'].widget.attrs["class"] = "select-css"
-    #     self.fields['koujimei'].widget.attrs["class"] = "input"
-    #     self.fields['cost'].widget.attrs["class"] = "input"
-    #     self.fields['constractor'].widget.attrs["class"] = "input"
-    #     self.fields['account_type'].widget.attrs["class"] = "select-css"
-    #     self.fields['comment'].widget.attrs["class"] = "textarea"

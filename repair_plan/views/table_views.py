@@ -20,12 +20,12 @@ class RepairPlanTableView(PermissionRequiredMixin, generic.TemplateView):
         latest_version, is_manager = get_latest_version(self.request.user)
         ver = ver or latest_version
 
-        # Formの作成
-        form = RepairPlanListForm(is_manager, ver, initial={"version": ver})
-        context["form"] = form
-
         if not ver:
             return context
+
+        # kwargsに"ver"を追加
+        form_kwargs = {"ver": ver}
+        context["form"] = RepairPlanListForm(**form_kwargs)
 
         # Service層で複雑な計算を実行
         data = get_repair_plan_table_data(ver, is_simple=self.is_simple)

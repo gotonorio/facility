@@ -18,8 +18,15 @@ class RepairPlanListForm(RepairPlanBaseForm):
         widget=forms.Select(attrs={"class": "select-css is-size-6"}),
     )
 
-    def __init__(self, is_manager, ver, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        # 1. super().__init__ の前に追加引数を pop する
+        is_manager = kwargs.pop("is_manager", False)
+        ver = kwargs.pop("ver", None)
+
+        # 2. 親クラスを初期化（ここで self.fields が作成される）
         super().__init__(*args, **kwargs)
+
+        # 3. 取り出した値を使ってロジックを実行
         qs = KoujiName.objects.all()
         if not is_manager:
             qs = qs.filter(version__only_manager=False)
@@ -27,8 +34,10 @@ class RepairPlanListForm(RepairPlanBaseForm):
         versions = qs.values_list("version__version", flat=True).order_by("-version").distinct()
         self.fields["version"].choices = [(v, v) for v in versions]
 
+        # 初期値のセット
         if ver:
-            self.initial["version"] = ver
+            # ver がオブジェクトならその version 数値を使う（__str__の実装に合わせて調整）
+            self.initial["version"] = str(ver)
         elif versions:
             self.initial["version"] = versions[0]
 
