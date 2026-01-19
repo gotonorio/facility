@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    "common",
     "register.apps.RegisterConfig",
     "repair_plan.apps.RepairPlanConfig",
     "repair_plan_simulator.apps.RepairPlanSimulatorConfig",
@@ -94,9 +95,7 @@ ROOT_URLCONF = "facility.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            os.path.join(BASE_DIR, "templates"),
-        ],
+        "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -105,9 +104,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "facility.context_processors.global_settings",
             ],
-            "libraries": {
-                "my_templatetags": "templatetags.facility_extras",
-            },
+            "libraries": {},
         },
     },
 ]
@@ -176,7 +173,7 @@ CSRF_TRUSTED_ORIGINS = ["https://facility.sophiagardens.org"]
 AUTH_USER_MODEL = "register.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-VERSION_NO = "2026-01-11"
+VERSION_NO = "2026-01-19"
 LOGIN_URL = "register:login"
 LOGIN_REDIRECT_URL = "register:mypage"
 LOGOUT_REDIRECT_URL = "register:login"
@@ -196,8 +193,9 @@ MARKDOWN_EXTENSIONS = [
 # static files settings
 # -----------------------------------------------------------------------------
 if DEBUG:
-    # STATIC_ROOTに追加するパスを指定する。
-    STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+    # commonアプリにstaticフォルダを作成しているためコメントアウト
+    # STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+    STATICFILES_DIRS = []
 else:
     # for nginx（本番のocker専用）
     STATIC_ROOT = "/code/static"

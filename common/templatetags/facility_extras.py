@@ -15,9 +15,7 @@ facilityアプリケーション用カスタムテンプレートタグ・フィ
                 "django.contrib.messages.context_processors.messages",
                 "facility.context_processors.global_settings",
             ],
-            "libraries": {
-                "my_templatetags": "templatetags.facility_extras",
-            },
+            "libraries": {},
         },
 """
 
