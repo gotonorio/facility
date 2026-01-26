@@ -95,7 +95,10 @@ ROOT_URLCONF = "facility.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            BASE_DIR / "templates",  # プロジェクト直下の共通設定用テンプレートフォルダ
+            BASE_DIR / "common" / "templates",  # commonアプリ用テンプレートフォルダ
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -173,7 +176,7 @@ CSRF_TRUSTED_ORIGINS = ["https://facility.sophiagardens.org"]
 AUTH_USER_MODEL = "register.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-VERSION_NO = "2026-01-19"
+VERSION_NO = "2026-01-26"
 LOGIN_URL = "register:login"
 LOGIN_REDIRECT_URL = "register:mypage"
 LOGOUT_REDIRECT_URL = "register:login"
