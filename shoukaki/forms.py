@@ -103,7 +103,8 @@ class ShoukakiListForm(forms.Form):
 
     order = forms.ChoiceField(
         label="表示順：",
-        widget=forms.Select(attrs={"class": "select-css is-size-7"}),
+        # widget=forms.Select(attrs={"class": "select-css is-size-7"}),
+        widget=forms.Select(attrs={"class": "select is-small"}),
         choices=ORDER_CHOICES,
     )
 

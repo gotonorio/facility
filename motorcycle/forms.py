@@ -1,16 +1,16 @@
 from django import forms
-from facility.forms import YearMonthForm
 
+from facility.forms import YearMonthForm
 from motorcycle.models import MotorCycleSpace
 
 
 class MotorCycleSpaseListForm(YearMonthForm):
     """駐輪場一覧表示用Form"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["year"].widget.attrs["class"] = "input is-size-7"
-        self.fields["month"].widget.attrs["class"] = "select-css is-size-7"
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields["year"].widget.attrs["class"] = "input is-size-7"
+    #     self.fields["month"].widget.attrs["class"] = "select-css is-size-7"
 
 
 class MotorCycleUpdateForm(forms.ModelForm):

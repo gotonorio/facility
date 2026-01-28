@@ -23,7 +23,8 @@ class YearMonthForm(forms.Form):
         label="西暦",
         widget=forms.NumberInput(
             attrs={
-                "style": "width:9ch",
+                "style": "width:10ch",
+                "class": "input is-small",
             }
         ),
     )
@@ -32,6 +33,7 @@ class YearMonthForm(forms.Form):
         widget=forms.Select(
             attrs={
                 "style": "width:10ch",
+                "class": "select",
             }
         ),
         choices=MONTH,

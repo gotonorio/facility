@@ -3,7 +3,7 @@ services:
   facility:
     build:
       context: ./
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     # image名:タグ
     image: facility
     # 起動ユーザを指定する
@@ -24,7 +24,7 @@ services:
     networks:
       - sophiag-network
  
-    command: /usr/local/bin/gunicorn facility.wsgi:application -w 2 -b :8300
+    command: /usr/local/bin/gunicorn facility.wsgi:application --workers 1 --threads 4 --bind :8300
     
 networks:
   sophiag-network:

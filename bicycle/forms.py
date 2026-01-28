@@ -1,7 +1,7 @@
 from django import forms
-from facility.forms import YearMonthForm
 
 from bicycle.models import LOCATION, BicycleSpace
+from facility.forms import YearMonthForm
 
 
 class BicycleSpaseListForm(YearMonthForm):
@@ -11,17 +11,12 @@ class BicycleSpaseListForm(YearMonthForm):
         label="場所",
         widget=forms.Select(
             attrs={
-                "class": "select-css is-size-7",
+                "class": "select",
                 "style": "width:10ch",
             }
         ),
         choices=LOCATION,
     )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["year"].widget.attrs["class"] = "input is-size-7"
-        self.fields["month"].widget.attrs["class"] = "select-css is-size-7"
 
 
 class BicycleUpdateForm(forms.ModelForm):
@@ -58,7 +53,7 @@ class BicycleUpdateForm(forms.ModelForm):
             ),
             "location": forms.Select(
                 attrs={
-                    "class": "select-css",
+                    "class": "select",
                 }
             ),
             "room_number": forms.NumberInput(
@@ -74,7 +69,7 @@ class BicycleUpdateForm(forms.ModelForm):
             ),
             "status_of_use": forms.Select(
                 attrs={
-                    "class": "select-css",
+                    "class": "select",
                 }
             ),
             "comment": forms.Textarea(

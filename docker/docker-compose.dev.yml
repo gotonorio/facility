@@ -3,7 +3,7 @@ services:
   facility:
     build:
       context: ./
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     # image名:タグ
     image: facility
     # container名

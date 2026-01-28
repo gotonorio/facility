@@ -1,3 +1,10 @@
+import logging
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import timezone
+from django.utils.timezone import localtime
+from django.views.generic import ListView, TemplateView
+
 from bicycle.forms import BicycleSpaseListForm
 from bicycle.models import BicycleSpace
 from bicycle.services.display_service import (
@@ -6,11 +13,9 @@ from bicycle.services.display_service import (
     get_bicycle_income_summary,
     get_bicycle_summary,
 )
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils import timezone
-from django.utils.timezone import localtime
-from django.views.generic import ListView, TemplateView
 from facility.forms import IncomeHistoryForm
+
+logger = logging.getLogger(__name__)
 
 
 class BicycleSpaceListView(LoginRequiredMixin, TemplateView):
@@ -24,7 +29,9 @@ class BicycleSpaceListView(LoginRequiredMixin, TemplateView):
 
         # 日付の取得
         year = self.kwargs.get("year") or self.request.GET.get("year", local_now.year)
-        month = self.kwargs.get("month") or self.request.GET.get("month", local_now.month)
+        month = self.kwargs.get("month") or self.request.GET.get(
+            "month", local_now.month
+        )
 
         # Serviceでデータ取得
         categorized, total, _ = get_bicycle_summary(year, month)
@@ -78,6 +85,7 @@ class BicycleIncomeHistoryView(LoginRequiredMixin, ListView):
         year = self.request.GET.get("year", localtime(timezone.now()).year)
 
         qs, total = get_bicycle_income_summary(year)
+        logger.debug(f"BicycleIncomeHistoryView: year={year}, total={total}")
 
         context.update(
             {
