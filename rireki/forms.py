@@ -1,12 +1,15 @@
 from django import forms
+
 from repair_plan.models import MasterKoujiType
 
 from .models import AccountType, KoujiRireki
 
 
 class RirekiListForm(forms.Form):
-    """履歴一覧表示の時にselect要素で工事種別を選択させる
+    """履歴一覧表示用Form
     http://www.subthread.co.jp/blog/20160531/
+    別テーブルのレコードを選択させ、その ID を元に検索したい場合は、forms.ModelChoiceField() を使う。
+    単に選択肢を表示させたい場合は、forms.ChoiceField() を使う。
     """
 
     # querysetを使う場合はforms.ModelChoiceFiled()を使う。empty_labelを使用できる。
@@ -19,8 +22,10 @@ class RirekiListForm(forms.Form):
             "invalid_choice": "invalid choice.",
         },
         required=False,
-        widget=forms.Select(attrs={"class": "select-css"}),
+        # bulmaの select クラスを適用する場合は、DjangoではなくHTMLテンプレート側で指定すること
+        # widget=forms.Select(attrs={"class": "select"}),
     )
+
     kouji_type = forms.ModelChoiceField(
         queryset=MasterKoujiType.objects.filter(live="1").order_by("sequense"),
         label="工事種別",
@@ -30,24 +35,37 @@ class RirekiListForm(forms.Form):
             "invalid_choice": "invalid choice.",
         },
         required=False,
-        widget=forms.Select(attrs={"class": "select-css"}),
+        # bulmaの select クラスを適用する場合は、DjangoではなくHTMLテンプレート側で指定すること
+        # widget=forms.Select(attrs={"class": "selects"}),
     )
-    year = forms.ModelChoiceField(
-        # 修繕履歴データから西暦を抽出してセットする。
-        queryset=KoujiRireki.objects.values_list("year", flat=True).order_by("year").distinct(),
+
+    year = forms.ChoiceField(
         label="西暦",
-        empty_label="年度全表示",
-        error_messages={
-            "required": "You didn't select a choice.",
-            "invalid_choice": "invalid choice.",
-        },
-        required=False,
-        widget=forms.Select(attrs={"class": "select-css"}),
+        required=False,  # 全表示を許容するためFalseに
     )
+
+    def __init__(self, *args, **kwargs):
+        """ChoiceFieldの選択肢をDBから動的に取得してセットする場合は、__init__をオーバーライドする"""
+        super().__init__(*args, **kwargs)
+
+        # 1. DBから年度リストを取得
+        year_values = (
+            KoujiRireki.objects.values_list("year", flat=True)
+            .order_by("-year")
+            .distinct()
+        )
+        # 2. 先頭に「年度全表示」を追加してセットする
+        # (値, ラベル) の形式
+        self.fields["year"].choices = [("", "年度全表示")] + [
+            (v, v) for v in year_values
+        ]
 
 
 class ImportForm(forms.Form):
-    file = forms.FileField(label="CSVファイル", help_text="※拡張子csvのファイルをアップロードしてください。")
+    file = forms.FileField(
+        label="CSVファイル",
+        help_text="※拡張子csvのファイルをアップロードしてください。",
+    )
 
     # BulmaがFileFieldの選択ボタンに未対応？
     def __init__(self, *args, **kwargs):
@@ -60,7 +78,16 @@ class KoujiRirekiCreateForm(forms.ModelForm):
 
     class Meta:
         model = KoujiRireki
-        fields = ["year", "month", "koujitype", "koujimei", "cost", "constractor", "account_type", "comment"]
+        fields = [
+            "year",
+            "month",
+            "koujitype",
+            "koujimei",
+            "cost",
+            "constractor",
+            "account_type",
+            "comment",
+        ]
         labels = {
             "year": "年",
             "month": "月",

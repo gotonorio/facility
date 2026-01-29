@@ -13,7 +13,7 @@ from bicycle.services.display_service import (
     get_bicycle_income_summary,
     get_bicycle_summary,
 )
-from facility.forms import IncomeHistoryForm
+from common.forms.base_form import YearMonthForm
 
 logger = logging.getLogger(__name__)
 
@@ -91,7 +91,7 @@ class BicycleIncomeHistoryView(LoginRequiredMixin, ListView):
             {
                 "bicycle": qs,
                 "total": total,
-                "form": IncomeHistoryForm(initial={"year": year}),
+                "form": YearMonthForm(initial={"year": year}),
             }
         )
         return context

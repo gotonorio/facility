@@ -25,10 +25,26 @@
   </div>
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
+
+      <div class="navbar-item">
+        <form action="" method="get">
+          <div class="field has-addons">
+            <!-- bulmaのselect要素はnavbar内では少し特殊なようだ -->
+            <div class="control"> <div class="select is-small"> {{form.account_type}} </div></div>
+            <div class="control"> <div class="select is-small"> {{form.kouji_type}} </div></div>
+            <div class="control"> <div class="select is-small"> {{form.year}} </div></div>
+            <div class="control">
+              <button type="submit" class="button is-primary is-small">表示</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      {% comment %}
       <form class="navbar-item" action="{% url 'rireki:rireki_list'%}" method="get">
         {{form.account_type}}{{form.kouji_type}}{{form.year}}
         <button type="submit" class="button is-primary is-size-7">表示</button>
       </form>
+      {% endcomment %}
     </div>
     <div class="navbar-end">
       <a href="{% url 'register:repair_plan' %}" class="navbar-item">戻る</a>

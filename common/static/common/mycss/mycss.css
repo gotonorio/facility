@@ -148,6 +148,21 @@ div.my_field > textarea {
     height: 100%;
 }
 
+/* ナビゲーションバー内の入力要素・ボタンのサイズを微調整 */
+/* .navbar .field .input,
+.navbar .field .select select,
+.navbar .field .button {
+    font-size: 0.9rem !important;
+    height: auto;                
+} */
+
+/* has-addonsを使っている場合、高さを固定するとより綺麗に揃います */
+/* .navbar .field.has-addons .control .input,
+.navbar .field.has-addons .control .select select,
+.navbar .field.has-addons .control .button {
+    height: 2.5rem;
+} */
+
 /* -------------------------------------------------------------------------- */
 
 /* フォームのカスタマイズ */

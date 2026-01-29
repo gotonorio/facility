@@ -4,8 +4,9 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from django.utils.timezone import localtime
 from django.views.generic import ListView, TemplateView
-from facility.forms import IncomeHistoryForm
-from parking.forms import ParkingSpaceFigForm, ParkingSpaceListForm
+
+from common.forms.base_form import YearMonthForm
+from parking.forms import ParkingSpaceFigForm
 from parking.models import ParkingSpace
 from parking.services.display_service import (
     categorize_parking_spaces,
@@ -35,7 +36,8 @@ class ParkingSpaceListView(LoginRequiredMixin, ListView):
         context.update(
             {
                 "total": total,
-                "form": ParkingSpaceListForm(initial={"year": year, "month": month}),
+                # "form": ParkingSpaceListForm(initial={"year": year, "month": month}),
+                "form": YearMonthForm(initial={"year": year, "month": month}),
                 "title": f"{year}年 {month}月",
                 "space1": space1,
                 "space2": space2,
@@ -81,7 +83,9 @@ class ParkingFigView(LoginRequiredMixin, ListView):
 
         context.update(
             {
-                "form": ParkingSpaceFigForm(initial={"year": self.year, "month": self.month}),
+                "form": ParkingSpaceFigForm(
+                    initial={"year": self.year, "month": self.month}
+                ),
                 "title": f"{self.year}年{self.month}月度の状況：空き＝{empty_num}台/{num}台",
             }
         )
@@ -103,7 +107,7 @@ class UtilizationRateView(LoginRequiredMixin, TemplateView):
 
         context.update(
             {
-                "form": ParkingSpaceListForm(initial={"year": year, "month": month}),
+                "form": YearMonthForm(initial={"year": year, "month": month}),
                 "title": f"{year}年 {month}月 稼働率",
                 **metrics,  # plain, machine_up, machine_down, utilization_rate が展開される
             }
@@ -139,7 +143,7 @@ class ParkingSpaceManagementView(PermissionRequiredMixin, ListView):
             {
                 "parking_list": qs,
                 "total": total,
-                "form": ParkingSpaceListForm(
+                "form": YearMonthForm(
                     initial={"year": year, "month": month, "parking_type": parking_type}
                 ),
                 "title": f"{year}-{month}-01",
@@ -167,7 +171,7 @@ class IncomeRirekiView(LoginRequiredMixin, ListView):
                 "parking": qs,
                 "total": total,
                 "noincome": noincome,
-                "form": IncomeHistoryForm(initial={"year": year}),
+                "form": YearMonthForm(initial={"year": year}),
             }
         )
         return context

@@ -1,8 +1,8 @@
 import logging
 
 from django import forms
-from repair_plan.models import KoujiName, MasterPlan
 
+from repair_plan.models import KoujiName, MasterPlan
 from repair_plan_simulator.models import ConsumerPriceIndex, Shuuzenhi_income
 
 logger = logging.getLogger(__name__)
@@ -15,7 +15,7 @@ class SimulateDataForm(forms.Form):
         queryset=MasterPlan.objects.none(),
         label="計画 Ver.",
         required=True,
-        widget=forms.Select(attrs={"class": "select-css is-size-7"}),
+        widget=forms.Select(attrs={"class": "select-css is-size-6"}),
     )
     # 経費率
     expense_rate = forms.FloatField(
@@ -129,7 +129,9 @@ class ShuuzenhiIncomeCreateForm(forms.ModelForm):
                     "class": "select-css",
                 }
             ),
-            "comment": forms.Textarea(attrs={"class": "textarea", "rows": "4", "required": False}),
+            "comment": forms.Textarea(
+                attrs={"class": "textarea", "rows": "4", "required": False}
+            ),
             # "comment": forms.TextInput(
             #     attrs={
             #         "class": "input",
@@ -143,7 +145,9 @@ class CPICreateForm(forms.ModelForm):
 
     # 以降の年について毎年同じ物価上昇率を考慮
     continuas = forms.BooleanField(
-        required=False, label="連続入力", help_text="※ 修正時、以降の年について毎年同じ物価上昇率を考慮する。"
+        required=False,
+        label="連続入力",
+        help_text="※ 修正時、以降の年について毎年同じ物価上昇率を考慮する。",
     )
 
     class Meta:
@@ -165,7 +169,9 @@ class CPICreateForm(forms.ModelForm):
                     "class": "input",
                 }
             ),
-            "comment": forms.Textarea(attrs={"class": "textarea", "rows": "4", "required": False}),
+            "comment": forms.Textarea(
+                attrs={"class": "textarea", "rows": "4", "required": False}
+            ),
         }
 
     # 入力フォームの初期値を設定するため

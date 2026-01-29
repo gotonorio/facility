@@ -20,10 +20,23 @@
   </div>
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      <form class="navbar-item" action="{% url 'repair_plan:repairplan_simpletable'%}" method="get">
-        計画バージョン :{{form.version}}
-        <button type="submit" class="button is-primary is-size-7">表示</button>
-      </form>
+
+      <div class="navbar-item">
+        <form action="" method="get">
+          <div class="field has-addons">
+            <!--ラベル表示-->
+            <div class="control">
+              <label class="button is-static is-small">
+                {{ form.version.label }}
+              </label>
+            </div>
+            <div class="control">{{form.version}} </div>
+            <div class="control">
+              <button type="submit" class="button is-primary is-small">表示</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
     <div class="navbar-end">
       <a class="navbar-item" href="{% url 'register:repair_plan' %}">戻る</a>

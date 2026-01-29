@@ -2,8 +2,8 @@ import logging
 
 from django import forms
 from django.core.exceptions import ValidationError
-from repair_plan.models import KoujiName
 
+from repair_plan.models import KoujiName
 from repair_plan_cycle.models import KoujiCycleData
 
 logger = logging.getLogger(__name__)
@@ -12,36 +12,33 @@ logger = logging.getLogger(__name__)
 class CycleDataListForm(forms.Form):
     """工事周期データ一覧Form"""
 
-    version = forms.ModelChoiceField(
-        queryset=KoujiCycleData.objects.values_list("version", flat=True).distinct().order_by("-version"),
+    version = forms.ChoiceField(
+        choices=[
+            (v, v)
+            for v in KoujiCycleData.objects.values_list("version", flat=True)
+            .distinct()
+            .order_by("-version")
+        ],
         label="工事周期データ",
-        empty_label="選択してください",
         required=True,
-        widget=forms.Select(attrs={"class": "select-css is-size-7"}),
+        # widget=forms.Select(attrs={"class": "is-small"}),  # Bulma CSS framework
     )
 
 
-class CycleDataForm(forms.ModelForm):
-    """工事周期データ用Form"""
+class CycleDataEditForm(forms.ModelForm):
+    """工事周期データ編集用Form"""
 
     version = forms.ChoiceField(
         choices=[
             (v, v)
-            for v in KoujiCycleData.objects.values_list("version", flat=True).distinct().order_by("-version")
+            for v in KoujiCycleData.objects.values_list("version", flat=True)
+            .distinct()
+            .order_by("-version")
         ],
         label="工事周期データ",
         required=True,
         widget=forms.Select(attrs={"class": "select-css is-size-6"}),
     )
-
-    # version = forms.ModelChoiceField(
-    #     label="工事周期データ Ver.",
-    #     empty_label="選択してください",
-    #     to_field_name="version",
-    #     # queryset=MasterPlan.objects.all(),
-    #     queryset=KoujiCycleData.objects.all().values("version").distinct().order_by("-version"),
-    #     widget=forms.Select(attrs={"class": "select-css is-size-6"}),
-    # )
 
     # ModelFormの場合にはMetaクラスが必要。Formクラスでは使用できない
     class Meta:
@@ -75,7 +72,9 @@ class RepairPlanCreateForm(forms.Form):
     version = forms.ChoiceField(
         choices=[
             (v, v)
-            for v in KoujiCycleData.objects.values_list("version", flat=True).distinct().order_by("-version")
+            for v in KoujiCycleData.objects.values_list("version", flat=True)
+            .distinct()
+            .order_by("-version")
         ],
         label="計画 Ver.",
         required=True,
@@ -130,7 +129,10 @@ class CycleDataDuplicateForm(forms.Form):
 
         # BasicPlanData に存在する version の一覧を取得し ChoiceField にセット
         versions = (
-            KoujiCycleData.objects.all().order_by("-version").values_list("version", flat=True).distinct()
+            KoujiCycleData.objects.all()
+            .order_by("-version")
+            .values_list("version", flat=True)
+            .distinct()
         )
         self.fields["source_version"].choices = [(v, v) for v in versions]
 
@@ -141,7 +143,9 @@ class CycleDataDeleteForm(forms.Form):
     delete_version = forms.ChoiceField(
         choices=[
             (v, v)
-            for v in KoujiCycleData.objects.values_list("version", flat=True).distinct().order_by("-version")
+            for v in KoujiCycleData.objects.values_list("version", flat=True)
+            .distinct()
+            .order_by("-version")
         ],
         label="削除するVer.",
         required=True,

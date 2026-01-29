@@ -12,10 +12,6 @@
 {% block navbar %}
 <nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <form class="navbar-item" action="" method="get">
-      {{form.year}}{{form.month}}
-      <button type="submit" class="button is-primary is-size-7">表示</button>
-    </form>
     {# ハンバーガアイコンのため #}
     <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
       <span aria-hidden="true"></span>
@@ -25,6 +21,18 @@
   </div>
   <div id="navbarMainMenu" class="navbar-menu">
     <div class="navbar-start">
+      <div class="navbar-item">
+        <form action="" method="get">
+          <div class="field has-addons">
+            <div class="control"> {{form.year}} </div>
+            <!-- bulmaのselect要素はnavbar内では少し特殊なようだ -->
+            <div class="control"> <div class="select is-small"> {{form.month}} </div></div>
+            <div class="control">
+              <button type="submit" class="button is-primary is-small">表示</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
     <div class="navbar-end">
       <a class="navbar-item" href="{% url 'parking:list' %}">戻る</a>

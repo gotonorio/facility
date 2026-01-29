@@ -46,7 +46,9 @@ class DescriptionCreateForm(forms.ModelForm):
 
 
 class DescriptionListForm(forms.ModelForm):
-    """説明書表示用Form"""
+    """説明書表示用Form
+    - ToDo: ヘルプ関連は未作成。今後作成予定
+    """
 
     class Meta:
         model = Description

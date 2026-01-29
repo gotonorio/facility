@@ -13,10 +13,11 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import generic
+
 from repair_plan.models import KoujiName, MasterKoujiType, MasterPlan, MasterUnit
 from repair_plan_cycle.form import (
     CycleDataDeleteForm,
-    CycleDataForm,
+    CycleDataEditForm,
     RepairPlanCreateForm,
 )
 from repair_plan_cycle.models import KoujiCycleData
@@ -32,7 +33,7 @@ class CycleDataUpdateView(PermissionRequiredMixin, generic.UpdateView):
     """修繕工事の周期データを修正・更新"""
 
     model = KoujiCycleData
-    form_class = CycleDataForm
+    form_class = CycleDataEditForm
     template_name = "repair_plan_cycle/koujicycledata_form.html"
     permission_required = "repair_plan.add_koujiname"
 
@@ -53,7 +54,7 @@ class CycleDataCreateView(PermissionRequiredMixin, generic.CreateView):
     """修繕工事の周期データを新規作成"""
 
     model = KoujiCycleData
-    form_class = CycleDataForm
+    form_class = CycleDataEditForm
     template_name = "repair_plan_cycle/koujicycledata_form.html"
     success_url = reverse_lazy("repair_plan_cycle:cycledata_list")
     permission_required = "repair_plan.add_koujiname"
@@ -123,12 +124,16 @@ class RepairplanCreateView(PermissionRequiredMixin, generic.FormView):
             try:
                 _ = MasterKoujiType.objects.get(master_name=row[2])
             except MasterKoujiType.DoesNotExist:
-                raise ValidationError(f"{i + 1}行目の{row[2]} は工事種別マスタが登録されていません!")
+                raise ValidationError(
+                    f"{i + 1}行目の{row[2]} は工事種別マスタが登録されていません!"
+                )
             # (4) 施工単位名のチェック
             try:
                 _ = MasterUnit.objects.get(unit_name=row[5])
             except MasterUnit.DoesNotExist:
-                raise ValidationError(f"{i + 1}行目の{row[5]} は施工単位マスタが登録されていません!")
+                raise ValidationError(
+                    f"{i + 1}行目の{row[5]} は施工単位マスタが登録されていません!"
+                )
             # (5) 実支出金額のチェック
             if str(row[7]) == "":
                 row[7] = 0

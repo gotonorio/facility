@@ -5,6 +5,8 @@ from django import forms
 
 
 class ImportRepairPlanDataForm(forms.Form):
+    """修繕計画データインポート用Form"""
+
     file = forms.FileField(label="CSVファイル")
 
     def clean_file(self):

@@ -1,7 +1,7 @@
 from django import forms
 
 from bicycle.models import LOCATION, BicycleSpace
-from facility.forms import YearMonthForm
+from common.forms.base_form import YearMonthForm
 
 
 class BicycleSpaseListForm(YearMonthForm):

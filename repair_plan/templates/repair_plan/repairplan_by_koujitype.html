@@ -23,10 +23,6 @@ https://github.com/chartjs/chartjs-adapter-date-fns
 <nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item">【SG川崎】</a>
-    <form class="navbar-item" action="{% url 'repair_plan:repairplan_by_koujitype' %}" method="get">
-      {{form.version}}
-      <button type="submit" class="button is-primary is-size-7">表示</button>
-    </form>
     {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
     <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
       <span aria-hidden="true"></span>
@@ -35,6 +31,18 @@ https://github.com/chartjs/chartjs-adapter-date-fns
     </a>
   </div>
   <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <div class="navbar-item">
+        <form action="" method="get">
+          <div class="field has-addons">
+            <div class="control"> {{form.version}} </div>
+            <div class="control">
+              <button type="submit" class="button is-primary is-small">表示</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
     <div class="navbar-end">
       <a class="navbar-item" href="{% url 'register:repair_plan' %}">戻る</a>
     </div>

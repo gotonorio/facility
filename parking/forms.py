@@ -1,6 +1,7 @@
 from django import forms
 
-from facility.forms import YearMonthForm
+# from facility.forms import YearMonthForm
+from common.forms.base_form import YearMonthForm
 from parking.models import ParkingSpace, ParkingType
 
 ORDER_CHOICES = (
@@ -17,20 +18,6 @@ class ParkingSpaceFigForm(YearMonthForm):
         super().__init__(*args, **kwargs)
         self.fields["year"].widget.attrs["class"] = "input_form"
         self.fields["month"].widget.attrs["class"] = "select_form"
-
-
-class ParkingSpaceListForm(YearMonthForm):
-    """駐車場データのリスト表示用Form
-    widgetをTextInputにすることでフィールド長さを調整できるが、IntegerFieldと
-    しての増減ができなくなる。
-    """
-
-    parking_type = forms.ModelChoiceField(
-        queryset=ParkingType.objects,
-        empty_label="ALL",
-        required=False,
-        widget=forms.Select(attrs={"class": "select-css is-size-7"}),
-    )
 
 
 class MonthlyProcessingForm(forms.Form):
@@ -92,27 +79,25 @@ class ParkingUpdateForm(forms.ModelForm):
             "comment",
         )
         widgets = {
-            "no": forms.NumberInput(attrs={"class": "input", "readonly": True}),
-            "name": forms.TextInput(
-                attrs={"class": "input", "placeholder": "契約者名"},
+            "no": forms.NumberInput(
+                attrs={"class": "input", "readonly": True, "style": "width: 12ch"}
             ),
-            "room_number": forms.NumberInput(attrs={"class": "input"}),
-            "payment_date": forms.DateInput(attrs={"class": "input", "readonly": True}),
+            "name": forms.TextInput(
+                attrs={
+                    "class": "input",
+                    "placeholder": "契約者名",
+                    "style": "width: 24ch",
+                },
+            ),
+            "room_number": forms.NumberInput(
+                attrs={"class": "input", "style": "width: 12ch"}
+            ),
+            "payment_date": forms.DateInput(
+                attrs={"class": "input", "readonly": True, "style": "width: 16ch"}
+            ),
             "status_of_use": forms.Select(attrs={"class": "select-css"}),
             "comment": forms.Textarea(attrs={"class": "textarea", "rows": "2"}),
         }
-        # widgets = {
-        #     "no": forms.NumberInput(attrs={"class": "input", "readonly": True, "style": "width: 12ch"}),
-        #     "name": forms.TextInput(
-        #         attrs={"class": "input", "placeholder": "契約者名", "style": "width: 24ch"},
-        #     ),
-        #     "room_number": forms.NumberInput(attrs={"class": "input", "style": "width: 12ch"}),
-        #     "payment_date": forms.DateInput(
-        #         attrs={"class": "input", "readonly": True, "style": "width: 16ch"}
-        #     ),
-        #     "status_of_use": forms.Select(attrs={"class": "select-css"}),
-        #     "comment": forms.Textarea(attrs={"class": "textarea", "rows": "2"}),
-        # }
         help_texts = {
             "room_number": "* 「空き」の場合は「0」にしてください。",
         }

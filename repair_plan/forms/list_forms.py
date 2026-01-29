@@ -15,7 +15,8 @@ class RepairPlanListForm(RepairPlanBaseForm):
         label="工事種別",
         required=False,
         empty_label="工事種別全表示",
-        widget=forms.Select(attrs={"class": "select-css is-size-6"}),
+        # bulmaの select クラスを適用する場合は、DjangoではなくHTMLテンプレート側で指定すること
+        # widget=forms.Select(attrs={"class": "select"}),  # Bulma CSS framework
     )
 
     def __init__(self, *args, **kwargs):
@@ -31,7 +32,11 @@ class RepairPlanListForm(RepairPlanBaseForm):
         if not is_manager:
             qs = qs.filter(version__only_manager=False)
 
-        versions = qs.values_list("version__version", flat=True).order_by("-version").distinct()
+        versions = (
+            qs.values_list("version__version", flat=True)
+            .order_by("-version")
+            .distinct()
+        )
         self.fields["version"].choices = [(v, v) for v in versions]
 
         # 初期値のセット
@@ -51,10 +56,12 @@ class DeleteKoujinameVerForm(RepairPlanBaseForm):
         super().__init__(*args, **kwargs)
 
         # KoujiNameに存在するMasterPlanのIDをリストとして取得
-        existing_version_ids = KoujiName.objects.values_list("version", flat=True).distinct()
+        existing_version_ids = KoujiName.objects.values_list(
+            "version", flat=True
+        ).distinct()
 
         # 親クラスの version フィールドの queryset を直接書き換える
         # これにより、バリデーションもこのQuerySetに基づいて行われます
-        self.fields["version"].queryset = MasterPlan.objects.filter(id__in=existing_version_ids).order_by(
-            "-version"
-        )
+        self.fields["version"].queryset = MasterPlan.objects.filter(
+            id__in=existing_version_ids
+        ).order_by("-version")
