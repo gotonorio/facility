@@ -18,31 +18,43 @@ import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ------------------------------------------------------------------
-# 環境変数の読み込み
-# ------------------------------------------------------------------
 # instanceを作成
 env = environ.Env(
-    # 初期値を設定
-    # SECURITY WARNING: don't run with debug turned on in production!
-    # DEBUG=(bool, False)
+    # キャスト（型指定）とデフォルト値を設定
+    DEBUG=(bool, False),
+    SECRET_KEY=(str, ""),
+    ALLOWED_HOSTS=(list, []),
 )
-# .envを読み込む
-environ.Env.read_env(os.path.join(BASE_DIR, "docker/.env"))
 
-# セキュリティ関係の環境変数を読み込む。
-# 読み込む環境変数のタイプに合わせる必要があるので注意。
+# .envを読み込む (ファイルが存在する場合のみ読み込む設定)
+# 本番環境では、.dockerignoreファイルで.envをコンテナにコピーせず、compose.ymlで環環変数に取り込む。
+# env_file = os.path.join(BASE_DIR, "docker/.env")
+env_file = os.path.join(BASE_DIR, ".env_dev")
+if os.path.exists(env_file):
+    environ.Env.read_env(env_file)
+
+# あとは共通：環境変数（OS由来 または .envファイル由来）から読み込む
 SECRET_KEY = env("SECRET_KEY")
 DB_NAME = env("DB_NAME")
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+ALLOWED_HOSTS = env("ALLOWED_HOSTS")
+DEBUG = env("DEBUG")
 
-# デフォルトは本番用なのでFalseとする。
-DEBUG = False
-# ローカル環境（local_settings.pyがあれば）でDEBUGを上書き
-try:
-    from .local_settings import DEBUG
-except ImportError:
-    pass
+# # .envを読み込む
+# environ.Env.read_env(os.path.join(BASE_DIR, "docker/.env"))
+
+# # セキュリティ関係の環境変数を読み込む。
+# # 読み込む環境変数のタイプに合わせる必要があるので注意。
+# SECRET_KEY = env("SECRET_KEY")
+# DB_NAME = env("DB_NAME")
+# ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+
+# # デフォルトは本番用なのでFalseとする。
+# DEBUG = False
+# # ローカル環境（local_settings.pyがあれば）でDEBUGを上書き
+# try:
+#     from .local_settings import DEBUG
+# except ImportError:
+#     pass
 
 # # Quick-start development settings - unsuitable for production
 # # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -54,7 +66,6 @@ except ImportError:
 # DEBUG = True
 
 # ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -193,17 +204,6 @@ MARKDOWN_EXTENSIONS = [
 ]
 
 # -----------------------------------------------------------------------------
-# static files settings
-# -----------------------------------------------------------------------------
-if DEBUG:
-    # commonアプリにstaticフォルダを作成しているためコメントアウト
-    # STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-    STATICFILES_DIRS = []
-else:
-    # for nginx（本番のocker専用）
-    STATIC_ROOT = "/code/static"
-
-# -----------------------------------------------------------------------------
 # 共用設備用設定
 # -----------------------------------------------------------------------------
 # 平置き
@@ -278,3 +278,13 @@ LOGGING = {
         "level": "DEBUG",
     },
 }
+
+# -----------------------------------------------------------------------------
+# static files settings
+# -----------------------------------------------------------------------------
+# 常に定義する
+STATIC_ROOT = "/code/static"
+
+if DEBUG:
+    # 開発時に追加で参照したい場合のみ
+    STATICFILES_DIRS = []

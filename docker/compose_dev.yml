@@ -1,0 +1,41 @@
+# 通帳監査システム
+services:
+  facility:
+    # 相対パスでDockerfileのpathを指定。
+    # contextは一つ上の階層なので、Dockerfileの指定はcontextで指定した階層からのpathになる。
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    # image名:タグ
+    image: facility
+    # 起動ユーザを指定する
+    user: "${UID}:${GID}"
+    # container名
+    container_name: facility
+    restart: unless-stopped
+
+    # ここで指定した中身が、OSの環境変数としてDjangoに渡される（settings.pyで読み込む）
+    # 機密ファイル（.env）の配置場所を相対パスで指定
+    env_file:
+      - ../.env_dev
+
+    # DockerfileのCOPYコマンドで（.djangoignoreで除外した以外の）ファイルを/code/にコピー済み。
+    # ホスト上のcollectstaticで作成されたstaticディレクトリを/code/staticとしてマウントする。
+    #     settings.pyで STATIC_ROOT = "/code/static"としている
+    #     /codeはDockerfileでWORKDIRとしている
+    # ホスト上のpb_audit.sqlite3を/code/fac.sqlite3としてマウントする。
+    volumes:
+      - ../static:/code/static
+      - ../fac.sqlite3:/code/fac.sqlite3
+
+    # 環境変数TZを設定。
+    environment:
+      TZ: "Asia/Tokyo"
+
+    # --------------------------------------------
+    # ローカル環境ではportをオープンする。
+    # --------------------------------------------
+    ports:
+      - "8300:8300"
+    # Djangoの簡易サーバで起動する
+    command: python3 manage.py runserver 0.0.0.0:8300
