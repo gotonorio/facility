@@ -10,10 +10,10 @@ class RepairPlanBaseForm(forms.Form):
         queryset=MasterPlan.objects.none(),
         label="計画 Ver.",
         required=True,
-        widget=forms.Select(
-            attrs={
-                "style": "width:10ch",
-                "class": "select",
-            }
-        ),
+        # widget=forms.Select(
+        #     attrs={
+        #         "style": "width:10ch",
+        #         "class": "select",
+        #     }
+        # ),
     )
