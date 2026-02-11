@@ -23,9 +23,13 @@
       <div class="navbar-item">
         <form action="" method="get">
           <div class="field has-addons">
-            <div class="control"> {{form.version}} </div>
-            <!-- bulmaのselect要素はnavbar内では少し特殊なようだ -->
-            <div class="control"> <div class="select is-small"> {{form.koujitype}} </div></div>
+            <!-- bulmaのselect要素はnavbar内では少し特殊でcontrolで包む必要がある -->
+            <div class="control">
+              <div class="select is-small"> {{form.version}} </div>
+            </div>
+            <div class="control">
+              <div class="select is-small"> {{form.koujitype}} </div>
+            </div>
             <div class="control">
               <button type="submit" class="button is-primary is-small">表示</button>
             </div>

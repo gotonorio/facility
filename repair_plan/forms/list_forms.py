@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 class RepairPlanListForm(RepairPlanBaseForm):
+    """長期修繕工事リスト表示用Form"""
+
     koujitype = forms.ModelChoiceField(
         queryset=MasterKoujiType.objects.order_by("sequense"),
         label="工事種別",
@@ -45,6 +47,9 @@ class RepairPlanListForm(RepairPlanBaseForm):
             self.initial["version"] = str(ver)
         elif versions:
             self.initial["version"] = versions[0]
+
+        # widget
+        self.fields["version"].widget.attrs["class"] = "select is-size-7"
 
 
 class DeleteKoujinameVerForm(RepairPlanBaseForm):
