@@ -55,7 +55,10 @@ class RepairPlanListForm(RepairPlanBaseForm):
 class DeleteKoujinameVerForm(RepairPlanBaseForm):
     """長期修繕計画の削除用Form"""
 
-    confirm_flg = forms.BooleanField(label="削除確認", required=False)
+    confirm_flg = forms.BooleanField(
+        label="削除確認",
+        required=False,
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -70,3 +73,5 @@ class DeleteKoujinameVerForm(RepairPlanBaseForm):
         self.fields["version"].queryset = MasterPlan.objects.filter(
             id__in=existing_version_ids
         ).order_by("-version")
+
+        self.fields["version"].widget.attrs["class"] = "select-css"

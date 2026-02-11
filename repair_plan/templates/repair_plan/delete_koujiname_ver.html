@@ -53,10 +53,10 @@
       <div class='field'>
         <div class='control'>
           <div class='label'>{{ field.label_tag }}</div>
+          <div class='my_field'>{{ field }}</div>
           {% if field.help_text %}
             <span class='helptext'>{{ field.help_text }}</span>
           {% endif %}
-          <div class='my_field'>{{ field }}</div>
           {{ field.errors }}
         </div>
       </div>
@@ -64,8 +64,8 @@
     {% csrf_token %}
     <br>
     <div class='my_button'>
-      <button type='submit' class="button is-size-7 is-danger has-text-weight-bold">削除</button>
-      <a class="button is-primary is-size-7 has-text-black has-text-weight-bold" href="javascript:void(0);" onclick="window.history.back();">キャンセル</a>
+      <button type='submit' class='button is-primary is-size-7'>削除</button>
+      <a class='button is-danger is-size-7' href='javascript:void(0);' onclick='window.history.back();'>キャンセル</a>
     </div>
   </form>
 </div>

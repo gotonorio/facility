@@ -10,10 +10,6 @@
 <nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item">【SG川崎】</a>
-    <form class="navbar-item" action="{% url 'repair_plan:repairplan_update_list' %}" method="get">
-      {{form.version}}{{form.koujitype}}
-      <button type="submit" class="button is-primary is-size-7">選択</button>
-    </form>
     {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
     <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
       <span aria-hidden="true"></span>
@@ -22,6 +18,21 @@
     </a>
   </div>
   <div id="navbarBasicExample" class="navbar-menu">
+
+    <div class="navbar-start">
+      <div class="navbar-item">
+        <form action="" method="get">
+          <div class="field has-addons">
+            <!-- bulmaのselect要素はnavbar内では少し特殊なようだ -->
+            <div class="control"> <div class="select is-small"> {{form.version}} </div></div>
+            <div class="control"> <div class="select is-small"> {{form.koujitype}} </div></div>
+            <div class="control">
+              <button type="submit" class="button is-primary is-small">表示</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
     <div class="navbar-end">
       <a class="navbar-item" href="{% url 'register:repair_plan_data' %}">戻る</a>
     </div>
