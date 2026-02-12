@@ -28,9 +28,10 @@ services:
       - ../static:/code/static
       - ../fac.sqlite3:/code/fac.sqlite3
 
-    # 環境変数TZを設定。
+    # 環境変数を設定。
     environment:
       TZ: "Asia/Tokyo"
+      APP_ENV: "development"
 
     # --------------------------------------------
     # ローカル環境ではportをオープンする。

@@ -26,12 +26,18 @@ env = environ.Env(
     ALLOWED_HOSTS=(list, []),
 )
 
-# .envを読み込む (ファイルが存在する場合のみ読み込む設定)
-# 本番環境では、.dockerignoreファイルで.envをコンテナにコピーせず、compose.ymlで環環変数に取り込む。
-# env_file = os.path.join(BASE_DIR, "docker/.env")
-env_file = os.path.join(BASE_DIR, ".env_dev")
+# 1. まずOS自体の環境変数（またはデフォルト値）からモードを取得
+# OS側に何もなければ 'production' とみなす
+app_env = os.environ.get("APP_ENV", "production")
+
+if app_env == "development":
+    env_file = os.path.join(BASE_DIR, ".env_dev")
+else:
+    env_file = os.path.join(BASE_DIR, ".env")
+
+# 読み込み実行
 if os.path.exists(env_file):
-    environ.Env.read_env(env_file)
+    env.read_env(env_file)
 
 # あとは共通：環境変数（OS由来 または .envファイル由来）から読み込む
 SECRET_KEY = env("SECRET_KEY")
@@ -39,33 +45,8 @@ DB_NAME = env("DB_NAME")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 DEBUG = env("DEBUG")
 
-# # .envを読み込む
-# environ.Env.read_env(os.path.join(BASE_DIR, "docker/.env"))
-
-# # セキュリティ関係の環境変数を読み込む。
-# # 読み込む環境変数のタイプに合わせる必要があるので注意。
-# SECRET_KEY = env("SECRET_KEY")
-# DB_NAME = env("DB_NAME")
-# ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
-
-# # デフォルトは本番用なのでFalseとする。
-# DEBUG = False
-# # ローカル環境（local_settings.pyがあれば）でDEBUGを上書き
-# try:
-#     from .local_settings import DEBUG
-# except ImportError:
-#     pass
-
 # # Quick-start development settings - unsuitable for production
 # # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = "django-insecure-gdzgh6bh$_bf5l@w7!k8zqfo096r-%f_)n3a=w5+rx7j6vnj-8"
-
-# # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-
-# ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -187,7 +168,7 @@ CSRF_TRUSTED_ORIGINS = ["https://facility.sophiagardens.org"]
 AUTH_USER_MODEL = "register.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-VERSION_NO = "2026-02-11"
+VERSION_NO = "2026-02-12"
 LOGIN_URL = "register:login"
 LOGIN_REDIRECT_URL = "register:mypage"
 LOGOUT_REDIRECT_URL = "register:login"
