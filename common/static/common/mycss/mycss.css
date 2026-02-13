@@ -1,187 +1,62 @@
-/* https://www.webcreatorbox.com/tech/dark-mode */
+
 :root {
   --main-text: #333;
   --main-bg: #fff;
   --md-strong: yellow;
-  /* ゴシック体（Mac/Win/GoogleFontsの順） */
   --font-sans: "Helvetica Neue", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", "Noto Sans JP", sans-serif;
-  /* 明朝体（Mac/Win/GoogleFontsの順） */
   --font-serif: "Hiragino Mincho ProN", "YuMincho", "Yu Mincho", "Noto Serif JP", serif;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --main-text: #fff;
-    --main-bg: #000;
-    --md-strong: #666666;
-  }
+  --navbar-height: 3.25rem; /* ここ一箇所を変えるだけで済むようにする */
 }
 
-/* 固定フッタスタイル */
-html {
-    position: relative;
-    min-height: 100%;
-    margin:0px;
-    color: var(--main-text);
-    background-color: var(--main-bg);
+/* すべての要素でパディングが高さに含まれるようにする（超重要） */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* ブラウザの仕様違いを吸収するためhtml,bodyの両方に設定する */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  color: var(--main-text);
+  background-color: var(--main-bg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.site-wrapper {
+  display: flex;
+  flex-direction: column;
+  /* 100dvh固定ではなく、最低100dvhにする */
+  min-height: 100dvh; 
+  /* ナビバー分の余白を確保 */
+  padding-top: var(--navbar-height);
 }
 
 main {
-  /* ユーザーのPCにゴシックがあればそれを使う。なければ Noto Sans をダウンロードする */
-  font-family: var(--font-sans);
-  /* 明朝体の場合 */
-  /* font-family: var(--font-serif); */
-  /* Macの場合アンチエイリアスを強調する。*/
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  /* my_footerを使う場合、本体をmargin-bottomでfooterエリアを確保しなければならない。 */
-  margin-bottom: 40px; 
+  /* フッターを下に押し下げる */
+  flex: 1; 
 }
 
-/* footerだとBulmaのfooterを上書きしてしまう */
-.my_footer {
-    font-size: 80%;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 40px; /* ここでフッタの固定高さを設定 */
-    line-height: 40px; /* ここでテキストを垂直に中央に配置 */
-    color: var(--main-text);
-    background-color: var(--main-bg);
+.my-footer {
+  padding: 1.0rem 0;
+  border-top: 1px solid #eee;
+  background-color: var(--main-bg);
 }
 
-/* 入力フォーム用 style sheet */
-.errorlist {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-  color: red;
-}
-div.my_field > span.helptext {
-  font-size: 12px;
-  color: #999;
-}
-div.my_field input, div.my_field > select-css, div.my_field > button {
-  /* width: 100%; */
-  padding: 6px 12px;
-  box-sizing: border-box;
-  border-radius: 4px;
-  border: solid 1px #999;
-}
-div.my_field > textarea {
-  border-radius: 10px;
-  border: solid 1px #999;
-}
-
-/* webkit系ブラウザ用のスクロールバー調整 */
-::-webkit-scrollbar{
-  width: 10px;
-}
-::-webkit-scrollbar-track{
-  background: #fff;
-  border-left: solid 1px #ececec;
-}
-::-webkit-scrollbar-thumb{
-  background: #ccc;
-  border-radius: 10px;
-  box-shadow: inset 0 0 0 2px #fff;
-}
-
-/* ログイン画面用 */
-.login_container {
-  width: 240px;
-  margin: auto;
-}
-/* form入力style */
-#form_style {
-  width: 420px;
-  /* margin: auto; */
-}
-/* tableの中央配置 */
-.table_center_nowrap {
-  width: auto;
-  margin: 3px auto;
-  white-space: nowrap;
-}
-.table_nowrap {
-  width: auto;
-  white-space: nowrap;
-}
-
-/* markdown用style */
-.markdown {
-  overflow-x: auto;
-  margin:0px;
-}
-/* 767px以下ではmargin-leftを4pxにする */
-@media screen and (max-width: 767px) {
-  .markdown {
-    overflow-x: auto;
-    margin-left:0px;
-    padding:2px;
-  }
-}
-.markdown table {
-  /* 表の外枠表示 */
-  border: dotted 1px;
-  /* 表の最小幅で表示させる。倍率は適当。 */
-  width: 30%;
-  white-space: nowrap;
-}
-
-/* ナビゲーションバー内のフォーム要素を調整 */
-.navbar.is-black .field.has-addons {
-    display: flex;
-    align-items: center;
-}
-
-/* -------------------------------------------------------------------------- */
-/* navbarにおけるフォーム要素の調整 */
-/* -------------------------------------------------------------------------- */
-/* セレクトボックス右側の矢印（アイコン）の色を黒くする */
-.navbar.is-black .select:not(.is-multiple):not(.is-loading)::after {
-    border-color: #000;
-}
-
-/* ボタンも高さを完全に一致させる（Bulmaの微細なズレ防止） */
-.navbar.is-black .button {
-    height: 100%;
-}
-
-/* ナビゲーションバー内の入力要素・ボタンのサイズを微調整 */
-/* .navbar .field .input,
-.navbar .field .select select,
-.navbar .field .button {
-    font-size: 0.9rem !important;
-    height: auto;                
-} */
-
-/* has-addonsを使っている場合、高さを固定するとより綺麗に揃います */
-/* .navbar .field.has-addons .control .input,
-.navbar .field.has-addons .control .select select,
-.navbar .field.has-addons .control .button {
-    height: 2.5rem;
-} */
-
-/* -------------------------------------------------------------------------- */
-
-/* フォームのカスタマイズ */
-/* -------------------------------------------------------------------------- */
-/* セレクトボックスのカスタマイズ bulmaのnavbarでは使用しない（サイズ調整が難しい） */
+/* セレクトボックスのカスタマイズ */
 /* 2019/08/02現在、safariでBulmaのclass = "select"が機能しないため、下記cssを使用。*/
 /* https://coliss.com/articles/build-websites/operation/css/consistent-select-element-styling.html*/
 .select-css {
   display: block;
   /* 先ほど決めたフォント順序に同期させる */
   font-family: var(--font-sans);
-  /* フォントサイズは使用時に設定するようにする */
-  /* font-size: 12px; */
+  font-size: 14px;
   font-weight: 400;
   color: #444;
   /* 日本語フォントに合わせて少し余裕を持たせる */
   line-height: 1.4;
-  /* padding: .6em 1.4em .5em .8em; */
-  padding: .4em 1.4em .4em .8em;
+  padding: .6em 1.4em .5em .8em;
   max-width: 100%; 
   box-sizing: border-box;
   margin: 0;
@@ -224,4 +99,83 @@ div.my_field > textarea {
 .select-css option {
   font-weight: normal;
   font-family: sans-serif; /* ブラウザ標準に従わせるのが安全 */
+}
+
+/* 入力フォーム用 style sheet */
+.errorlist {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  color: red;
+}
+div.my_field > span.helptext {
+  font-size: 14px;
+  color: #999;
+}
+div.my_field input, div.my_field > select-css, div.my_field > button {
+  /* width: 100%; */
+  padding: 6px 12px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: solid 1px #999;
+}
+div.my_field > textarea {
+  border-radius: 10px;
+  border: solid 1px #999;
+}
+
+/* webkit系ブラウザ用のスクロールバー調整 */
+::-webkit-scrollbar{
+  width: 10px;
+}
+::-webkit-scrollbar-track{
+  background: #fff;
+  border-left: solid 1px #ececec;
+}
+::-webkit-scrollbar-thumb{
+  background: #ccc;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 2px #fff;
+}
+
+/* ログイン画面用 */
+.login_container {
+  width: 240px;
+  margin: 0 auto;
+}
+/* form入力style */
+#form_style {
+  width: 420px;
+  /* margin: auto; */
+}
+/* tableの中央配置 */
+.table_center_nowrap {
+  width: auto;
+  margin: 3px auto;
+  white-space: nowrap;
+}
+.table_nowrap {
+  width: auto;
+  white-space: nowrap;
+}
+
+/* markdown用style */
+.markdown {
+  overflow-x: auto;
+  margin:0px;
+}
+/* 767px以下ではmargin-leftを4pxにする */
+@media screen and (max-width: 767px) {
+  .markdown {
+    overflow-x: auto;
+    margin-left:0px;
+    padding:2px;
+  }
+}
+.markdown table {
+  /* 表の外枠表示 */
+  border: dotted 1px;
+  /* 表の最小幅で表示させる。倍率は適当。 */
+  width: 30%;
+  white-space: nowrap;
 }

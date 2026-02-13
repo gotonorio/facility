@@ -5,7 +5,7 @@ services:
     # contextは一つ上の階層なので、Dockerfileの指定はcontextで指定した階層からのpathになる。
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/Dockerfile_dev
     # image名:タグ
     image: facility
     # 起動ユーザを指定する
@@ -19,19 +19,13 @@ services:
     env_file:
       - ../.env_dev
 
-    # DockerfileのCOPYコマンドで（.djangoignoreで除外した以外の）ファイルを/code/にコピー済み。
-    # ホスト上のcollectstaticで作成されたstaticディレクトリを/code/staticとしてマウントする。
-    #     settings.pyで STATIC_ROOT = "/code/static"としている
-    #     /codeはDockerfileでWORKDIRとしている
-    # ホスト上のpb_audit.sqlite3を/code/fac.sqlite3としてマウントする。
+    # 開発環境では、ホスト上のルートディレクトリを/code/以下にマウントする。
     volumes:
-      - ../static:/code/static
-      - ../fac.sqlite3:/code/fac.sqlite3
+      - ../:/code
 
     # 環境変数を設定。
     environment:
       TZ: "Asia/Tokyo"
-      APP_ENV: "development"
 
     # --------------------------------------------
     # ローカル環境ではportをオープンする。

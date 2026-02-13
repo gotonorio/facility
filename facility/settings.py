@@ -27,13 +27,13 @@ env = environ.Env(
 )
 
 # 1. まずOS自体の環境変数（またはデフォルト値）からモードを取得
-# OS側に何もなければ 'production' とみなす
-app_env = os.environ.get("APP_ENV", "production")
+# OS側に何もなければ 'development' とみなす
+app_env = os.environ.get("APP_ENV", "development")
 
-if app_env == "development":
-    env_file = os.path.join(BASE_DIR, ".env_dev")
-else:
+if app_env == "product":
     env_file = os.path.join(BASE_DIR, ".env")
+else:
+    env_file = os.path.join(BASE_DIR, ".env_dev")
 
 # 読み込み実行
 if os.path.exists(env_file):
