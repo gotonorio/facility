@@ -5,7 +5,7 @@ services:
     # contextは一つ上の階層なので、Dockerfileの指定はcontextで指定した階層からのpathになる。
     build:
       context: ..
-      dockerfile: docker/Dockerfile_dev
+      dockerfile: docker/Dockerfile
     # image名:タグ
     image: facility
     # 起動ユーザを指定する
