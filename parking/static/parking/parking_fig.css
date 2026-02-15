@@ -1,9 +1,20 @@
+
+/* テーブル全体のレイアウトを固定モードにする */
 .table_fix {
-    /* safariでborder表示が崩れるためコメントアウトする */
-    /* border-collapse: collapse; */
-    min-width: 1030px;
     table-layout: fixed;
+    min-width: 832px; /* 1列26px × 32列 = 832px (計算値) */
+    /* border-collapse: collapse; */
+    word-break: break-all;
 }
+
+/* 1列（最小単位）の幅を26pxに強制固定する */
+.table_fix td {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    box-sizing: border-box; /* 枠線を含めて26pxにする */
+}
+
 a,a:hover,a:visited {
 	text-decoration: none;
     color: inherit;
@@ -81,6 +92,7 @@ a,a:hover,a:visited {
     text-align: center;
     font-size: 75%; 
 }
+
 .td_w {
     width: 52px;
     height: 26px;
@@ -112,6 +124,7 @@ a,a:hover,a:visited {
     text-align: center;
     font-size: 75%; 
 }
+
 .td_trash {
     width: 26px;
     height: 52px;

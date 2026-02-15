@@ -34,9 +34,15 @@
     </form>
 </div>
 <div class="inline_block">
-    <h3>{{title}}</h3>
+    <h3>　{{title}}</h3>
 </div>
 <table class="table_center_nowrap table_fix">
+    <!-- table-layout: fixed;を設定しているため、1行目に32列x26pxを確保しておく -->
+    <colgroup>
+        {% for i in "x"|rjust:"32" %}
+        <col style="width: 26px;">
+        {% endfor %}
+    </colgroup>
     <tr>
         <td colspan="12" class="set_right">凡例 :</td>
         <td class="td_w" colspan="2">使用中</td>
