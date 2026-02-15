@@ -168,7 +168,7 @@ CSRF_TRUSTED_ORIGINS = ["https://facility.sophiagardens.org"]
 AUTH_USER_MODEL = "register.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-VERSION_NO = "2026-02-15"
+VERSION_NO = "2026-02-16"
 LOGIN_URL = "register:login"
 LOGIN_REDIRECT_URL = "register:mypage"
 LOGOUT_REDIRECT_URL = "register:login"
@@ -269,37 +269,25 @@ LOGGING = {
 #    static/ は STATIC_URL = "/static" で指定している
 # -----------------------------------------------------------------------------
 
-# # 開発時に追加で参照するディレクトリ（共通のCSS/JSなど）
-# STATICFILES_DIRS = [
-#     BASE_DIR / "common" / "static",
-# ]
+# 開発時に追加で参照するディレクトリ（共通のCSS/JSなど）
+STATICFILES_DIRS = [
+    BASE_DIR / "common" / "static",
+]
 
-# # 開発（ローカル）ではプロジェクト直下の static フォルダに集める
-# if not DEBUG:
-#     # 本番環境
-#     # collectstatic で集約した静的ファイルのPath
-#     STATIC_ROOT = "/code/static"
-# else:
-#     # 開発環境
-#     # DEBUG=TrueではDjangoはこの設定を無視して、アプリ内のstatic/、STATICFILES_DIRSを直接参照する
-#     # ただし、開発環境で collectstatic を行う場合に必要となるため設定する
-#     STATIC_ROOT = BASE_DIR / "static"
+# 開発（ローカル）ではプロジェクト直下の static フォルダに集める
+if not DEBUG:
+    # 本番環境
+    # collectstatic で集約した静的ファイルのPath
+    STATIC_ROOT = "/code/static"
+else:
+    # 開発環境
+    # DEBUG=TrueではDjangoはこの設定を無視して、アプリ内のstatic/、STATICFILES_DIRSを直接参照する
+    # ただし、開発環境で collectstatic を行う場合に必要となるため設定する
+    STATIC_ROOT = BASE_DIR / "static"
 
-# MEDIA_URL = "/media/"
-# if not DEBUG:
-#     # MEDIA_ROOT = "/code_warehouse/media/"
-#     MEDIA_ROOT = "/code/media/"
-# else:
-#     MEDIA_ROOT = BASE_DIR / "media"
-
-
-
-# -----------------------------------------------------------------------------
-# static files settings
-# -----------------------------------------------------------------------------
-# 常に定義する
-STATIC_ROOT = "/code/static"
-
-if DEBUG:
-    # 開発時に追加で参照したい場合のみ
-    STATICFILES_DIRS = []
+MEDIA_URL = "/media/"
+if not DEBUG:
+    # MEDIA_ROOT = "/code_warehouse/media/"
+    MEDIA_ROOT = "/code/media/"
+else:
+    MEDIA_ROOT = BASE_DIR / "media"

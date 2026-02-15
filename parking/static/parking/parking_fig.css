@@ -7,15 +7,13 @@
     word-break: break-all;
 }
 
-/* 1列（最小単位）の幅を26pxに強制固定する */
-.table_fix td {
-    width: 26px;      /* 基本の幅を指定 */
-    min-width: 26px;  /* 縮小を禁止 */
-    max-width: 26px;  /* 拡大も禁止（これで完全に固定化） */
+/* 1列（最小単位）の幅を26pxに強制固定する。safariで表示が崩れるため、コメントアウト */
+/* .table_fix td {
     height: 26px;
     padding: 0;
-    box-sizing: border-box; /* 枠線を含めて26pxにする */
-}
+    box-sizing: border-box;
+    text-align: center;
+} */
 
 a,a:hover,a:visited {
 	text-decoration: none;
