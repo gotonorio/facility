@@ -4,16 +4,47 @@
     table-layout: fixed;
     min-width: 832px; /* 1列26px × 32列 = 832px (計算値) */
     /* border-collapse: collapse; */
+    border-collapse: separate;
     word-break: break-all;
 }
 
-/* 1列（最小単位）の幅を26pxに強制固定する。safariで表示が崩れるため、コメントアウト */
-/* .table_fix td {
-    height: 26px;
-    padding: 0;
+/* ----- 2026年2月16日追加分 ----- */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;       /* 横方向のはみ出しをスクロール可能にする */
+    -webkit-overflow-scrolling: touch; /* iOSでのスクロールを滑らかにする */
+}
+
+.table_fix td {
+    padding: 0;             /* 余白を完全にゼロにする */
+    width: 26px;            /* td 自体も幅を指定 */
     box-sizing: border-box;
-    text-align: center;
-} */
+}
+
+.table_fix td span {
+    display: block;
+    width: 26px;
+    min-width: 26px;
+    max-width: 26px;        /* 念のため最大幅も制限 */
+    height: 26px;           /* 高さを揃える */
+    line-height: 26px;      /* 文字を上下中央に */
+    box-sizing: border-box; /* 枠線を含めて26pxにする */
+    margin: 0;              /* 余計な外白を消す */
+}
+
+/* 横長セル（31番など）の幅を死守する */
+.td_w, .td_w_empty, .td_w_cancel, .td_w_reserve {
+    /* width ではなく min-width と max-width を !important で指定 */
+    min-width: 52px !important;
+    max-width: 52px !important;
+    width: 52px !important;
+    
+    /* 文字数による自動計算を完全にシャットアウト */
+    display: table-cell; 
+    overflow: hidden;
+    white-space: nowrap;
+}
+/* ----- ここまで2026年2月16日追加分 ----- */
 
 a,a:hover,a:visited {
 	text-decoration: none;

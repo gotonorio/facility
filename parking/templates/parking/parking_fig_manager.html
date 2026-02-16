@@ -36,238 +36,241 @@
 <div class="inline_block">
     <h3>　{{title}}</h3>
 </div>
-<table class="table_center_nowrap table_fix">
-    <!-- table-layout: fixed;を設定しているため、1行目に32列x26pxを確保しておく -->
-    <colgroup>
-        {% for i in "x"|rjust:"32" %}
-        <col style="width: 26px;">
-        {% endfor %}
-    </colgroup>
-    <tr>
-        <td colspan="12" class="set_right">凡例 : </td>
-        <td class="td_w" colspan="2">使用中</td>
-        <td class="td_w_empty" colspan="2">空き</td>
-        <td class="td_w_cancel" colspan="2">解約予定</td>
-        <td class="td_w_reserve" colspan="2">予約中</td>
-    </tr>
-    <tr>
-        <td class="td_crlf"></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="td_trash" rowspan="4" colspan="3">ゴミ置き場</td>
-        <td class="td_trash" rowspan="4" colspan="3">駐輪場</td>
-        <td {% if sect11.status_of_use == '空き' %} class="td_w_empty"{% elif sect11.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect11.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect11.pk %}">11</a></td>
-        <td rowspan="4" colspan="3"></td>
-        <td {% if sect15.status_of_use == '空き' %} class="td_w_empty"{% elif sect15.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect15.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect15.pk %}">15</a></td>
-        <td {% if sect19.status_of_use == '空き' %} class="td_w_empty"{% elif sect19.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect19.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect19.pk %}">19</a></td>
-        <td colspan="3"></td>
-        <td {% if sect23.status_of_use == '空き' %} class="td_w_empty"{% elif sect23.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect23.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect23.pk %}">23</a></td>
-        <td class="td_w" rowspan="2" colspan="4"></td>
-    </tr>
-    <tr>
-        <td {% if sect1.status_of_use == '空き' %} class="td_h_empty"{% elif sect1.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect1.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect1.pk %}">1</a></td>
-        <td {% if sect2.status_of_use == '空き' %} class="td_h_empty"{% elif sect2.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect2.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect2.pk %}">2</a></td>
-        <td {% if sect3.status_of_use == '空き' %} class="td_h_empty"{% elif sect3.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect3.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect3.pk %}">3</a></td>
-        <td {% if sect4.status_of_use == '空き' %} class="td_h_empty"{% elif sect4.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect4.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect4.pk %}">4</a></td>
-        <td {% if sect5.status_of_use == '空き' %} class="td_h_empty"{% elif sect5.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect5.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect5.pk %}">5</a></td>
-        <td {% if sect6.status_of_use == '空き' %} class="td_h_empty"{% elif sect6.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect6.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect6.pk %}">6</a></td>
-        <td {% if sect12.status_of_use == '空き' %} class="td_w_empty"{% elif sect12.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect12.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect12.pk %}">12</a></td>
-        <td {% if sect16.status_of_use == '空き' %} class="td_w_empty"{% elif sect16.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect16.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect16.pk %}">16</a></td>
-        <td {% if sect20.status_of_use == '空き' %} class="td_w_empty"{% elif sect20.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect20.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect20.pk %}">20</a></td>
-        <td colspan="3"></td>
-        <td {% if sect24.status_of_use == '空き' %} class="td_w_empty"{% elif sect24.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect24.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect24.pk %}">24</a></td>
-    </tr>
-    <tr>
-        <td {% if sect13.status_of_use == '空き' %} class="td_w_empty"{% elif sect13.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect13.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect13.pk %}">13</a></td>
-        <td {% if sect17.status_of_use == '空き' %} class="td_w_empty"{% elif sect17.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect17.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect17.pk %}">17</a></td>
-        <td {% if sect21.status_of_use == '空き' %} class="td_w_empty"{% elif sect21.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect21.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect21.pk %}">21</a></td>
-        <td colspan="3"></td>
-        <td {% if sect25.status_of_use == '空き' %} class="td_w_empty"{% elif sect25.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect25.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect25.pk %}">25</a></td>
-        <td {% if sect27.status_of_use == '空き' %} class="td_h_empty"{% elif sect27.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect27.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect27.pk %}">27</a></td>
-        <td {% if sect28.status_of_use == '空き' %} class="td_h_empty"{% elif sect28.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect28.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect28.pk %}">28</a></td>
-        <td {% if sect29.status_of_use == '空き' %} class="td_h_empty"{% elif sect29.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect29.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect29.pk %}">29</a></td>
-        <td {% if sect30.status_of_use == '空き' %} class="td_h_empty"{% elif sect30.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect30.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect30.pk %}">30</a></td>
-    </tr>
-    <tr>
-		<td rowspan="4" colspan="6"></td>
-        <td {% if sect14.status_of_use == '空き' %} class="td_w_empty"{% elif sect14.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect14.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect14.pk %}">14</a></td>
-        <td {% if sect18.status_of_use == '空き' %} class="td_w_empty"{% elif sect18.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect18.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect18.pk %}">18</a></td>
-        <td {% if sect22.status_of_use == '空き' %} class="td_w_empty"{% elif sect22.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect22.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect22.pk %}">22</a></td>
-        <td colspan="3"></td>
-        <td {% if sect26.status_of_use == '空き' %} class="td_w_empty"{% elif sect26.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect26.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect26.pk %}">26</a></td>
-    </tr>
-    <tr>
-        <td colspan="24"></td>
-        <td {% if sect31.status_of_use == '空き' %} class="td_w_empty"{% elif sect31.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect31.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect31.pk %}">31</a></td>
-    </tr>
-    <tr>
-        <td colspan="24"></td>
-        <td {% if sect32.status_of_use == '空き' %} class="td_w_empty"{% elif sect32.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect32.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect32.pk %}">32</a></td>
-    </tr>
-    <tr>
-        <td colspan="11">機械式駐車場（下段 No.44〜No.64 使用中止）</td>
-        <td colspan="13"></td>
-        <td {% if sect33.status_of_use == '空き' %} class="td_w_empty"{% elif sect33.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect33.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect33.pk %}">33</a></td>
-    </tr>
-    <tr>
-        <td rowspan="2" colspan="3"></td>
-        <td rowspan="6" colspan="3"></td>
-        <td {% if sect43.status_of_use == '空き' %} class="td_sh_empty"{% elif sect43.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect43.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect43.pk %}">43</a></td>
-        <td {% if sect45.status_of_use == '空き' %} class="td_sh_empty"{% elif sect45.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect45.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect45.pk %}">45</a></td>
-        <td {% if sect47.status_of_use == '空き' %} class="td_sh_empty"{% elif sect47.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect47.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect47.pk %}">47</a></td>
-        <td {% if sect49.status_of_use == '空き' %} class="td_sh_empty"{% elif sect49.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect49.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect49.pk %}">49</a></td>
-        <td {% if sect51.status_of_use == '空き' %} class="td_sh_empty"{% elif sect51.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect51.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect51.pk %}">51</a></td>
-        <td {% if sect53.status_of_use == '空き' %} class="td_sh_empty"{% elif sect53.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect53.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect53.pk %}">53</a></td>
-        <td {% if sect55.status_of_use == '空き' %} class="td_sh_empty"{% elif sect55.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect55.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect55.pk %}">55</a></td>
-        <td {% if sect57.status_of_use == '空き' %} class="td_sh_empty"{% elif sect57.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect57.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect57.pk %}">57</a></td>
-        <td {% if sect59.status_of_use == '空き' %} class="td_sh_empty"{% elif sect59.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect59.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect59.pk %}">59</a></td>
-        <td {% if sect61.status_of_use == '空き' %} class="td_sh_empty"{% elif sect61.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect61.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect61.pk %}">61</a></td>
-        <td {% if sect63.status_of_use == '空き' %} class="td_sh_empty"{% elif sect63.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect63.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect63.pk %}">63</a></td>
-        {% comment %}
-        <td {% if sect43.status_of_use == '空き' %} class="td_sh_empty"{% elif sect43.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect43.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect43.pk %}">43</a></td>
-        <td {% if sect45.status_of_use == '空き' %} class="td_sh_empty"{% elif sect45.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect45.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect45.pk %}">45</a></td>
-        <td {% if sect47.status_of_use == '空き' %} class="td_sh_empty"{% elif sect47.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect47.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect47.pk %}">47</a></td>
-        <td {% if sect49.status_of_use == '空き' %} class="td_sh_empty"{% elif sect49.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect49.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect49.pk %}">49</a></td>
-        <td {% if sect51.status_of_use == '空き' %} class="td_sh_empty"{% elif sect51.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect51.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect51.pk %}">51</a></td>
-        <td {% if sect53.status_of_use == '空き' %} class="td_sh_empty"{% elif sect53.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect53.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect53.pk %}">53</a></td>
-        <td {% if sect55.status_of_use == '空き' %} class="td_sh_empty"{% elif sect55.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect55.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect55.pk %}">55</a></td>
-        <td {% if sect57.status_of_use == '空き' %} class="td_sh_empty"{% elif sect57.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect57.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect57.pk %}">57</a></td>
-        <td {% if sect59.status_of_use == '空き' %} class="td_sh_empty"{% elif sect59.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect59.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect59.pk %}">59</a></td>
-        <td {% if sect61.status_of_use == '空き' %} class="td_sh_empty"{% elif sect61.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect61.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect61.pk %}">61</a></td>
-        <td {% if sect63.status_of_use == '空き' %} class="td_sh_empty"{% elif sect63.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect63.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect63.pk %}">63</a></td>
-        {% endcomment %}
-        <td rowspan="2"></td>
-        <td {% if sect87.status_of_use == '空き' %} class="td_h_empty"{% elif sect87.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect87.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect87.pk %}">87</a></td>
-        <td {% if sect88.status_of_use == '空き' %} class="td_h_empty"{% elif sect88.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect88.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect88.pk %}">88</a></td>
-        <td {% if sect89.status_of_use == '空き' %} class="td_h_empty"{% elif sect89.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect89.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect89.pk %}">89</a></td>
-        <td {% if sect90.status_of_use == '空き' %} class="td_h_empty"{% elif sect90.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect90.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect90.pk %}">90</a></td>
-        <td {% if sect91.status_of_use == '空き' %} class="td_h_empty"{% elif sect91.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect91.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect91.pk %}">91</a></td>
-        <td {% if sect92.status_of_use == '空き' %} class="td_h_empty"{% elif sect92.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect92.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect92.pk %}">92</a></td>
-        <td {% if sect93.status_of_use == '空き' %} class="td_h_empty"{% elif sect93.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect93.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect93.pk %}">93</a></td>
-        <td {% if sect94.status_of_use == '空き' %} class="td_h_empty"{% elif sect94.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect94.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect94.pk %}">94</a></td>
-        <td {% if sect95.status_of_use == '空き' %} class="td_h_empty"{% elif sect95.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect95.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect95.pk %}">95</a></td>
-        <td {% if sect96.status_of_use == '空き' %} class="td_h_empty"{% elif sect96.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect96.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect96.pk %}">96</a></td>
-        <td rowspan="4" colspan="2"></td>
-        <td {% if sect34.status_of_use == '空き' %} class="td_w_empty"{% elif sect34.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect34.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect34.pk %}">34</a></td>
-    </tr>
-    <tr>
-        {% comment %}
-        <td {% if sect44.status_of_use == '空き' %} class="td_sh_empty"{% elif sect44.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect44.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect44.pk %}">44</a></td>
-        <td {% if sect46.status_of_use == '空き' %} class="td_sh_empty"{% elif sect46.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect46.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect46.pk %}">46</a></td>
-        <td {% if sect48.status_of_use == '空き' %} class="td_sh_empty"{% elif sect48.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect48.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect48.pk %}">48</a></td>
-        <td {% if sect50.status_of_use == '空き' %} class="td_sh_empty"{% elif sect50.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect50.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect50.pk %}">50</a></td>
-        <td {% if sect52.status_of_use == '空き' %} class="td_sh_empty"{% elif sect52.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect52.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect52.pk %}">52</a></td>
-        <td {% if sect54.status_of_use == '空き' %} class="td_sh_empty"{% elif sect54.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect54.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect54.pk %}">54</a></td>
-        <td {% if sect56.status_of_use == '空き' %} class="td_sh_empty"{% elif sect56.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect56.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect56.pk %}">56</a></td>
-        <td {% if sect58.status_of_use == '空き' %} class="td_sh_empty"{% elif sect58.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect58.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect58.pk %}">58</a></td>
-        <td {% if sect60.status_of_use == '空き' %} class="td_sh_empty"{% elif sect60.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect60.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect60.pk %}">60</a></td>
-        <td {% if sect62.status_of_use == '空き' %} class="td_sh_empty"{% elif sect62.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect62.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect62.pk %}">62</a></td>
-        <td {% if sect64.status_of_use == '空き' %} class="td_sh_empty"{% elif sect64.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect64.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect64.pk %}">64</a></td>
-        {% endcomment %}
-        <td {% if sect35.status_of_use == '空き' %} class="td_w_empty"{% elif sect35.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect35.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect35.pk %}">35</a></td>
-    </tr>
-    <tr>
-        <td rowspan="4"></td>
-        <td {% if sect107.status_of_use == '空き' %} class="td_w_empty"{% elif sect107.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect107.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect107.pk %}">107</a></td>
-        <td {% if sect65.status_of_use == '空き' %} class="td_sh_empty"{% elif sect65.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect65.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect65.pk %}">65</a></td>
-        <td {% if sect67.status_of_use == '空き' %} class="td_sh_empty"{% elif sect67.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect67.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect67.pk %}">67</a></td>
-        <td {% if sect69.status_of_use == '空き' %} class="td_sh_empty"{% elif sect69.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect69.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect69.pk %}">69</a></td>
-        <td {% if sect71.status_of_use == '空き' %} class="td_sh_empty"{% elif sect71.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect71.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect71.pk %}">71</a></td>
-        <td {% if sect73.status_of_use == '空き' %} class="td_sh_empty"{% elif sect73.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect73.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect73.pk %}">73</a></td>
-        <td {% if sect75.status_of_use == '空き' %} class="td_sh_empty"{% elif sect75.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect75.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect75.pk %}">75</a></td>
-        <td {% if sect77.status_of_use == '空き' %} class="td_sh_empty"{% elif sect77.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect77.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect77.pk %}">77</a></td>
-        <td {% if sect79.status_of_use == '空き' %} class="td_sh_empty"{% elif sect79.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect79.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect79.pk %}">79</a></td>
-        <td {% if sect81.status_of_use == '空き' %} class="td_sh_empty"{% elif sect81.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect81.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect81.pk %}">81</a></td>
-        <td {% if sect83.status_of_use == '空き' %} class="td_sh_empty"{% elif sect83.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect83.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect83.pk %}">83</a></td>
-        <td {% if sect85.status_of_use == '空き' %} class="td_sh_empty"{% elif sect85.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect85.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect85.pk %}">85</a></td>
-        <td rowspan="2"></td>
-        <td {% if sect97.status_of_use == '空き' %} class="td_h_empty"{% elif sect97.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect97.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect97.pk %}">97</a></td>
-        <td {% if sect98.status_of_use == '空き' %} class="td_h_empty"{% elif sect98.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect98.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect98.pk %}">98</a></td>
-        <td {% if sect99.status_of_use == '空き' %} class="td_h_empty"{% elif sect99.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect99.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect99.pk %}">99</a></td>
-        <td {% if sect100.status_of_use == '空き' %} class="td_h_empty"{% elif sect100.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect100.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect100.pk %}">100</a></td>
-        <td {% if sect101.status_of_use == '空き' %} class="td_h_empty"{% elif sect101.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect101.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect101.pk %}">101</a></td>
-        <td {% if sect102.status_of_use == '空き' %} class="td_h_empty"{% elif sect102.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect102.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect102.pk %}">102</a></td>
-        <td {% if sect103.status_of_use == '空き' %} class="td_h_empty"{% elif sect103.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect103.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect103.pk %}">103</a></td>
-        <td {% if sect104.status_of_use == '空き' %} class="td_h_empty"{% elif sect104.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect104.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect104.pk %}">104</a></td>
-        <td {% if sect105.status_of_use == '空き' %} class="td_h_empty"{% elif sect105.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect105.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect105.pk %}">105</a></td>
-        <td {% if sect106.status_of_use == '空き' %} class="td_h_empty"{% elif sect106.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect106.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect106.pk %}">106</a></td>
-        <td {% if sect36.status_of_use == '空き' %} class="td_w_empty"{% elif sect36.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect36.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect36.pk %}">36</a></td>
-    </tr>
-    <tr>
-        <td {% if sect108.status_of_use == '空き' %} class="td_w_empty"{% elif sect108.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect108.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect108.pk %}">108</a></td>
-        <td {% if sect66.status_of_use == '空き' %} class="td_sh_empty"{% elif sect66.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect66.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect66.pk %}">66</a></td>
-        <td {% if sect68.status_of_use == '空き' %} class="td_sh_empty"{% elif sect68.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect68.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect68.pk %}">68</a></td>
-        <td {% if sect70.status_of_use == '空き' %} class="td_sh_empty"{% elif sect70.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect70.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect70.pk %}">70</a></td>
-        <td {% if sect72.status_of_use == '空き' %} class="td_sh_empty"{% elif sect72.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect72.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect72.pk %}">72</a></td>
-        <td {% if sect74.status_of_use == '空き' %} class="td_sh_empty"{% elif sect74.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect74.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect74.pk %}">74</a></td>
-        <td {% if sect76.status_of_use == '空き' %} class="td_sh_empty"{% elif sect76.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect76.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect76.pk %}">76</a></td>
-        <td {% if sect78.status_of_use == '空き' %} class="td_sh_empty"{% elif sect78.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect78.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect78.pk %}">78</a></td>
-        <td {% if sect80.status_of_use == '空き' %} class="td_sh_empty"{% elif sect80.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect80.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect80.pk %}">80</a></td>
-        <td {% if sect82.status_of_use == '空き' %} class="td_sh_empty"{% elif sect82.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect82.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect82.pk %}">82</a></td>
-        <td {% if sect84.status_of_use == '空き' %} class="td_sh_empty"{% elif sect84.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect84.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect84.pk %}">84</a></td>
-        <td {% if sect86.status_of_use == '空き' %} class="td_sh_empty"{% elif sect86.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect86.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect86.pk %}">86</a></td>
-        <td {% if sect37.status_of_use == '空き' %} class="td_w_empty"{% elif sect37.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect37.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect37.pk %}">37</a></td>
-    </tr>
-    <tr>
-        <td {% if sect109.status_of_use == '空き' %} class="td_w_empty"{% elif sect109.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect109.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect109.pk %}">109</a></td>
-        <td rowspan="2" colspan="24"></td>
-        <td {% if sect38.status_of_use == '空き' %} class="td_w_empty"{% elif sect38.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect38.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect38.pk %}">38</a></td>
-    </tr>
-    <tr>
-        <td {% if sect110.status_of_use == '空き' %} class="td_w_empty"{% elif sect110.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect110.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect110.pk %}">110</a></td>
-        <td {% if sect39.status_of_use == '空き' %} class="td_w_empty"{% elif sect39.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect39.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect39.pk %}">39</a></td>
-    </tr>
-    <tr>
-        <td rowspan="2" colspan="1"></td>
-        <td class="td_trash" rowspan="2" colspan="2">外階段</td>
-        <td rowspan="2" colspan="1"></td>
-        <td {% if sect111.status_of_use == '空き' %} class="td_h_empty"{% elif sect111.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect111.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect111.pk %}">111</a></td>
-        <td {% if sect112.status_of_use == '空き' %} class="td_h_empty"{% elif sect112.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect112.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect112.pk %}">112</a></td>
-        <td {% if sect113.status_of_use == '空き' %} class="td_h_empty"{% elif sect113.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect113.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect113.pk %}">113</a></td>
-        <td {% if sect114.status_of_use == '空き' %} class="td_h_empty"{% elif sect114.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect114.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect114.pk %}">114</a></td>
-        <td {% if sect115.status_of_use == '空き' %} class="td_h_empty"{% elif sect115.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect115.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect115.pk %}">115</a></td>
-        <td {% if sect116.status_of_use == '空き' %} class="td_h_empty"{% elif sect116.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect116.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect116.pk %}">116</a></td>
-        <td {% if sect117.status_of_use == '空き' %} class="td_h_empty"{% elif sect117.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect117.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect117.pk %}">117</a></td>
-        <td {% if sect118.status_of_use == '空き' %} class="td_h_empty"{% elif sect118.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect118.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect118.pk %}">118</a></td>
-        <td {% if sect119.status_of_use == '空き' %} class="td_h_empty"{% elif sect119.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect119.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect119.pk %}">119</a></td>
-        <td {% if sect120.status_of_use == '空き' %} class="td_h_empty"{% elif sect120.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect120.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect120.pk %}">120</a></td>
-        <td {% if sect121.status_of_use == '空き' %} class="td_h_empty"{% elif sect121.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect121.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect121.pk %}">121</a></td>
-        <td {% if sect122.status_of_use == '空き' %} class="td_h_empty"{% elif sect122.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect122.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect122.pk %}">122</a></td>
-        <td {% if sect123.status_of_use == '空き' %} class="td_h_empty"{% elif sect123.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect123.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect123.pk %}">123</a></td>
-        <td {% if sect124.status_of_use == '空き' %} class="td_h_empty"{% elif sect124.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect124.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect124.pk %}">124</a></td>
-        <td {% if sect125.status_of_use == '空き' %} class="td_h_empty"{% elif sect125.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect125.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect125.pk %}">125</a></td>
-        <td {% if sect126.status_of_use == '空き' %} class="td_h_empty"{% elif sect126.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect126.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect126.pk %}">126</a></td>
-        <td {% if sect127.status_of_use == '空き' %} class="td_h_empty"{% elif sect127.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect127.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect127.pk %}">127</a></td>
-        <td {% if sect128.status_of_use == '空き' %} class="td_h_empty"{% elif sect128.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect128.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect128.pk %}">128</a></td>
-        <td {% if sect129.status_of_use == '空き' %} class="td_h_empty"{% elif sect129.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect129.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect129.pk %}">129</a></td>
-        <td rowspan="2" colspan="1"></td>
-        <td {% if sect130.status_of_use == '空き' %} class="td_h_empty"{% elif sect130.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect130.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect130.pk %}">130</a></td>
-        <td {% if sect131.status_of_use == '空き' %} class="td_h_empty"{% elif sect131.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect131.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect131.pk %}">131</a></td>
-        <td {% if sect132.status_of_use == '空き' %} class="td_w_empty"{% elif sect132.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect132.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect132.pk %}">132</a></td>
-        <td rowspan="3" colspan="2"></td>
-        <td {% if sect40.status_of_use == '空き' %} class="td_w_empty"{% elif sect40.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect40.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect40.pk %}">40</a></td>
-    </tr>
-    <tr>
-        <td {% if sect133.status_of_use == '空き' %} class="td_w_empty"{% elif sect133.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect133.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect133.pk %}">133</a></td>
-        <td {% if sect41.status_of_use == '空き' %} class="td_w_empty"{% elif sect41.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect41.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect41.pk %}">41</a></td>
-    </tr>
-    <tr>
-        <td class="text_centered" colspan="4"></td>
-        <td class="text_centered" colspan="19">マンション側 駐輪場</td>
-        <td class="text_centered"></td>
-        <td class="td_trash" rowspan="3" colspan="2">外階段</td>
-        <td {% if sect134.status_of_use == '空き' %} class="td_w_empty"{% elif sect134.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect134.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect134.pk %}">134</a></td>
-        <td {% if sect42.status_of_use == '空き' %} class="td_w_empty"{% elif sect42.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect42.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect42.pk %}">42</a></td>
-    </tr>
-    <tr>
-        <td class="text_centered" colspan="24">通路</td>
-    </tr>
-</table>
+<div class="table-wrapper">
+    <table class="table_center_nowrap table_fix">
+        <!-- table-layout: fixed;を設定しているため、1行目に32列x26pxを確保しておく -->
+        <colgroup>
+            {% for i in "x"|rjust:"32" %}
+            <col style="width: 26px; min-width: 26px;">
+            {% comment %} <col style="width: 26px;"> {% endcomment %}
+            {% endfor %}
+        </colgroup>
+        <tr>
+            <td colspan="12" class="set_right">凡例 : </td>
+            <td class="td_w" colspan="2">使用中</td>
+            <td class="td_w_empty" colspan="2">空き</td>
+            <td class="td_w_cancel" colspan="2">解約予定</td>
+            <td class="td_w_reserve" colspan="2">予約中</td>
+        </tr>
+        <tr>
+            <td class="td_crlf"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="td_trash" rowspan="4" colspan="3">ゴミ置き場</td>
+            <td class="td_trash" rowspan="4" colspan="3">駐輪場</td>
+            <td {% if sect11.status_of_use == '空き' %} class="td_w_empty"{% elif sect11.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect11.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect11.pk %}">11</a></td>
+            <td rowspan="4" colspan="3"></td>
+            <td {% if sect15.status_of_use == '空き' %} class="td_w_empty"{% elif sect15.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect15.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect15.pk %}">15</a></td>
+            <td {% if sect19.status_of_use == '空き' %} class="td_w_empty"{% elif sect19.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect19.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect19.pk %}">19</a></td>
+            <td colspan="3"></td>
+            <td {% if sect23.status_of_use == '空き' %} class="td_w_empty"{% elif sect23.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect23.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect23.pk %}">23</a></td>
+            <td class="td_w" rowspan="2" colspan="4"></td>
+        </tr>
+        <tr>
+            <td {% if sect1.status_of_use == '空き' %} class="td_h_empty"{% elif sect1.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect1.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect1.pk %}"><span>1</span></a></td>
+            <td {% if sect2.status_of_use == '空き' %} class="td_h_empty"{% elif sect2.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect2.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect2.pk %}"><span>2</span></a></td>
+            <td {% if sect3.status_of_use == '空き' %} class="td_h_empty"{% elif sect3.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect3.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect3.pk %}"><span>3</span></a></td>
+            <td {% if sect4.status_of_use == '空き' %} class="td_h_empty"{% elif sect4.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect4.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect4.pk %}"><span>4</span></a></td>
+            <td {% if sect5.status_of_use == '空き' %} class="td_h_empty"{% elif sect5.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect5.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect5.pk %}"><span>5</span></a></td>
+            <td {% if sect6.status_of_use == '空き' %} class="td_h_empty"{% elif sect6.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect6.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect6.pk %}"><span>6</span></a></td>
+            <td {% if sect12.status_of_use == '空き' %} class="td_w_empty"{% elif sect12.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect12.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect12.pk %}">12</a></td>
+            <td {% if sect16.status_of_use == '空き' %} class="td_w_empty"{% elif sect16.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect16.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect16.pk %}">16</a></td>
+            <td {% if sect20.status_of_use == '空き' %} class="td_w_empty"{% elif sect20.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect20.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect20.pk %}">20</a></td>
+            <td colspan="3"></td>
+            <td {% if sect24.status_of_use == '空き' %} class="td_w_empty"{% elif sect24.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect24.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect24.pk %}">24</a></td>
+        </tr>
+        <tr>
+            <td {% if sect13.status_of_use == '空き' %} class="td_w_empty"{% elif sect13.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect13.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect13.pk %}">13</a></td>
+            <td {% if sect17.status_of_use == '空き' %} class="td_w_empty"{% elif sect17.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect17.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect17.pk %}">17</a></td>
+            <td {% if sect21.status_of_use == '空き' %} class="td_w_empty"{% elif sect21.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect21.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect21.pk %}">21</a></td>
+            <td colspan="3"></td>
+            <td {% if sect25.status_of_use == '空き' %} class="td_w_empty"{% elif sect25.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect25.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect25.pk %}">25</a></td>
+            <td {% if sect27.status_of_use == '空き' %} class="td_h_empty"{% elif sect27.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect27.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect27.pk %}"><span>27</span></a></td>
+            <td {% if sect28.status_of_use == '空き' %} class="td_h_empty"{% elif sect28.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect28.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect28.pk %}"><span>28</span></a></td>
+            <td {% if sect29.status_of_use == '空き' %} class="td_h_empty"{% elif sect29.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect29.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect29.pk %}"><span>29</span></a></td>
+            <td {% if sect30.status_of_use == '空き' %} class="td_h_empty"{% elif sect30.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect30.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect30.pk %}"><span>30</span></a></td>
+        </tr>
+        <tr>
+            <td rowspan="4" colspan="6"></td>
+            <td {% if sect14.status_of_use == '空き' %} class="td_w_empty"{% elif sect14.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect14.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect14.pk %}">14</a></td>
+            <td {% if sect18.status_of_use == '空き' %} class="td_w_empty"{% elif sect18.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect18.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect18.pk %}">18</a></td>
+            <td {% if sect22.status_of_use == '空き' %} class="td_w_empty"{% elif sect22.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect22.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect22.pk %}">22</a></td>
+            <td colspan="3"></td>
+            <td {% if sect26.status_of_use == '空き' %} class="td_w_empty"{% elif sect26.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect26.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect26.pk %}">26</a></td>
+        </tr>
+        <tr>
+            <td colspan="24"></td>
+            <td {% if sect31.status_of_use == '空き' %} class="td_w_empty"{% elif sect31.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect31.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect31.pk %}">31</a></td>
+        </tr>
+        <tr>
+            <td colspan="24"></td>
+            <td {% if sect32.status_of_use == '空き' %} class="td_w_empty"{% elif sect32.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect32.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect32.pk %}">32</a></td>
+        </tr>
+        <tr>
+            <td colspan="11">機械式駐車場（下段 No.44〜No.64 使用中止）</td>
+            <td colspan="13"></td>
+            <td {% if sect33.status_of_use == '空き' %} class="td_w_empty"{% elif sect33.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect33.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect33.pk %}">33</a></td>
+        </tr>
+        <tr>
+            <td rowspan="2" colspan="3"></td>
+            <td rowspan="6" colspan="3"></td>
+            <td {% if sect43.status_of_use == '空き' %} class="td_sh_empty"{% elif sect43.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect43.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect43.pk %}"><span>43</span></a></td>
+            <td {% if sect45.status_of_use == '空き' %} class="td_sh_empty"{% elif sect45.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect45.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect45.pk %}"><span>45</span></a></td>
+            <td {% if sect47.status_of_use == '空き' %} class="td_sh_empty"{% elif sect47.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect47.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect47.pk %}"><span>47</span></a></td>
+            <td {% if sect49.status_of_use == '空き' %} class="td_sh_empty"{% elif sect49.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect49.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect49.pk %}"><span>49</span></a></td>
+            <td {% if sect51.status_of_use == '空き' %} class="td_sh_empty"{% elif sect51.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect51.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect51.pk %}"><span>51</span></a></td>
+            <td {% if sect53.status_of_use == '空き' %} class="td_sh_empty"{% elif sect53.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect53.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect53.pk %}"><span>53</span></a></td>
+            <td {% if sect55.status_of_use == '空き' %} class="td_sh_empty"{% elif sect55.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect55.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect55.pk %}"><span>55</span></a></td>
+            <td {% if sect57.status_of_use == '空き' %} class="td_sh_empty"{% elif sect57.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect57.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect57.pk %}"><span>57</span></a></td>
+            <td {% if sect59.status_of_use == '空き' %} class="td_sh_empty"{% elif sect59.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect59.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect59.pk %}"><span>59</span></a></td>
+            <td {% if sect61.status_of_use == '空き' %} class="td_sh_empty"{% elif sect61.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect61.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect61.pk %}"><span>61</span></a></td>
+            <td {% if sect63.status_of_use == '空き' %} class="td_sh_empty"{% elif sect63.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect63.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect63.pk %}"><span>63</span></a></td>
+            {% comment %}
+            <td {% if sect43.status_of_use == '空き' %} class="td_sh_empty"{% elif sect43.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect43.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect43.pk %}">43</a></td>
+            <td {% if sect45.status_of_use == '空き' %} class="td_sh_empty"{% elif sect45.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect45.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect45.pk %}">45</a></td>
+            <td {% if sect47.status_of_use == '空き' %} class="td_sh_empty"{% elif sect47.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect47.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect47.pk %}">47</a></td>
+            <td {% if sect49.status_of_use == '空き' %} class="td_sh_empty"{% elif sect49.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect49.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect49.pk %}">49</a></td>
+            <td {% if sect51.status_of_use == '空き' %} class="td_sh_empty"{% elif sect51.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect51.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect51.pk %}">51</a></td>
+            <td {% if sect53.status_of_use == '空き' %} class="td_sh_empty"{% elif sect53.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect53.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect53.pk %}">53</a></td>
+            <td {% if sect55.status_of_use == '空き' %} class="td_sh_empty"{% elif sect55.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect55.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect55.pk %}">55</a></td>
+            <td {% if sect57.status_of_use == '空き' %} class="td_sh_empty"{% elif sect57.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect57.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect57.pk %}">57</a></td>
+            <td {% if sect59.status_of_use == '空き' %} class="td_sh_empty"{% elif sect59.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect59.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect59.pk %}">59</a></td>
+            <td {% if sect61.status_of_use == '空き' %} class="td_sh_empty"{% elif sect61.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect61.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect61.pk %}">61</a></td>
+            <td {% if sect63.status_of_use == '空き' %} class="td_sh_empty"{% elif sect63.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect63.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect63.pk %}">63</a></td>
+            {% endcomment %}
+            <td rowspan="2"></td>
+            <td {% if sect87.status_of_use == '空き' %} class="td_h_empty"{% elif sect87.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect87.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect87.pk %}"><span>87</span></a></td>
+            <td {% if sect88.status_of_use == '空き' %} class="td_h_empty"{% elif sect88.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect88.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect88.pk %}"><span>88</span></a></td>
+            <td {% if sect89.status_of_use == '空き' %} class="td_h_empty"{% elif sect89.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect89.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect89.pk %}"><span>89</span></a></td>
+            <td {% if sect90.status_of_use == '空き' %} class="td_h_empty"{% elif sect90.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect90.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect90.pk %}"><span>90</span></a></td>
+            <td {% if sect91.status_of_use == '空き' %} class="td_h_empty"{% elif sect91.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect91.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect91.pk %}"><span>91</span></a></td>
+            <td {% if sect92.status_of_use == '空き' %} class="td_h_empty"{% elif sect92.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect92.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect92.pk %}"><span>92</span></a></td>
+            <td {% if sect93.status_of_use == '空き' %} class="td_h_empty"{% elif sect93.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect93.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect93.pk %}"><span>93</span></a></td>
+            <td {% if sect94.status_of_use == '空き' %} class="td_h_empty"{% elif sect94.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect94.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect94.pk %}"><span>94</span></a></td>
+            <td {% if sect95.status_of_use == '空き' %} class="td_h_empty"{% elif sect95.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect95.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect95.pk %}"><span>95</span></a></td>
+            <td {% if sect96.status_of_use == '空き' %} class="td_h_empty"{% elif sect96.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect96.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect96.pk %}"><span>96</span></a></td>
+            <td rowspan="4" colspan="2"></td>
+            <td {% if sect34.status_of_use == '空き' %} class="td_w_empty"{% elif sect34.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect34.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect34.pk %}">34</a></td>
+        </tr>
+        <tr>
+            {% comment %}
+            <td {% if sect44.status_of_use == '空き' %} class="td_sh_empty"{% elif sect44.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect44.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect44.pk %}">44</a></td>
+            <td {% if sect46.status_of_use == '空き' %} class="td_sh_empty"{% elif sect46.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect46.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect46.pk %}">46</a></td>
+            <td {% if sect48.status_of_use == '空き' %} class="td_sh_empty"{% elif sect48.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect48.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect48.pk %}">48</a></td>
+            <td {% if sect50.status_of_use == '空き' %} class="td_sh_empty"{% elif sect50.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect50.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect50.pk %}">50</a></td>
+            <td {% if sect52.status_of_use == '空き' %} class="td_sh_empty"{% elif sect52.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect52.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect52.pk %}">52</a></td>
+            <td {% if sect54.status_of_use == '空き' %} class="td_sh_empty"{% elif sect54.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect54.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect54.pk %}">54</a></td>
+            <td {% if sect56.status_of_use == '空き' %} class="td_sh_empty"{% elif sect56.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect56.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect56.pk %}">56</a></td>
+            <td {% if sect58.status_of_use == '空き' %} class="td_sh_empty"{% elif sect58.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect58.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect58.pk %}">58</a></td>
+            <td {% if sect60.status_of_use == '空き' %} class="td_sh_empty"{% elif sect60.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect60.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect60.pk %}">60</a></td>
+            <td {% if sect62.status_of_use == '空き' %} class="td_sh_empty"{% elif sect62.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect62.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect62.pk %}">62</a></td>
+            <td {% if sect64.status_of_use == '空き' %} class="td_sh_empty"{% elif sect64.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect64.status_of_use == '解約予定'%}class="td_sh_cancel"{% elif sect44.status_of_use == '使用中止'%}class="td_sh_stop"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect64.pk %}">64</a></td>
+            {% endcomment %}
+            <td {% if sect35.status_of_use == '空き' %} class="td_w_empty"{% elif sect35.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect35.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect35.pk %}">35</a></td>
+        </tr>
+        <tr>
+            <td rowspan="4"></td>
+            <td {% if sect107.status_of_use == '空き' %} class="td_w_empty"{% elif sect107.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect107.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect107.pk %}">107</a></td>
+            <td {% if sect65.status_of_use == '空き' %} class="td_sh_empty"{% elif sect65.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect65.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect65.pk %}"><span>65</span></a></td>
+            <td {% if sect67.status_of_use == '空き' %} class="td_sh_empty"{% elif sect67.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect67.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect67.pk %}"><span>67</span></a></td>
+            <td {% if sect69.status_of_use == '空き' %} class="td_sh_empty"{% elif sect69.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect69.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect69.pk %}"><span>69</span></a></td>
+            <td {% if sect71.status_of_use == '空き' %} class="td_sh_empty"{% elif sect71.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect71.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect71.pk %}"><span>71</span></a></td>
+            <td {% if sect73.status_of_use == '空き' %} class="td_sh_empty"{% elif sect73.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect73.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect73.pk %}"><span>73</span></a></td>
+            <td {% if sect75.status_of_use == '空き' %} class="td_sh_empty"{% elif sect75.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect75.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect75.pk %}"><span>75</span></a></td>
+            <td {% if sect77.status_of_use == '空き' %} class="td_sh_empty"{% elif sect77.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect77.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect77.pk %}"><span>77</span></a></td>
+            <td {% if sect79.status_of_use == '空き' %} class="td_sh_empty"{% elif sect79.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect79.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect79.pk %}"><span>79</span></a></td>
+            <td {% if sect81.status_of_use == '空き' %} class="td_sh_empty"{% elif sect81.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect81.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect81.pk %}"><span>81</span></a></td>
+            <td {% if sect83.status_of_use == '空き' %} class="td_sh_empty"{% elif sect83.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect83.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect83.pk %}"><span>83</span></a></td>
+            <td {% if sect85.status_of_use == '空き' %} class="td_sh_empty"{% elif sect85.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect85.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect85.pk %}"><span>85</span></a></td>
+            <td rowspan="2"></td>
+            <td {% if sect97.status_of_use == '空き' %} class="td_h_empty"{% elif sect97.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect97.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect97.pk %}"><span>97</span></a></td>
+            <td {% if sect98.status_of_use == '空き' %} class="td_h_empty"{% elif sect98.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect98.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect98.pk %}"><span>98</span></a></td>
+            <td {% if sect99.status_of_use == '空き' %} class="td_h_empty"{% elif sect99.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect99.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect99.pk %}"><span>99</span></a></td>
+            <td {% if sect100.status_of_use == '空き' %} class="td_h_empty"{% elif sect100.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect100.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect100.pk %}"><span>100</span></a></td>
+            <td {% if sect101.status_of_use == '空き' %} class="td_h_empty"{% elif sect101.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect101.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect101.pk %}"><span>101</span></a></td>
+            <td {% if sect102.status_of_use == '空き' %} class="td_h_empty"{% elif sect102.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect102.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect102.pk %}"><span>102</span></a></td>
+            <td {% if sect103.status_of_use == '空き' %} class="td_h_empty"{% elif sect103.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect103.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect103.pk %}"><span>103</span></a></td>
+            <td {% if sect104.status_of_use == '空き' %} class="td_h_empty"{% elif sect104.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect104.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect104.pk %}"><span>104</span></a></td>
+            <td {% if sect105.status_of_use == '空き' %} class="td_h_empty"{% elif sect105.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect105.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect105.pk %}"><span>105</span></a></td>
+            <td {% if sect106.status_of_use == '空き' %} class="td_h_empty"{% elif sect106.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect106.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect106.pk %}"><span>106</span></a></td>
+            <td {% if sect36.status_of_use == '空き' %} class="td_w_empty"{% elif sect36.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect36.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect36.pk %}">36</a></td>
+        </tr>
+        <tr>
+            <td {% if sect108.status_of_use == '空き' %} class="td_w_empty"{% elif sect108.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect108.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect108.pk %}">108</a></td>
+            <td {% if sect66.status_of_use == '空き' %} class="td_sh_empty"{% elif sect66.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect66.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect66.pk %}">66</a></td>
+            <td {% if sect68.status_of_use == '空き' %} class="td_sh_empty"{% elif sect68.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect68.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect68.pk %}">68</a></td>
+            <td {% if sect70.status_of_use == '空き' %} class="td_sh_empty"{% elif sect70.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect70.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect70.pk %}">70</a></td>
+            <td {% if sect72.status_of_use == '空き' %} class="td_sh_empty"{% elif sect72.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect72.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect72.pk %}">72</a></td>
+            <td {% if sect74.status_of_use == '空き' %} class="td_sh_empty"{% elif sect74.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect74.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect74.pk %}">74</a></td>
+            <td {% if sect76.status_of_use == '空き' %} class="td_sh_empty"{% elif sect76.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect76.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect76.pk %}">76</a></td>
+            <td {% if sect78.status_of_use == '空き' %} class="td_sh_empty"{% elif sect78.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect78.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect78.pk %}">78</a></td>
+            <td {% if sect80.status_of_use == '空き' %} class="td_sh_empty"{% elif sect80.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect80.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect80.pk %}">80</a></td>
+            <td {% if sect82.status_of_use == '空き' %} class="td_sh_empty"{% elif sect82.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect82.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect82.pk %}">82</a></td>
+            <td {% if sect84.status_of_use == '空き' %} class="td_sh_empty"{% elif sect84.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect84.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect84.pk %}">84</a></td>
+            <td {% if sect86.status_of_use == '空き' %} class="td_sh_empty"{% elif sect86.status_of_use == '予約中'%} class="td_sh_reserve"{% elif sect86.status_of_use == '解約予定'%}class="td_sh_cancel"{% else %}class="td_sh"{% endif %}><a href="{% url 'parking:update' sect86.pk %}">86</a></td>
+            <td {% if sect37.status_of_use == '空き' %} class="td_w_empty"{% elif sect37.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect37.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect37.pk %}">37</a></td>
+        </tr>
+        <tr>
+            <td {% if sect109.status_of_use == '空き' %} class="td_w_empty"{% elif sect109.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect109.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect109.pk %}">109</a></td>
+            <td rowspan="2" colspan="24"></td>
+            <td {% if sect38.status_of_use == '空き' %} class="td_w_empty"{% elif sect38.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect38.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect38.pk %}">38</a></td>
+        </tr>
+        <tr>
+            <td {% if sect110.status_of_use == '空き' %} class="td_w_empty"{% elif sect110.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect110.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect110.pk %}">110</a></td>
+            <td {% if sect39.status_of_use == '空き' %} class="td_w_empty"{% elif sect39.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect39.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect39.pk %}">39</a></td>
+        </tr>
+        <tr>
+            <td rowspan="2" colspan="1"></td>
+            <td class="td_trash" rowspan="2" colspan="2">外階段</td>
+            <td rowspan="2" colspan="1"></td>
+            <td {% if sect111.status_of_use == '空き' %} class="td_h_empty"{% elif sect111.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect111.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect111.pk %}"><span>111</span></a></td>
+            <td {% if sect112.status_of_use == '空き' %} class="td_h_empty"{% elif sect112.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect112.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect112.pk %}"><span>112</span></a></td>
+            <td {% if sect113.status_of_use == '空き' %} class="td_h_empty"{% elif sect113.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect113.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect113.pk %}"><span>113</span></a></td>
+            <td {% if sect114.status_of_use == '空き' %} class="td_h_empty"{% elif sect114.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect114.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect114.pk %}"><span>114</span></a></td>
+            <td {% if sect115.status_of_use == '空き' %} class="td_h_empty"{% elif sect115.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect115.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect115.pk %}"><span>115</span></a></td>
+            <td {% if sect116.status_of_use == '空き' %} class="td_h_empty"{% elif sect116.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect116.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect116.pk %}"><span>116</span></a></td>
+            <td {% if sect117.status_of_use == '空き' %} class="td_h_empty"{% elif sect117.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect117.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect117.pk %}"><span>117</span></a></td>
+            <td {% if sect118.status_of_use == '空き' %} class="td_h_empty"{% elif sect118.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect118.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect118.pk %}"><span>118</span></a></td>
+            <td {% if sect119.status_of_use == '空き' %} class="td_h_empty"{% elif sect119.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect119.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect119.pk %}"><span>119</span></a></td>
+            <td {% if sect120.status_of_use == '空き' %} class="td_h_empty"{% elif sect120.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect120.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect120.pk %}"><span>120</span></a></td>
+            <td {% if sect121.status_of_use == '空き' %} class="td_h_empty"{% elif sect121.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect121.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect121.pk %}"><span>121</span></a></td>
+            <td {% if sect122.status_of_use == '空き' %} class="td_h_empty"{% elif sect122.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect122.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect122.pk %}"><span>122</span></a></td>
+            <td {% if sect123.status_of_use == '空き' %} class="td_h_empty"{% elif sect123.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect123.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect123.pk %}"><span>123</span></a></td>
+            <td {% if sect124.status_of_use == '空き' %} class="td_h_empty"{% elif sect124.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect124.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect124.pk %}"><span>124</span></a></td>
+            <td {% if sect125.status_of_use == '空き' %} class="td_h_empty"{% elif sect125.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect125.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect125.pk %}"><span>125</span></a></td>
+            <td {% if sect126.status_of_use == '空き' %} class="td_h_empty"{% elif sect126.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect126.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect126.pk %}"><span>126</span></a></td>
+            <td {% if sect127.status_of_use == '空き' %} class="td_h_empty"{% elif sect127.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect127.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect127.pk %}"><span>127</span></a></td>
+            <td {% if sect128.status_of_use == '空き' %} class="td_h_empty"{% elif sect128.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect128.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect128.pk %}"><span>128</span></a></td>
+            <td {% if sect129.status_of_use == '空き' %} class="td_h_empty"{% elif sect129.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect129.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect129.pk %}"><span>129</span></a></td>
+            <td rowspan="2" colspan="1"></td>
+            <td {% if sect130.status_of_use == '空き' %} class="td_h_empty"{% elif sect130.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect130.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect130.pk %}"><span>130</span></a></td>
+            <td {% if sect131.status_of_use == '空き' %} class="td_h_empty"{% elif sect131.status_of_use == '予約中'%} class="td_h_reserve"{% elif sect131.status_of_use == '解約予定'%}class="td_h_cancel"{% else %}class="td_h"{% endif %} rowspan="2"><a href="{% url 'parking:update' sect131.pk %}"><span>131</span></a></td>
+            <td {% if sect132.status_of_use == '空き' %} class="td_w_empty"{% elif sect132.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect132.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect132.pk %}">132</a></td>
+            <td rowspan="3" colspan="2"></td>
+            <td {% if sect40.status_of_use == '空き' %} class="td_w_empty"{% elif sect40.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect40.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect40.pk %}">40</a></td>
+        </tr>
+        <tr>
+            <td {% if sect133.status_of_use == '空き' %} class="td_w_empty"{% elif sect133.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect133.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect133.pk %}">133</a></td>
+            <td {% if sect41.status_of_use == '空き' %} class="td_w_empty"{% elif sect41.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect41.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect41.pk %}">41</a></td>
+        </tr>
+        <tr>
+            <td class="text_centered" colspan="4"></td>
+            <td class="text_centered" colspan="19">マンション側 駐輪場</td>
+            <td class="text_centered"></td>
+            <td class="td_trash" rowspan="3" colspan="2">外階段</td>
+            <td {% if sect134.status_of_use == '空き' %} class="td_w_empty"{% elif sect134.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect134.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect134.pk %}">134</a></td>
+            <td {% if sect42.status_of_use == '空き' %} class="td_w_empty"{% elif sect42.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect42.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect42.pk %}">42</a></td>
+        </tr>
+        <tr>
+            <td class="text_centered" colspan="24">通路</td>
+        </tr>
+    </table>
+</div>
 <br>
 {% endblock %}
