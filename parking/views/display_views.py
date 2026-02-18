@@ -1,11 +1,15 @@
+import logging
+import os
+
+from common.forms.base_form import YearMonthForm
+from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import redirect
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.timezone import localtime
 from django.views.generic import ListView, TemplateView
-
-from common.forms.base_form import YearMonthForm
 from parking.forms import ParkingSpaceFigForm
 from parking.models import ParkingSpace
 from parking.services.display_service import (
@@ -16,29 +20,40 @@ from parking.services.display_service import (
     get_utilization_metrics,
 )
 
+logger = logging.getLogger(__name__)
 
-class ParkingSpaceListView(LoginRequiredMixin, ListView):
+
+class ParkingSpaceListView(PermissionRequiredMixin, ListView):
     """一般ユーザ用 駐車場リスト表示"""
 
     model = ParkingSpace
     template_name = "parking/parking_list.html"
+    permission_required = "repair_plan.view_koujiname"
+    context_object_name = "parking_list"
 
+    def get_queryset(self):
+        # パラメータの確定
+        local_now = localtime(timezone.now())
+        self.year = self.request.GET.get("year", local_now.year)
+        self.month = self.request.GET.get("month", local_now.month)
+
+        # メインデータを取得してself に保持する（Service層を利用）
+        qs, self.total = get_parking_summary(self.year, self.month)
+
+        return qs
+
+    # テンプレートで使う「辞書」の作成（Dictを返す）
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        local_now = localtime(timezone.now())
-        year = self.request.GET.get("year", local_now.year)
-        month = self.request.GET.get("month", local_now.month)
 
-        # Service層で集計
-        qs, total = get_parking_summary(year, month)
-        space1, space2, space3 = categorize_parking_spaces(qs)
+        # 取得済みの qs は get_queryset で context["parking_list"] に入っている
+        space1, space2, space3 = categorize_parking_spaces(context["parking_list"])
 
         context.update(
             {
-                "total": total,
-                # "form": ParkingSpaceListForm(initial={"year": year, "month": month}),
-                "form": YearMonthForm(initial={"year": year, "month": month}),
-                "title": f"{year}年 {month}月",
+                "total": self.total,
+                "form": YearMonthForm(initial={"year": self.year, "month": self.month}),
+                "title": f"{self.year}年 {self.month}月",
                 "space1": space1,
                 "space2": space2,
                 "space3": space3,
@@ -47,55 +62,110 @@ class ParkingSpaceListView(LoginRequiredMixin, ListView):
         return context
 
 
-class ParkingFigView(LoginRequiredMixin, ListView):
+class ParkingSpaceManagementView(PermissionRequiredMixin, ListView):
+    """管理者の編集用 リスト表示"""
+
+    model = ParkingSpace
+    permission_required = "parking.add_parkingspace"
+    raise_exception = True
+    context_object_name = "parking_list"
+
+    def get_template_names(self):
+        # モバイル判定がある場合も共通のテンプレートを返す（元のロジックを維持）
+        return ["parking/management.html"]
+
+    # データの取得（HttpResponseを返す）
+    def get_queryset(self):
+        # 1. パラメータの確定
+        local_now = localtime(timezone.now())
+        self.year = self.request.GET.get("year", local_now.year)
+        self.month = self.request.GET.get("month", local_now.month)
+        self.parking_type = self.request.GET.get("parking_type")
+
+        # 2. メインデータを取得してself に保持する（Service層を利用）
+        qs, self.total = get_parking_summary(self.year, self.month, self.parking_type)
+
+        return qs
+
+    # テンプレートで使う「辞書」の作成（Dictを返す）
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context.update(
+            {
+                # "parking_list": self.qs,
+                "total": self.total,
+                "form": YearMonthForm(
+                    initial={"year": self.year, "month": self.month, "parking_type": self.parking_type}
+                ),
+                "title": f"{self.year}-{self.month}-01",
+            }
+        )
+        return context
+
+
+class ParkingFigView(PermissionRequiredMixin, TemplateView):
     """空き駐車場の図解表示"""
 
     model = ParkingSpace
     context_object_name = "parkings"
+    permission_required = "repair_plan.view_koujiname"
 
     def get_template_names(self):
         if self.request.user.has_perm("parking.add_parkingspace"):
             return ["parking/parking_fig_manager.html"]
         return ["parking/parking_fig.html"]
 
+    # データの取得（HttpResponseを返す）
     def get(self, request, *args, **kwargs):
         local_now = localtime(timezone.now())
         year = kwargs.get("year") or request.GET.get("year", local_now.year)
         month = kwargs.get("month") or request.GET.get("month", local_now.month)
+        self.mode = request.GET.get("mode")
 
-        # フォールバック処理を含むデータ取得
-        qs, self.year, self.month = get_parking_diagram_data(year, month)
+        # データ取得（指定された年月のデータがない場合は最大年月のデータを返す）
+        self.qs, self.year, self.month = get_parking_diagram_data(year, month)
 
-        if not qs.exists():
+        # querysetエラー処理でredirectするのはget()で行う。
+        if not self.qs.exists():
             messages.info(request, "駐車場データが存在しません")
             return redirect("register:facility")
 
-        self.object_list = qs
+        # get_context_data()処処に
         return super().get(request, *args, **kwargs)
 
+    # テンプレートで使う「辞書」の作成（Dictを返す）
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        for item in self.object_list:
+        for item in self.qs:
             context[f"sect{item.no}"] = item
 
+        # 利用状況を取得する
         _, empty_num = ParkingSpace.objects.get_empty_space(self.year, self.month, "")
         num = ParkingSpace.objects.get_parking_space_num(self.year, self.month, "")
 
         context.update(
             {
-                "form": ParkingSpaceFigForm(
-                    initial={"year": self.year, "month": self.month}
-                ),
-                "title": f"{self.year}年{self.month}月度の状況：空き＝{empty_num}台/{num}台",
+                "form": ParkingSpaceFigForm(initial={"year": self.year, "month": self.month}),
+                "title": f"{self.year}年{self.month}月度の駐車場：空き＝{empty_num}台/{num}台",
             }
         )
+
+        # HTMLファイル出力は、当年月データまたは最新のデータを出力する。
+        if self.mode == "export":
+            # 出力ボタンから呼ばれた時の処理
+            _ = generate_parking_maps_html(context)
+        else:
+            pass
+
         return context
 
 
-class UtilizationRateView(LoginRequiredMixin, TemplateView):
+class UtilizationRateView(PermissionRequiredMixin, TemplateView):
     """稼働率の表示"""
 
     template_name = "parking/utilization_rate.html"
+    permission_required = "repair_plan.view_koujiname"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -115,48 +185,12 @@ class UtilizationRateView(LoginRequiredMixin, TemplateView):
         return context
 
 
-# 追加分
-
-
-class ParkingSpaceManagementView(PermissionRequiredMixin, ListView):
-    """管理者用 リスト表示"""
-
-    model = ParkingSpace
-    permission_required = "parking.add_parkingspace"
-    raise_exception = True
-
-    def get_template_names(self):
-        # モバイル判定がある場合も共通のテンプレートを返す（元のロジックを維持）
-        return ["parking/management.html"]
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        local_now = localtime(timezone.now())
-        year = self.request.GET.get("year", local_now.year)
-        month = self.request.GET.get("month", local_now.month)
-        parking_type = self.request.GET.get("parking_type")
-
-        # 一般用と共通のService関数を利用
-        qs, total = get_parking_summary(year, month, parking_type)
-
-        context.update(
-            {
-                "parking_list": qs,
-                "total": total,
-                "form": YearMonthForm(
-                    initial={"year": year, "month": month, "parking_type": parking_type}
-                ),
-                "title": f"{year}-{month}-01",
-            }
-        )
-        return context
-
-
-class IncomeRirekiView(LoginRequiredMixin, ListView):
+class IncomeRirekiView(PermissionRequiredMixin, ListView):
     """駐車場収入履歴一覧"""
 
     model = ParkingSpace
     template_name = "parking/income_history.html"
+    permission_required = "repair_plan.view_koujiname"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -175,3 +209,22 @@ class IncomeRirekiView(LoginRequiredMixin, ListView):
             }
         )
         return context
+
+
+def generate_parking_maps_html(context_data):
+    # 1. HTMLを生成
+    html_string = render_to_string("parking/parking_fig_output.html", context_data)
+
+    # 2. 保存先のフルパスを作成 (例: balance_sheet_2023.html)
+    filename = "parking_fig_latest.html"
+    file_path = os.path.join(settings.SHARED_OUTPUT_ROOT, filename)
+
+    # 共有領域ディレクトリが存在しない場合の処理
+    os.makedirs(settings.SHARED_OUTPUT_ROOT, exist_ok=True)
+
+    # 3. 書き出し
+    # Rocky Linux + Dockerの権限問題を避けるため、mode='w' で上書き保存
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(html_string)
+
+    return file_path

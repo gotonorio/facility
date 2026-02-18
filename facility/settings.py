@@ -291,3 +291,6 @@ if not DEBUG:
     MEDIA_ROOT = "/code/media/"
 else:
     MEDIA_ROOT = BASE_DIR / "media"
+
+# プロジェクトルートの中にある outputs/parking_maps を指す
+SHARED_OUTPUT_ROOT = BASE_DIR / 'outputs' / 'parking_maps'

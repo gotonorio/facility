@@ -22,6 +22,7 @@ local_settings.py
 # メディアファイルは巨大なためrsyncでバックアップする
 media/
 *.pdf
+outputs/
 
 # 国際化は考慮しない
 *.pot

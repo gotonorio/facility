@@ -27,6 +27,8 @@ services:
     volumes:
       - ../static:/code/static
       - ../fac.sqlite3:/code/fac.sqlite3
+      # ホストの共有領域を、コンテナ内の出力用パスにマウント
+      - /home/sophiag_master/bulma/opt/shared_data/parking_maps:/code/outputs/parking_maps
 
     # 環境変数TZを設定。
     environment:
