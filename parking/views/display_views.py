@@ -154,7 +154,11 @@ class ParkingFigView(PermissionRequiredMixin, TemplateView):
         # HTMLファイル出力は、当年月データまたは最新のデータを出力する。
         if self.mode == "export":
             # 出力ボタンから呼ばれた時の処理
-            _ = generate_parking_maps_html(context)
+            is_ok = generate_parking_maps_html(context)
+            if is_ok:
+                messages.success(self.request, f"{self.year}年{self.month}月の駐車場状況図を保存しました")
+            else:
+                messages.error(self.request, f"{self.year}年{self.month}月の駐車場状況図の出力に失敗しました")
         else:
             pass
 
@@ -212,19 +216,50 @@ class IncomeRirekiView(PermissionRequiredMixin, ListView):
 
 
 def generate_parking_maps_html(context_data):
-    # 1. HTMLを生成
-    html_string = render_to_string("parking/parking_fig_output.html", context_data)
+    try:
+        # 1. HTMLを生成
+        html_string = render_to_string("parking/parking_fig_output.html", context_data)
 
-    # 2. 保存先のフルパスを作成 (例: balance_sheet_2023.html)
-    filename = "parking_fig_latest.html"
-    file_path = os.path.join(settings.SHARED_OUTPUT_ROOT, filename)
+        # 2. 保存先のフルパスを作成
+        filename = "parking_fig_latest.html"
+        file_path = os.path.join(settings.SHARED_OUTPUT_ROOT, filename)
 
-    # 共有領域ディレクトリが存在しない場合の処理
-    os.makedirs(settings.SHARED_OUTPUT_ROOT, exist_ok=True)
+        # 共有領域ディレクトリが存在しない場合の処理
+        os.makedirs(settings.SHARED_OUTPUT_ROOT, exist_ok=True)
 
-    # 3. 書き出し
-    # Rocky Linux + Dockerの権限問題を避けるため、mode='w' で上書き保存
-    with open(file_path, "w", encoding="utf-8") as f:
-        f.write(html_string)
+        # 3. 書き出し
+        # 書き込みそのものが失敗した場合、ここで例外（Error）が発生します
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(html_string)
 
-    return file_path
+        # すべて成功したらパスを返す
+        return file_path
+
+    except (OSError, IOError) as e:
+        # 権限エラー(PermissionError)やディスクフル、パス間違いなどはここでキャッチ
+        logger.error(f"HTMLファイルの書き出しに失敗しました: {e}")
+        return False
+
+    except Exception as e:
+        # それ以外の予期せぬエラー（テンプレートエラーなど）をキャッチ
+        logger.error(f"予期せぬエラーが発生しました: {e}")
+        return False
+
+
+# def generate_parking_maps_html(context_data):
+#     # 1. HTMLを生成
+#     html_string = render_to_string("parking/parking_fig_output.html", context_data)
+
+#     # 2. 保存先のフルパスを作成 (例: balance_sheet_2023.html)
+#     filename = "parking_fig_latest.html"
+#     file_path = os.path.join(settings.SHARED_OUTPUT_ROOT, filename)
+
+#     # 共有領域ディレクトリが存在しない場合の処理
+#     os.makedirs(settings.SHARED_OUTPUT_ROOT, exist_ok=True)
+
+#     # 3. 書き出し
+#     # Rocky Linux + Dockerの権限問題を避けるため、mode='w' で上書き保存
+#     with open(file_path, "w", encoding="utf-8") as f:
+#         f.write(html_string)
+
+#     return file_path

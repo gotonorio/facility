@@ -246,3 +246,43 @@ a,a:hover,a:visited {
     background-color: #333;
     overflow: hidden;
 }
+
+/*----------------------------------------*/
+/* message表示用css */
+/*----------------------------------------*/
+.message-container {
+    margin: 20px;
+}
+.message-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    position: relative;
+    font-family: sans-serif;
+}
+/* Djangoのタグ（success, error等）に合わせた色分け */
+.message-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.message-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.message-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+/* 閉じるボタン */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
+}
