@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.timezone import localtime
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, View
 from parking.forms import ParkingSpaceFigForm
 from parking.models import ParkingSpace
 from parking.services.display_service import (
@@ -18,6 +18,7 @@ from parking.services.display_service import (
     get_parking_diagram_data,
     get_parking_summary,
     get_utilization_metrics,
+    resolve_year_month,
 )
 
 logger = logging.getLogger(__name__)
@@ -33,13 +34,15 @@ class ParkingSpaceListView(PermissionRequiredMixin, ListView):
 
     def get_queryset(self):
         # パラメータの確定
-        local_now = localtime(timezone.now())
-        self.year = self.request.GET.get("year", local_now.year)
-        self.month = self.request.GET.get("month", local_now.month)
+        self.year, self.month = resolve_year_month(
+            self.kwargs.get("year"),
+            self.kwargs.get("month"),
+            self.request.GET.get("year"),
+            self.request.GET.get("month"),
+        )
 
         # メインデータを取得してself に保持する（Service層を利用）
         qs, self.total = get_parking_summary(self.year, self.month)
-
         return qs
 
     # テンプレートで使う「辞書」の作成（Dictを返す）
@@ -76,11 +79,13 @@ class ParkingSpaceManagementView(PermissionRequiredMixin, ListView):
 
     # データの取得（HttpResponseを返す）
     def get_queryset(self):
-        # 1. パラメータの確定
-        local_now = localtime(timezone.now())
-        self.year = self.request.GET.get("year", local_now.year)
-        self.month = self.request.GET.get("month", local_now.month)
-        self.parking_type = self.request.GET.get("parking_type")
+        # パラメータの確定
+        self.year, self.month = resolve_year_month(
+            self.kwargs.get("year"),
+            self.kwargs.get("month"),
+            self.request.GET.get("year"),
+            self.request.GET.get("month"),
+        )
 
         # 2. メインデータを取得してself に保持する（Service層を利用）
         qs, self.total = get_parking_summary(self.year, self.month, self.parking_type)
@@ -116,14 +121,14 @@ class ParkingFigView(PermissionRequiredMixin, TemplateView):
             return ["parking/parking_fig_manager.html"]
         return ["parking/parking_fig.html"]
 
-    # データの取得（HttpResponseを返す）
+    # get() はレスポンス制御だけを行い、データの取得は load_data() に分ける。
     def get(self, request, *args, **kwargs):
-        local_now = localtime(timezone.now())
-        year = kwargs.get("year") or request.GET.get("year", local_now.year)
-        month = kwargs.get("month") or request.GET.get("month", local_now.month)
-        self.mode = request.GET.get("mode")
-
-        # データ取得（指定された年月のデータがない場合は最大年月のデータを返す）
+        year, month = resolve_year_month(
+            self.kwargs.get("year"),
+            self.kwargs.get("month"),
+            self.request.GET.get("year"),
+            self.request.GET.get("month"),
+        )
         self.qs, self.year, self.month = get_parking_diagram_data(year, month)
 
         # querysetエラー処理でredirectするのはget()で行う。
@@ -131,16 +136,15 @@ class ParkingFigView(PermissionRequiredMixin, TemplateView):
             messages.info(request, "駐車場データが存在しません")
             return redirect("register:facility")
 
-        # get_context_data()処処に
         return super().get(request, *args, **kwargs)
 
-    # テンプレートで使う「辞書」の作成（Dictを返す）
+    # get_context_data()はテンプレートで使う「辞書」の作成だけとする。（Dictを返す）
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         for item in self.qs:
             context[f"sect{item.no}"] = item
 
-        # 利用状況を取得する
         _, empty_num = ParkingSpace.objects.get_empty_space(self.year, self.month, "")
         num = ParkingSpace.objects.get_parking_space_num(self.year, self.month, "")
 
@@ -150,19 +154,63 @@ class ParkingFigView(PermissionRequiredMixin, TemplateView):
                 "title": f"{self.year}年{self.month}月度の駐車場：空き＝{empty_num}台/{num}台",
             }
         )
-
-        # HTMLファイル出力は、当年月データまたは最新のデータを出力する。
-        if self.mode == "export":
-            # 出力ボタンから呼ばれた時の処理
-            is_ok = generate_parking_maps_html(context)
-            if is_ok:
-                messages.success(self.request, f"{self.year}年{self.month}月の駐車場状況図を保存しました")
-            else:
-                messages.error(self.request, f"{self.year}年{self.month}月の駐車場状況図の出力に失敗しました")
-        else:
-            pass
+        # htmlファイル出力は、当年月データまたは最新のデータを出力する。
+        context["year"] = self.year
+        context["month"] = self.month
 
         return context
+
+
+class ParkingFigExportView(PermissionRequiredMixin, View):
+    """駐車場図のHTML出力専用View"""
+
+    permission_required = "repair_plan.add_koujiname"
+
+    def get(self, request, *args, **kwargs):
+        # 年月決定
+        year, month = resolve_year_month(
+            kwargs.get("year"),
+            kwargs.get("month"),
+            request.GET.get("year"),
+            request.GET.get("month"),
+        )
+
+        # データ取得
+        qs, year, month = get_parking_diagram_data(year, month)
+
+        if not qs.exists():
+            messages.info(request, "駐車場データが存在しません")
+            return redirect("register:facility")
+
+        # 表示Viewと同じロジックでデータ構築
+        context = {}
+
+        for item in qs:
+            context[f"sect{item.no}"] = item
+
+        _, empty_num = ParkingSpace.objects.get_empty_space(year, month, "")
+        num = ParkingSpace.objects.get_parking_space_num(year, month, "")
+
+        context.update(
+            {
+                "year": year,
+                "month": month,
+                "empty_num": empty_num,
+                "num": num,
+                "title": f"{year}年{month}月度の駐車場：空き＝{empty_num}台/{num}台",
+            }
+        )
+
+        # HTML生成
+        is_ok = generate_parking_maps_html(context)
+
+        if is_ok:
+            messages.success(request, f"{year}年{month}月の駐車場状況図を保存しました")
+        else:
+            messages.error(request, f"{year}年{month}月の駐車場状況図の出力に失敗しました")
+
+        # 元の表示画面へ戻す
+        return redirect("parking:fig", year=year, month=month)
 
 
 class UtilizationRateView(PermissionRequiredMixin, TemplateView):
@@ -244,3 +292,64 @@ def generate_parking_maps_html(context_data):
         # それ以外の予期せぬエラー（テンプレートエラーなど）をキャッチ
         logger.error(f"予期せぬエラーが発生しました: {e}")
         return False
+
+
+# class ParkingFigView(PermissionRequiredMixin, TemplateView):
+#     """空き駐車場の図解表示"""
+
+#     model = ParkingSpace
+#     context_object_name = "parkings"
+#     permission_required = "repair_plan.view_koujiname"
+
+#     def get_template_names(self):
+#         if self.request.user.has_perm("parking.add_parkingspace"):
+#             return ["parking/parking_fig_manager.html"]
+#         return ["parking/parking_fig.html"]
+
+#     # データの取得（HttpResponseを返す）
+#     def get(self, request, *args, **kwargs):
+#         local_now = localtime(timezone.now())
+#         year = kwargs.get("year") or request.GET.get("year", local_now.year)
+#         month = kwargs.get("month") or request.GET.get("month", local_now.month)
+#         self.mode = request.GET.get("mode")
+
+#         # データ取得（指定された年月のデータがない場合は最大年月のデータを返す）
+#         self.qs, self.year, self.month = get_parking_diagram_data(year, month)
+
+#         # querysetエラー処理でredirectするのはget()で行う。
+#         if not self.qs.exists():
+#             messages.info(request, "駐車場データが存在しません")
+#             return redirect("register:facility")
+
+#         # get_context_data()処処に
+#         return super().get(request, *args, **kwargs)
+
+#     # テンプレートで使う「辞書」の作成（Dictを返す）
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         for item in self.qs:
+#             context[f"sect{item.no}"] = item
+
+#         # 利用状況を取得する
+#         _, empty_num = ParkingSpace.objects.get_empty_space(self.year, self.month, "")
+#         num = ParkingSpace.objects.get_parking_space_num(self.year, self.month, "")
+
+#         context.update(
+#             {
+#                 "form": ParkingSpaceFigForm(initial={"year": self.year, "month": self.month}),
+#                 "title": f"{self.year}年{self.month}月度の駐車場：空き＝{empty_num}台/{num}台",
+#             }
+#         )
+
+#         # HTMLファイル出力は、当年月データまたは最新のデータを出力する。
+#         if self.mode == "export":
+#             # 出力ボタンから呼ばれた時の処理
+#             is_ok = generate_parking_maps_html(context)
+#             if is_ok:
+#                 messages.success(self.request, f"{self.year}年{self.month}月の駐車場状況図を保存しました")
+#             else:
+#                 messages.error(self.request, f"{self.year}年{self.month}月の駐車場状況図の出力に失敗しました")
+#         else:
+#             pass
+
+#         return context

@@ -11,6 +11,9 @@ urlpatterns = [
     path("fig/", display_views.ParkingFigView.as_view(), name="fig"),
     path("fig/<int:year>/<int:month>/", display_views.ParkingFigView.as_view(), name="fig"),
     path(
+        "fig_export/<int:year>/<int:month>/", display_views.ParkingFigExportView.as_view(), name="fig_export"
+    ),
+    path(
         "utilization_rate/",
         display_views.UtilizationRateView.as_view(),
         name="utilization_rate",

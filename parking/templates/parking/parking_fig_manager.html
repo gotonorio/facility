@@ -27,7 +27,7 @@
         <button class="fig_button_grey" type="submit">表示</button>
       </div>
       <div class="grid2">
-        <a href="{% url 'parking:fig' %}?mode=export" class="fig_button_grey">駐車場状況図 出力</a>
+        <a href="{% url 'parking:fig_export' year month %}" class="fig_button_grey">駐車場状況図 出力</a>
         <a href="{% url 'parking:list' %}" class="fig_button_grey">リスト表示</a>
         <a class="fig_button_grey" href="{% url 'register:facility' %}">戻る</a>
       </div>

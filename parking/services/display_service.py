@@ -1,7 +1,7 @@
-import csv
-
 from django.conf import settings
 from django.db.models import Max, Q
+from django.utils import timezone
+from django.utils.timezone import localtime
 
 from parking.models import ParkingSpace, ParkingType
 
@@ -105,3 +105,13 @@ def get_parking_fee_csv_data(year):
         .filter(payment_date=year)
         .order_by("room_number")
     )
+
+
+# Formデータ、url変数の取得
+def resolve_year_month(url_year, url_month, get_year, get_month):
+    local_now = localtime(timezone.now())
+
+    year = url_year or get_year or local_now.year
+    month = url_month or get_month or local_now.month
+
+    return int(year), int(month)
