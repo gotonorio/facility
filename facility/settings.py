@@ -294,4 +294,6 @@ else:
 
 # プロジェクトルートの中にある outputs/ を指す
 # SHARED_OUTPUT_ROOT = BASE_DIR / "outputs" / "parking_maps"
-SHARED_OUTPUT_ROOT = BASE_DIR / "outputs"
+# SHARED_OUTPUT_ROOT = BASE_DIR / "outputs"
+HTML_OUTPUT_ROOT = BASE_DIR / "outputs" / "html_data"
+IMAGE_OUTPUT_ROOT = BASE_DIR / "outputs" / "image_data"

@@ -264,16 +264,17 @@ class IncomeRirekiView(PermissionRequiredMixin, ListView):
 
 
 def generate_parking_maps_html(context_data):
+    """駐車場図のHTMLを生成して共有領域に保存する関数"""
     try:
         # 1. HTMLを生成
         html_string = render_to_string("parking/parking_fig_output.html", context_data)
 
         # 2. 保存先のフルパスを作成
         filename = "parking_fig_latest.html"
-        file_path = os.path.join(settings.SHARED_OUTPUT_ROOT, filename)
+        file_path = os.path.join(settings.HTML_OUTPUT_ROOT, filename)
 
         # 共有領域ディレクトリが存在しない場合の処理
-        os.makedirs(settings.SHARED_OUTPUT_ROOT, exist_ok=True)
+        os.makedirs(settings.HTML_OUTPUT_ROOT, exist_ok=True)
 
         # 3. 書き出し
         # 書き込みそのものが失敗した場合、ここで例外（Error）が発生します

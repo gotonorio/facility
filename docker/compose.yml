@@ -27,9 +27,9 @@ services:
     volumes:
       - ../static:/code/static
       - ../fac.sqlite3:/code/fac.sqlite3
-      # ホストのoutputs/shared_data/facility_dataを、コンテナ内の/code/outputs/にマウントする。
-      # ホストにはoutputs/shared_data/facility_dataが存在している必要がある。
-      - /home/sophiag_master/bulma/opt/shared_data/facility_data:/code/outputs
+      # ホストのoutputs/shared_data/を、コンテナ内の/code/outputs/にマウントする。
+      # ホストにはoutputs/shared_data/が存在している必要がある。
+      - /home/sophiag_master/bulma/opt/shared_data:/code/outputs
 
     # 環境変数TZを設定。
     environment:

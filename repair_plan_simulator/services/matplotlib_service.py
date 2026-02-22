@@ -50,7 +50,7 @@ def generate_and_save_chart(raw_data, filename="simulate_graph_latest.png"):
     ax1.set_ylim(bottom=0)
 
     # 保存先のパス設定 (DjangoのMEDIA_ROOTなど)
-    save_path = os.path.join(settings.SHARED_OUTPUT_ROOT, filename)
+    save_path = os.path.join(settings.IMAGE_OUTPUT_ROOT, filename)
 
     # ディレクトリがなければ作成
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
@@ -59,4 +59,4 @@ def generate_and_save_chart(raw_data, filename="simulate_graph_latest.png"):
     plt.savefig(save_path)
     plt.close()  # メモリ解放のために必ず閉じる
 
-    return os.path.join(settings.SHARED_OUTPUT_ROOT, filename)
+    return os.path.join(settings.IMAGE_OUTPUT_ROOT, filename)

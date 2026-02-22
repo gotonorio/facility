@@ -57,7 +57,6 @@ class SimulateView(LoginRequiredMixin, FormView):
 
         # ここでis_managerをコンテキストにセットする。
         context["is_manager"] = self.is_manager
-        logger.debug(f"User {self.request.user} is_manager: {self.is_manager}")
 
         # 1. GETパラメータの取得をクリーンに
         ver_str = self.request.GET.get("masterplan_ver")
