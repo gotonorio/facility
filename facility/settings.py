@@ -168,7 +168,7 @@ CSRF_TRUSTED_ORIGINS = ["https://facility.sophiagardens.org"]
 AUTH_USER_MODEL = "register.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-VERSION_NO = "2026-02-18"
+VERSION_NO = "2026-02-22"
 LOGIN_URL = "register:login"
 LOGIN_REDIRECT_URL = "register:mypage"
 LOGOUT_REDIRECT_URL = "register:login"
@@ -292,5 +292,6 @@ if not DEBUG:
 else:
     MEDIA_ROOT = BASE_DIR / "media"
 
-# プロジェクトルートの中にある outputs/parking_maps を指す
-SHARED_OUTPUT_ROOT = BASE_DIR / "outputs" / "parking_maps"
+# プロジェクトルートの中にある outputs/ を指す
+# SHARED_OUTPUT_ROOT = BASE_DIR / "outputs" / "parking_maps"
+SHARED_OUTPUT_ROOT = BASE_DIR / "outputs"

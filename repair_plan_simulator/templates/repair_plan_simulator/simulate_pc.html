@@ -16,7 +16,7 @@ https://github.com/chartjs/chartjs-adapter-date-fns
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 <script src="{% static 'repair_plan_simulator/simulate_graph.js' %}"></script>
 
-<link href="{% static 'mycss/graph.css' %}" rel="stylesheet">
+<link href="{% static 'common/mycss/graph.css' %}" rel="stylesheet">
 {% endblock head %}
 {% block navbar %}
 <nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
@@ -42,6 +42,18 @@ https://github.com/chartjs/chartjs-adapter-date-fns
 {% endblock navbar %}
 <br>
 {% block content %}
+<!-- メッセージフレームワーク -->
+{% if messages %}
+<div class="container" style="margin-top:1rem;">
+    <div class="notification is-info">
+        <button class="delete" type="button"></button>
+        {% for message in messages %}
+        <p> {{ message }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
 <div class="container  is-fluid">
   <div class="content">
     <br>
@@ -66,6 +78,9 @@ https://github.com/chartjs/chartjs-adapter-date-fns
     <div class="content">
       <button type="submit" class="button is-success is-size-7">実行</button>
       <a class="button is-danger is-size-7" href="javascript:void(0);" onclick="window.history.back();">キャンセル</a>
+      {% if is_manager %}
+        <button type="submit" name="export" value="true" class="button is-link is-size-7">グラフ保存</button>
+      {% endif %}
     </div>
   </form>
   <br>
@@ -139,7 +154,7 @@ https://github.com/chartjs/chartjs-adapter-date-fns
   </script>
   {% endfor %}
   <script type="text/javascript">
-    simulateShuuzenhiChart(graph_data);
+    simulateShuuzenhiChart2(graph_data);
   </script>
   {% endif %}
   <br>

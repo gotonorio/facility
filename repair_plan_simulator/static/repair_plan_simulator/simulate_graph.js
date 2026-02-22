@@ -137,3 +137,67 @@ function simulateShuuzenhiChart(data) {
 }
 
 
+function simulateShuuzenhiChart2(rawData) {
+    
+    // Chart.js用にデータを整形
+    const labels = rawData.map(item => item[0]);      // 年
+    const incomeData = rawData.map(item => item[1]);  // 収入累計
+    const expenseData = rawData.map(item => item[2]); // 支出累計
+
+    // グラフの描画
+    const ctx = document.getElementById('simulate_graph').getContext('2d');
+    const myChart = new Chart(ctx, {
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    type: 'line', // 折れ線グラフ
+                    label: '収入累計金額',
+                    data: incomeData,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.1, // 線の曲がり具合
+                    fill: false
+                },
+                {
+                    type: 'bar', // 縦棒グラフ
+                    label: '支出累計金額',
+                    data: expenseData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: '金額 (円)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: '年度'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: '長期修繕計画 収支累計推移',
+                    font: {
+                        size: 14
+                    }
+                },
+            },
+        }
+    });
+}
+
+

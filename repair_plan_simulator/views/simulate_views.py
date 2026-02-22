@@ -3,16 +3,17 @@
 # シミュレーション実行画面
 # -----------------------------------------------------------------------------
 
+import datetime
 import logging
 
-from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView
 from facility.services import get_latest_version
-from repair_plan.models import KoujiName, MasterPlan
+from repair_plan.models import MasterPlan
 
 from repair_plan_simulator.forms import SimulateDataForm
-from repair_plan_simulator.services import calc_expense, calc_income
+from repair_plan_simulator.services import calc_expense, calc_income, matplotlib_service
 
 logger = logging.getLogger(__name__)
 
@@ -35,65 +36,83 @@ class SimulateView(LoginRequiredMixin, FormView):
             return ["repair_plan_simulator/simulate_pc.html"]
         return ["repair_plan_simulator/simulate_pc.html"]
 
+    def get_simulation_results(self, ver_str, sim_data):
+        """計算実行ロジックをここに集約"""
+        plan = MasterPlan.objects.get(version=int(ver_str))
+        expense_list = calc_expense.calc_expense_list(
+            ver_str,
+            sim_data["expense_rate"],
+            sim_data["sales_tax_rate"],
+            sim_data["cpi_flg"],
+            include_actual_cost=sim_data["include_actual_cost"],
+        )
+        balance = plan.balance
+        return calc_income.add_income_list(expense_list, sim_data, balance)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if kwargs:
-            # ビューが渡す場合、URLから渡されたpkなどはkwargsでデータが渡される。
-            ver_str = str(kwargs.get("masterplan_ver"))
-        else:
-            # formから渡された場合、GETパラメータで取得する。
-            ver_str = self.request.GET.get("masterplan_ver", False)
 
-        if ver_str:
-            plan = MasterPlan.objects.get(version=int(ver_str))
-            ver_int = plan.version
-        else:
-            ver_int = None
+        if not hasattr(self, "is_manager"):
+            _, self.is_manager = get_latest_version(self.request.user)
 
-        if ver_int:
-            sim_data = {
-                "ver": ver_str,
-                "expense_rate": float(self.request.GET.get("expense_rate")),
-                "sales_tax_rate": float(self.request.GET.get("sales_tax_rate")),
-                "shuuzenhi_rate": float(self.request.GET.get("shuuzenhi_rate")),
-                "parking_rate": float(self.request.GET.get("parking_rate")),
-                "cpi_flg": self.request.GET.get("cpi_flg"),
-                "include_actual_cost": self.request.GET.get("include_actual_cost"),
+        # ここでis_managerをコンテキストにセットする。
+        context["is_manager"] = self.is_manager
+        logger.debug(f"User {self.request.user} is_manager: {self.is_manager}")
+
+        # 1. GETパラメータの取得をクリーンに
+        ver_str = self.request.GET.get("masterplan_ver")
+        export_requested = self.request.GET.get("export") == "true"
+
+        if not ver_str:
+            return context
+
+        # 2. シミュレーションに必要な設定を整理
+        sim_params = {
+            "expense_rate": float(self.request.GET.get("expense_rate", 0)),
+            "sales_tax_rate": float(self.request.GET.get("sales_tax_rate", 0)),
+            "shuuzenhi_rate": float(self.request.GET.get("shuuzenhi_rate", 0)),
+            "parking_rate": float(self.request.GET.get("parking_rate", 0)),
+            "cpi_flg": self.request.GET.get("cpi_flg"),
+            "include_actual_cost": self.request.GET.get("include_actual_cost"),
+        }
+
+        # 3. 計算実行
+        simulate_data = self.get_simulation_results(ver_str, sim_params)
+
+        # 4. グラフ生成（必要な時だけ呼び出す）
+        if export_requested:
+            self.handle_graph_export(simulate_data)
+
+        # 5. コンテキストへのセット
+        context.update(
+            {
+                "simulate_data": simulate_data,
+                "version": ver_str,
+                "form": SimulateDataForm(initial={"masterplan_ver": ver_str, **sim_params}),
+                # ...その他
             }
-
-            form = SimulateDataForm(
-                initial={
-                    "masterplan_ver": ver_str,
-                    "expense_rate": sim_data["expense_rate"],
-                    "sales_tax_rate": sim_data["sales_tax_rate"],
-                    "shuuzenhi_rate": sim_data["shuuzenhi_rate"],
-                    "parking_rate": sim_data["parking_rate"],
-                    "cpi_flg": sim_data["cpi_flg"],
-                    "include_actual_cost": sim_data["include_actual_cost"],
-                },
-            )
-
-            # 長期修繕計画支出額を年度毎に集計したリスト
-            expense_list = calc_expense.calc_expense_list(
-                ver_str,
-                sim_data["expense_rate"],
-                sim_data["sales_tax_rate"],
-                sim_data["cpi_flg"],
-                include_actual_cost=sim_data["include_actual_cost"],
-            )
-
-            balance = MasterPlan.objects.filter(version=ver_int).values("balance")[0]["balance"]
-            simulate_data = calc_income.add_income_list(expense_list, sim_data, balance)
-            excluded_data = KoujiName.objects.filter(version__version=ver_int, do_calc=False)
-
-            context.update(
-                {
-                    "simulate_data": simulate_data,
-                    "form": form,
-                    "excluded_data": excluded_data,
-                    "start_year": -settings.INITIAL_YEAR,
-                    "version": ver_str,
-                }
-            )
+        )
 
         return context
+
+    def handle_graph_export(self, simulate_data):
+        """グラフ生成とメッセージ処理を担当"""
+
+        # 西暦を取得（例: 2026）
+        current_year = datetime.datetime.now().strftime("%Y")
+        filename = f"simulate_graph_{current_year}.png"
+
+        graph_data = [[r["kouji_year"], r["income_ruikei"], r["ruikei_cost"]] for r in simulate_data]
+
+        # ファイル保存実行
+        success = matplotlib_service.generate_and_save_chart(graph_data, filename)
+
+        if success:
+            messages.success(self.request, f"{current_year}年度版のグラフを更新・保存しました。")
+        else:
+            messages.error(self.request, "グラフの保存に失敗しました。")
+
+        # if matplotlib_service.generate_and_save_chart(graph_data, filename):
+        #     messages.success(self.request, "長期修繕計画のグラフを保存しました")
+        # else:
+        #     messages.error(self.request, "出力に失敗しました")

@@ -3,9 +3,9 @@ Chart.js グラフ表示用コンテナのスタイル
 */
 .graph_container {
     /* 画面幅の70%に設定 */
-    width: 70vw;
+    width: 80vw;
     /* どんなに画面が大きくても1200pxで止める */
-    max-width: 1200px;  
+    max-width: 1000px;  
     /* 画面の中央に寄せたい場合 */
     /* margin: 0 auto; */
     /* 高さは指定しなくてOK（Chart.jsが比率から自動計算します） */

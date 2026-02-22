@@ -244,22 +244,3 @@ def generate_parking_maps_html(context_data):
         # それ以外の予期せぬエラー（テンプレートエラーなど）をキャッチ
         logger.error(f"予期せぬエラーが発生しました: {e}")
         return False
-
-
-# def generate_parking_maps_html(context_data):
-#     # 1. HTMLを生成
-#     html_string = render_to_string("parking/parking_fig_output.html", context_data)
-
-#     # 2. 保存先のフルパスを作成 (例: balance_sheet_2023.html)
-#     filename = "parking_fig_latest.html"
-#     file_path = os.path.join(settings.SHARED_OUTPUT_ROOT, filename)
-
-#     # 共有領域ディレクトリが存在しない場合の処理
-#     os.makedirs(settings.SHARED_OUTPUT_ROOT, exist_ok=True)
-
-#     # 3. 書き出し
-#     # Rocky Linux + Dockerの権限問題を避けるため、mode='w' で上書き保存
-#     with open(file_path, "w", encoding="utf-8") as f:
-#         f.write(html_string)
-
-#     return file_path

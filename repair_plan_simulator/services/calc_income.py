@@ -28,10 +28,6 @@ def add_income_list(shuuzenhi_expense, sim_data, zandaka) -> list:
 
     # querysetの結果をdict要素としたlistに変換
     list_income = tolist_income_list(qs_income)
-    # デバッグ用に収入見込みデータをログ出力
-    if settings.DEBUG:
-        for income in list_income:
-            logger.debug(f"income: {income}")
 
     # 修繕積立金
     last_income = shuuzenhi_rate * income_last.income
