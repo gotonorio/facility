@@ -29,7 +29,7 @@ services:
       - ../fac.sqlite3:/code/fac.sqlite3
       # ホストのoutputs/shared_data/facility_dataを、コンテナ内の/code/outputs/にマウントする。
       # ホストにはoutputs/shared_data/facility_dataが存在している必要がある。
-      - /home/sophiag_master/bulma/opt/shared_data:/code/outputs
+      - /home/sophiag_master/bulma/opt/shared_data/facility_data:/code/outputs
       # # ホストの共有領域 opt/ を、コンテナ内の出力用パスとしてマウントする。
       # # - /home/sophiag_master/bulma/opt/shared_data/parking_maps:/code/outputs/parking_maps
       # - /home/sophiag_master/bulma/opt/shared_data:/code/outputs

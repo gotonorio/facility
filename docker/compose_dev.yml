@@ -24,7 +24,7 @@ services:
       - ../:/code
       # ホストのoutputs/shared_data/facility_dataを、コンテナ内の/code/outputs/にマウントする。
       # ホストにはoutputs/shared_data/facility_dataが存在している必要がある。
-      - ../../outputs/shared_data/facility_data:/code/outputs
+      - ../../outputs/shared_data/facility_data/facility_data:/code/outputs
       # - ../../outputs/shared_data/parking_maps:/code/outputs/parking_maps
 
     # 環境変数を設定。
