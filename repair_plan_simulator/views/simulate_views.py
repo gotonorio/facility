@@ -97,9 +97,12 @@ class SimulateView(LoginRequiredMixin, FormView):
     def handle_graph_export(self, simulate_data):
         """グラフ生成とメッセージ処理を担当"""
 
-        # 西暦を取得（例: 2026）
-        current_year = datetime.datetime.now().strftime("%Y")
-        filename = f"simulate_graph_{current_year}.png"
+        # # 西暦を取得（例: 2026）
+        # current_year = datetime.datetime.now().strftime("%Y")
+        # filename = f"simulate_graph_{current_year}.png"
+
+        # sophiagardes.orgで配信するため、常に最新のグラフを同じ名前で保存する
+        filename = "simulate_graph_latest.png"
 
         graph_data = [[r["kouji_year"], r["income_ruikei"], r["ruikei_cost"]] for r in simulate_data]
 
