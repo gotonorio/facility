@@ -40,8 +40,13 @@ def generate_and_save_chart(raw_data, filename="simulate_graph_latest.png", curr
     ax1.set_xlabel("年度")
     ax1.set_ylabel("金額")
 
-    # タイトルを設定
-    plt.title(f"ソフィア・ガーデンズ川崎 長期修繕計画（{current_year}年）")
+    # メインタイトルとサブタイトルを個別に設定
+    plt.suptitle(f"ソフィア・ガーデンズ川崎 長期修繕計画（{current_year}年）", fontsize=12, fontweight="bold")
+    plt.title(
+        "※ このグラフは長期修繕計画に基づく将来の収支シミュレーションです。\n実際の支出額は工事内容や物価変動等により変動する可能性があります。",
+        fontsize=10,
+        color="gray",
+    )
 
     # 凡例を表示
     ax1.legend(loc="upper left")
