@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter  # グラフの軸のフォーマットをカスタマイズするためのインポート
 
 
-def generate_and_save_chart(raw_data, filename="simulate_graph_latest.png"):
+def generate_and_save_chart(raw_data, filename="simulate_graph_latest.png", current_year=None):
     # データの分解
     years = [row[0] for row in raw_data]
     income = [row[1] for row in raw_data]
@@ -41,7 +41,7 @@ def generate_and_save_chart(raw_data, filename="simulate_graph_latest.png"):
     ax1.set_ylabel("金額")
 
     # タイトルを設定
-    plt.title("ソフィア・ガーデンズ川崎 長期修繕計画 収支累計推移")
+    plt.title(f"ソフィア・ガーデンズ川崎 長期修繕計画（{current_year}年）")
 
     # 凡例を表示
     ax1.legend(loc="upper left")
