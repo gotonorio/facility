@@ -18,131 +18,12 @@ function clearCanvas(){
 * 多次元配列による修繕費収入グラフ表示 by N.Goto
 ****************************************************************
 */
-function simulateShuuzenhiChart(data) {
-    // (1) chart.jsのdataset用の配列を用意。
-    var xLabels = [], incomeData = [], expenseData = [], differenceData = [];
-
-    for (const row of data) {
-        xLabels.push(row[0]);
-        incomeData.push(row[1]);
-        expenseData.push(row[2]);
-        differenceData.push(row[1] - row[2]);
-    }
-
-    // (2) データオブジェクトを用意。
-    const chartData = {
-        labels: xLabels,
-        datasets: [
-            {
-                type: 'line',
-                label: '修繕費収入累計',
-                data: incomeData,
-                borderColor: 'red',
-                backgroundColor: 'red',
-                borderWidth: 2,
-                tension: 0,
-                pointRadius: 2,
-                pointHoverRadius: 6,
-                yAxisID: 'y',
-            },
-            {
-                type: 'line',
-                label: '修繕費支出累計',
-                data: expenseData,
-                borderColor: 'blue',
-                backgroundColor: 'blue',
-                borderWidth: 2,
-                tension: 0,
-                pointRadius: 2,
-                pointHoverRadius: 6,
-                yAxisID: 'y',
-            }
-        ]
-    };
-
-    // (3) チャートオプション
-    const myChartOption = {
-        // canvasサイズを固定する。(trueの場合windowの大きさに連動する)
-        responsive: true,
-        // コンテナの幅に合わせて比率を維持する
-        maintainAspectRatio: true,
-        // 比率の設定　2:3（幅が高さの1.5倍）にしたいので「1.5」を指定
-        aspectRatio: 1.5,
-
-        plugins: {
-            title: {
-                display: true,
-                text: '修繕費シミュレーション',
-                font: {
-                    size: 14
-                }
-            },
-            legend: {
-                display: true,
-                labels: {
-                    boxWidth: 10,
-                    padding: 20
-                }
-            },
-            tooltip: {
-                enabled: true,
-                mode: 'index',
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                padding: 12,
-            }
-        },
-
-        scales: {
-            y: {
-                type: 'linear',
-                position: 'left',
-                title: {
-                    display: true,
-                    text: '単位 (円)',
-                    font: {
-                        size: 10,
-                        weight: 'bold'
-                    }
-                },
-                ticks: {
-                    callback: function (value) {
-                        return value.toLocaleString();
-                    }
-                },
-                grid: {
-                    drawOnChartArea: true
-                }
-            },
-            x: {
-                title: {
-                    display: true,
-                    text: '西暦',
-                    font: {
-                        size: 10,
-                        weight: 'bold'
-                    }
-                },
-                grid: {
-                    display: true
-                }
-            }
-        }
-    };
-
-    new Chart(document.getElementById('simulate_graph'), {
-        type: 'line',  
-        data: chartData,
-        options: myChartOption
-    });
-}
-
-
 function simulateShuuzenhiChart2(rawData) {
     
-    // Chart.js用にデータを整形
+    // Chart.js用にデータを整形（金額を万円単位に変換）
     const labels = rawData.map(item => item[0]);      // 年
-    const incomeData = rawData.map(item => item[1]);  // 収入累計
-    const expenseData = rawData.map(item => item[2]); // 支出累計
+    const incomeData = rawData.map(item => Math.floor(item[1] / 10000));  // 収入累計（万円単位）
+    const expenseData = rawData.map(item => Math.floor(item[2] / 10000)); // 支出累計（万円単位）
 
     // グラフの描画
     const ctx = document.getElementById('simulate_graph').getContext('2d');
@@ -172,12 +53,16 @@ function simulateShuuzenhiChart2(rawData) {
         },
         options: {
             responsive: true,
+            interaction: {
+                mode: 'index',     // 同じ「年度」にあるデータをまとめて表示
+                intersect: false,  // マウスが棒に重なっていなくても近くにあれば表示
+            },
             scales: {
                 y: {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: '金額 (円)'
+                        text: '金額 (万円)'
                     }
                 },
                 x: {
@@ -195,9 +80,150 @@ function simulateShuuzenhiChart2(rawData) {
                         size: 14
                     }
                 },
+                // ツールチップの設定（金額をカンマ区切りで表示するなど）
+                tooltip: {
+                    enabled: true,
+                    mode: 'index', // ここでも指定しておくと確実です
+                    intersect: false,
+                    bodyAlign: 'right', // ツールチップの内容を右寄せにする
+                    callbacks: {
+                        // ツールチップ内のラベルをカスタマイズ（単位を付ける場合）
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                // Math.roundで整数であることを保証してからカンマ区切りにする
+                                const value = Math.round(context.parsed.y);
+                                label += value.toLocaleString() + ' 万円';
+                            }
+                            return label;
+                        }
+                    }
+                },                
             },
         }
     });
 }
 
+
+
+// function simulateShuuzenhiChart(data) {
+//     // (1) chart.jsのdataset用の配列を用意。
+//     var xLabels = [], incomeData = [], expenseData = [], differenceData = [];
+
+//     for (const row of data) {
+//         xLabels.push(row[0]);
+//         incomeData.push(row[1]);
+//         expenseData.push(row[2]);
+//         differenceData.push(row[1] - row[2]);
+//     }
+
+//     // (2) データオブジェクトを用意。
+//     const chartData = {
+//         labels: xLabels,
+//         datasets: [
+//             {
+//                 type: 'line',
+//                 label: '修繕費収入累計',
+//                 data: incomeData,
+//                 borderColor: 'red',
+//                 backgroundColor: 'red',
+//                 borderWidth: 2,
+//                 tension: 0,
+//                 pointRadius: 2,
+//                 pointHoverRadius: 6,
+//                 yAxisID: 'y',
+//             },
+//             {
+//                 type: 'line',
+//                 label: '修繕費支出累計',
+//                 data: expenseData,
+//                 borderColor: 'blue',
+//                 backgroundColor: 'blue',
+//                 borderWidth: 2,
+//                 tension: 0,
+//                 pointRadius: 2,
+//                 pointHoverRadius: 6,
+//                 yAxisID: 'y',
+//             }
+//         ]
+//     };
+
+//     // (3) チャートオプション
+//     const myChartOption = {
+//         // canvasサイズを固定する。(trueの場合windowの大きさに連動する)
+//         responsive: true,
+//         // コンテナの幅に合わせて比率を維持する
+//         maintainAspectRatio: true,
+//         // 比率の設定　2:3（幅が高さの1.5倍）にしたいので「1.5」を指定
+//         aspectRatio: 1.5,
+
+//         plugins: {
+//             title: {
+//                 display: true,
+//                 text: '修繕費シミュレーション',
+//                 font: {
+//                     size: 14
+//                 }
+//             },
+//             legend: {
+//                 display: true,
+//                 labels: {
+//                     boxWidth: 10,
+//                     padding: 20
+//                 }
+//             },
+//             tooltip: {
+//                 enabled: true,
+//                 mode: 'index',
+//                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
+//                 padding: 12,
+//             }
+//         },
+
+//         scales: {
+//             y: {
+//                 type: 'linear',
+//                 position: 'left',
+//                 title: {
+//                     display: true,
+//                     text: '単位 (円)',
+//                     font: {
+//                         size: 10,
+//                         weight: 'bold'
+//                     }
+//                 },
+//                 ticks: {
+//                     callback: function (value) {
+//                         return value.toLocaleString();
+//                     }
+//                 },
+//                 grid: {
+//                     drawOnChartArea: true
+//                 }
+//             },
+//             x: {
+//                 title: {
+//                     display: true,
+//                     text: '西暦',
+//                     font: {
+//                         size: 10,
+//                         weight: 'bold'
+//                     }
+//                 },
+//                 grid: {
+//                     display: true
+//                 }
+//             }
+//         }
+//     };
+
+//     new Chart(document.getElementById('simulate_graph'), {
+//         type: 'line',  
+//         data: chartData,
+//         options: myChartOption
+//     });
+// }
 
