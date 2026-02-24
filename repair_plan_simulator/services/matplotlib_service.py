@@ -25,7 +25,7 @@ def generate_and_save_chart(raw_data, filename="simulate_graph_latest.png", curr
         pos: 軸の位置（通常は無視してOK）
         """
         # 1万で割って、整数（または小数点1桁）にする
-        return f"{int(x / 10000):,}万円"
+        return f"{int(x / 10000):,}"
 
     # Y軸に適用
     ax1.yaxis.set_major_formatter(FuncFormatter(yen_formatter))
@@ -38,7 +38,10 @@ def generate_and_save_chart(raw_data, filename="simulate_graph_latest.png", curr
 
     # 軸のラベル設定
     ax1.set_xlabel("年度")
-    ax1.set_ylabel("金額")
+    ax1.set_ylabel("金額（万円）")
+
+    # 横線（グリッド）を表示
+    plt.grid(True, axis="y", linestyle="--", alpha=0.8)
 
     # メインタイトルとサブタイトルを個別に設定
     plt.suptitle(f"ソフィア・ガーデンズ川崎 長期修繕計画（{current_year}年）", fontsize=12, fontweight="bold")

@@ -9,7 +9,7 @@
  │
  ├─warehouse （管理組合ホームページ）
  │
- ├─ opt（データ共有領域。あらかじめ手動で作成しておく）
+ ├─ opt（データ共有領域。shared_data/まであらかじめ手動で作成しておく）
  │      └─ shared_data
  │             ├─ html_data（htmlファイル保存）
  │             └─ image_data（imageファイル保存）

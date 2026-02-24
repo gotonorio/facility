@@ -59,17 +59,36 @@ function simulateShuuzenhiChart2(rawData) {
             },
             scales: {
                 y: {
-                    beginAtZero: true,
+                    beginAtZero: true,  // Y軸は0からスタート
+                    grid: {
+                        display: true,        // 横線を表示
+                        color: '#e5e5e5',   // 線の色
+                        drawTicks: false      // 目盛の小さな出っ張りを消す場合はfalse
+                    },
                     title: {
                         display: true,
                         text: '金額 (万円)'
                     }
                 },
                 x: {
+                    grid: {
+                        display: false,         // これで垂直方向のグリッド線を消す
+                        drawOnChartArea: false, // グラフエリア内の線を消す（念のため）
+                        drawTicks: false        // 軸上の短い目盛（ヒゲ）だけ残したい場合は true
+                    },
                     title: {
                         display: true,
                         text: '年度'
-                    }
+                    },
+                    // 5単位（5年）ごとにラベルを表示
+                    type: 'linear',         // 数値軸として扱う
+                    ticks: {
+                        stepSize: 5,     
+                        precision: 0,       // 小数点を表示しない
+                        callback: function(value) {
+                            return value;   // 数値の後に「年」を付加は（value + '年'）
+                        }
+                    },
                 }
             },
             plugins: {
