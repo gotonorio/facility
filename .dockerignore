@@ -17,7 +17,6 @@ Thumbs.db
 
 # Pythonのビルド・配布用ディレクトリ
 .vscode/
-docker/
 build/
 develop-eggs/
 dist/
