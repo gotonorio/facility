@@ -5,7 +5,6 @@
 駐車場 状況図
 {% endblock title %}
 {% block head %}
-<link href="{% static 'parking/parking_fig.css' %}" rel="stylesheet">
 <style>
     .set_right {
         text-align: right;
@@ -193,7 +192,7 @@
 </div>
 
 <div class="table-wrapper">
-    <table class="table_center_nowrap table_fix">
+    <table class="table_fix">
         <!-- table-layout: fixed;を設定しているため、1行目に32列x26pxを確保しておく -->
         <colgroup>
             {% for i in "x"|rjust:"32" %}

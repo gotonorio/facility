@@ -1,13 +1,15 @@
 
-# 公開用ファイルの作成
+# facility
 
-ファイル構成
+## 公開用ファイルについて
+
+🔳 ファイル構成
 ```
 ホスト（Rocky Linux）
  │
  ├─warehouse （管理組合ホームページ）
  │
- ├─ opt（データ共有領域）
+ ├─ opt（データ共有領域。あらかじめ手動で作成しておく）
  │      └─ shared_data
  │             ├─ html_data（htmlファイル保存）
  │             └─ image_data（imageファイル保存）
@@ -27,18 +29,24 @@
 
 ```
 
-- /home/sophiag_master/bulma/opt/shared_data/facility_data/html_data(image_dara)
+🔳 compose.ymlのマウント設定
 
-sophiagardens.orgで配信するファイルは
+- ホスト共有の公開用ディレクトリは /home/sophiag_master/bulma/opt/shared_data/
+    - あらかじめ mkdir しておくこと。
+- 公開用ディレクトリをコンテナの /code/outputs/ にマウントする。
+    - /code は Dockerfileで作成しておく。
 
-1. 駐車場利用状況図（最新年月のデータ）
-2. 長期修繕計画の収支グラフ
+```
+    volumes:
+      - ../static:/code/static
+      - ../fac.sqlite3:/code/fac.sqlite3
+      - /home/sophiag_master/bulma/opt/shared_data:/code/outputs
 
-## 設定
+```
 
-### settings.pyの設定
+🔳 settings.pyの設定
 
-```python
+```
 # BASE_DIR はプロジェクトルートに設定
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -47,4 +55,21 @@ HTML_OUTPUT_ROOT = BASE_DIR / "outputs" / "html_data"
 IMAGE_OUTPUT_ROOT = BASE_DIR / "outputs" / "image_data"
 ```
 
-### compose.yml
+🔳 nginxの配信設定
+
+- nginx 公開ディレクトリはデフォルトでは /usr/share/nginx/html になっている。
+
+```
+default.conf でドメインサーバに以下の設定をしておくことで、
+http://sophiagardens.org/html_data/htmlファイル名」でアクセスできる。
+add_headerはキャッシュ禁止のため
+
+    location /html_data/ {
+        alias /usr/share/nginx/html/html_data/;
+        add_header Cache-Control "no-cache, must-revalidate";
+    }
+    location /image_data/ {
+        alias /usr/share/nginx/html/image_data/;
+        add_header Cache-Control "no-cache, must-revalidate";
+    }
+```
