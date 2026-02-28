@@ -88,7 +88,7 @@ class ParkingSpaceManagementView(PermissionRequiredMixin, ListView):
         )
 
         # 2. メインデータを取得してself に保持する（Service層を利用）
-        qs, self.total = get_parking_summary(self.year, self.month, self.parking_type)
+        qs, self.total = get_parking_summary(self.year, self.month)
 
         return qs
 
@@ -100,9 +100,7 @@ class ParkingSpaceManagementView(PermissionRequiredMixin, ListView):
             {
                 # "parking_list": self.qs,
                 "total": self.total,
-                "form": YearMonthForm(
-                    initial={"year": self.year, "month": self.month, "parking_type": self.parking_type}
-                ),
+                "form": YearMonthForm(initial={"year": self.year, "month": self.month}),
                 "title": f"{self.year}-{self.month}-01",
             }
         )

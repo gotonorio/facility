@@ -42,7 +42,6 @@ class ParkingSpaceQuerySet(models.QuerySet):
         if parking_type:
             qs = qs.filter(parking_type=parking_type)
         return qs
-        # return ParkingSpace.get_parking_space(year, month, parking_type)
 
     def get_parking_space_num(self, year, month, parking_type):
         """利用可能駐車場スペースの数を返す"""
@@ -54,7 +53,6 @@ class ParkingSpaceQuerySet(models.QuerySet):
         if parking_type:
             qs = qs.filter(parking_type=parking_type)
         return qs.count()
-        # return ParkingSpace.get_parking_space_num(year, month, parking_type)
 
     def get_parking_rireki(self, year):
         """指定された年の収入履歴を返す
