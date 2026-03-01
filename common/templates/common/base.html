@@ -5,9 +5,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" type="image/png" href="{% static 'common/favicon.ico' %}"/>
+  {# favicon #}
+  <link rel="icon" type="image/svg+xml" href="{% static 'common/favicon.svg' %}">
+  <link rel="icon" href="{% static 'common/favicon.ico' %}" sizes="any">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'common/apple-touch-icon.png' %}">
+  {% comment %} <link rel="shortcut icon" type="image/png" href="{% static 'common/favicon.ico' %}"/>
   <link rel="apple-touch-icon-precomposed" href="{{STATIC_URL}}/static/apple-touch-icon-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" href="{% static 'common/apple-touch-icon-precomposed.png' %}">
+  <link rel="apple-touch-icon-precomposed" href="{% static 'common/apple-touch-icon-precomposed.png' %}"> {% endcomment %}
   {# css #}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
   <link href="{% static 'common/mycss/mycss.css' %}" rel="stylesheet">
