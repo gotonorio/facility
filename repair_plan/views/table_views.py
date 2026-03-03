@@ -1,8 +1,12 @@
+import logging
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views import generic
 from facility.services import get_latest_version
 from repair_plan.forms import RepairPlanListForm
 from repair_plan.services.table_service import get_repair_plan_table_data
+
+logger = logging.getLogger(__name__)
 
 
 class RepairPlanTableView(PermissionRequiredMixin, generic.TemplateView):

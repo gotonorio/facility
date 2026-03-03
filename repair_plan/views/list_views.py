@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView
@@ -9,6 +11,8 @@ from repair_plan.services.list_service import (
     get_version_and_manager_info,
     get_yearly_repair_summary,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class RepairPlanListView(LoginRequiredMixin, ListView):

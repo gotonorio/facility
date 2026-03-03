@@ -1,4 +1,8 @@
+import logging
+
 from repair_plan.models import KoujiName
+
+logger = logging.getLogger(__name__)
 
 
 def get_repair_plan_table_data(ver, is_simple=False):
