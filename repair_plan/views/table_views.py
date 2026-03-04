@@ -10,6 +10,8 @@ from repair_plan.services.table_service import (
     get_pandas_table_data,
     get_pivot_table_data,
     get_repair_plan_table_data,
+    rename_headers,
+    sort_year_columns,
 )
 
 logger = logging.getLogger(__name__)
@@ -84,11 +86,28 @@ class RepairPlanPandasTableView(PermissionRequiredMixin, generic.TemplateView):
         form_kwargs = {"ver": ver}
         context["form"] = RepairPlanListForm(**form_kwargs)
 
-        # 修繕計画データからpandasのデータフレーム（DF)を作成
+        # 1. 修繕計画データからpandasのデータフレーム（DF)を作成
         df = get_pandas_table_data(ver)
 
-        # DFを工事種別でソートしてからピボットテーブルを作成
+        # # ----------------------------------------------
+        # #
+        # # ----------------------------------------------
+        # df = df.sort_values(["kouji_type__sequense", "kouji_name"])
+        # repair_plan_data = build_repair_plan_data(df)
+        # for category in repair_plan_data["categories"]:
+        #     logger.debug(f"Category: {category['name']}")
+        #     for row in category["rows"]:
+        #         logger.debug(f"  工事名: {row['kouji_name']}, 値: {row['values']}")
+        # # ----------------------------------------------
+
+        # 2. DFを工事種別でソートしてからピボットテーブルを作成
         pivot_df = get_pivot_table_data(df)
+
+        # 3. 年の列をソート
+        pivot_df = sort_year_columns(pivot_df)
+
+        # 4.ヘッダ名変更
+        pivot_df = rename_headers(pivot_df)
 
         # ピボットテーブルの最後列に行合計を追加(axis=1は行方向の合計)
         year_columns = pivot_df.columns[2:]
@@ -111,15 +130,12 @@ class RepairPlanPandasTableView(PermissionRequiredMixin, generic.TemplateView):
         # 工事種別の重複を空にする（上段だけ表示）
         pivot_df["工事種別"] = pivot_df["工事種別"].mask(pivot_df["工事種別"].duplicated(), "")
 
-        # # 種別が変わる行を判定
-        # pivot_df["is_category_row"] = pivot_df["工事種別"] != ""
-
-        # 金額フォーマット
-        for col in year_columns:
+        # 金額フォーマット（カンマ区切り、整数表示）を適用
+        year_columns_total = pivot_df.columns[2:]
+        for col in year_columns_total:
             pivot_df[col] = pivot_df[col].map("{:,.0f}".format)
 
         # HTML生成前に一旦保存
-        # # pivot_df = pivot_df.drop(columns=["is_category_row"], errors="ignore")
         html_table = pivot_df.to_html(
             classes="table is-striped is-size-6 is-narrow is-hoverable repair-table",
             index=False,

@@ -12,15 +12,18 @@ def build_pivot(df):
 
 
 def add_totals(pivot_df):
+    # ピボットテーブルの最後列に行合計を追加(axis=1は行方向の合計)
     pivot_df["合計"] = pivot_df.sum(axis=1)
-
+    # 総合計を計算
     yearly_total = pivot_df.sum(axis=0)
 
     return pivot_df, yearly_total
 
 
 def build_repair_plan_data(df):
+    # 工事種別でソートしてからピボットテーブルを作成
     pivot_df = build_pivot(df)
+    # ピボットテーブルに合計行を追加
     pivot_df, yearly_total = add_totals(pivot_df)
 
     header_years = list(pivot_df.columns)
