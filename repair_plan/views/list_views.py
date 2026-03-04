@@ -1,8 +1,9 @@
 import logging
 
+import pandas as pd
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from repair_plan.forms import RepairPlanListForm
 from repair_plan.models import KoujiName
 from repair_plan.services.list_service import (
@@ -163,3 +164,141 @@ class RepairPlanUpdateListView(RepairPlanListView):
     def get_template_names(self):
         # モバイル判定ロジック（将来の拡張用）
         return ["repair_plan/repairplan_update_list.html"]
+
+
+class RepairPlanPandasView(PermissionRequiredMixin, TemplateView):
+    """長期修繕計画表（pandas版）"""
+
+    template_name = "repair_plan/table/repairplan_test.html"
+    form_class = RepairPlanListForm
+    permission_required = "repair_plan.add_koujiname"
+
+    def get_form_kwargs(self):
+        return {
+            "initial": {"koujitype": self.koujitype_param},
+            "is_manager": self.is_manager,
+            "ver": self.version_obj,
+        }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # ----------------------
+        # ① 先にパラメータ確定
+        # ----------------------
+        ver_param = self.kwargs.get("version") or self.request.GET.get("version")
+        self.koujitype_param = self.kwargs.get("kouji_type") or self.request.GET.get("koujitype") or "ALL"
+
+        # ----------------------
+        # ② Service呼び出し
+        # ----------------------
+        self.version_obj, self.is_manager = get_version_and_manager_info(self.request.user, ver_param)
+
+        repair_plan_qs, self.total_amount = get_repair_plan_summary(self.version_obj, self.koujitype_param)
+
+        # ----------------------
+        # ③ Form生成（ここでOK）
+        # ----------------------
+        context["form"] = self.form_class(**self.get_form_kwargs())
+
+        # ----------------------
+        # ④ pandas処理
+        # ----------------------
+        qs_test = KoujiName.objects.filter(version__version=self.version_obj).values(
+            "kouji_type__master_name",
+            "kouji_name",
+            "kouji_year",
+            "unit_price",
+        )
+        df = pd.DataFrame(list(qs_test))
+
+        # ---------------------------
+        # ⑤ pivotへ変換
+        # ---------------------------
+        pivot_df = df.pivot_table(
+            index=["kouji_type__master_name", "kouji_name"],
+            columns="kouji_year",
+            values="unit_price",
+            aggfunc="sum",
+            fill_value=0,
+        ).reset_index()
+
+        pivot_df.columns.name = None
+
+        # ヘッダ名変更
+        pivot_df = pivot_df.rename(
+            columns={
+                "kouji_type__master_name": "工事種別",
+                "kouji_name": "工事名",
+            }
+        )
+
+        # 工事種別、工事名でソート
+        pivot_df = pivot_df.sort_values(by=["工事種別", "工事名"], ascending=[False, True])
+
+        # ここから-------------------------------------------------------------------------
+
+        # ---------------------------
+        # ⑥ 行合計（工事名ごと）
+        # ---------------------------
+        year_columns = pivot_df.columns[2:]
+
+        pivot_df["合計"] = pivot_df[year_columns].sum(axis=1)
+
+        # ---------------------------
+        # ⑦ 年ごとの合計（最下行用）
+        # ---------------------------
+        year_totals = pivot_df[year_columns].sum()
+
+        grand_total = pivot_df["合計"].sum()
+
+        total_row = {
+            "工事種別": "",
+            "工事名": "総合計",
+            **year_totals.to_dict(),
+            "合計": grand_total,
+        }
+
+        pivot_df = pd.concat([pivot_df, pd.DataFrame([total_row])], ignore_index=True)
+
+        # ---------------------------
+        # ⑧ 種別重複を空に
+        # ---------------------------
+        pivot_df["工事種別"] = pivot_df["工事種別"].mask(pivot_df["工事種別"].duplicated(), "")
+
+        # ここまで-------------------------------------------------------------------------
+
+        # 種別が変わる行を判定
+        pivot_df["is_category_row"] = pivot_df["工事種別"] != ""
+        # HTML生成前に一旦保存
+        html_table = pivot_df.to_html(
+            classes="table is-striped is-size-6 is-narrow is-hoverable repair-table",
+            index=False,
+            border=0,
+            escape=False,
+        )
+        context["html_table"] = html_table
+
+        # ---------------------------
+        # ⑥ 工事種別を上段だけ表示（下は空文字）
+        # ---------------------------
+        pivot_df["工事種別"] = pivot_df["工事種別"].mask(pivot_df["工事種別"].duplicated(), "")
+
+        # ---------------------------
+        # ⑦ 金額フォーマット
+        # ---------------------------
+        for col in pivot_df.columns[2:]:
+            pivot_df[col] = pivot_df[col].map("{:,.0f}".format)
+
+        # ---------------------------
+        # ⑧ HTML出力
+        # ---------------------------
+        pivot_df = pivot_df.drop(columns=["is_category_row"], errors="ignore")
+        context["html_table"] = pivot_df.to_html(
+            classes="table is-size-6 is-narrow",
+            index=False,
+            border=0,
+            escape=False,
+        )
+
+        return context

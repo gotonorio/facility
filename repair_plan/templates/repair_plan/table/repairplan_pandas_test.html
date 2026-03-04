@@ -1,0 +1,218 @@
+
+{% extends "common/base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #}
+{% load facility_extras %}
+
+{% block title %}
+修繕計画一覧
+{% endblock title %}
+{% block head %}
+
+<style>
+/* 金額を右揃え */
+table td:nth-child(n+3),
+table th:nth-child(n+3) {
+    text-align: right;
+}
+
+/* 工事種別・工事名を改行禁止 */
+table td:nth-child(1),
+table td:nth-child(2),
+table th:nth-child(1),
+table th:nth-child(2) {
+    white-space: nowrap;
+}
+/* 最後の列（合計）を強調する */
+.custom-matrix table col:last-child { 
+    background-color: #ebfffc; /* Bulmaのis-primary-lightに近い色 */
+    font-weight: bold;
+}
+
+/* ------------------------------
+タイトル行（thead）中央揃え
+------------------------------ */
+.repair-table thead th {
+    text-align: center !important;
+    font-weight: bold;
+}
+
+/* ------------------------------
+工事種別列・工事名列を太字
+------------------------------ */
+.repair-table td:nth-child(1),
+.repair-table td:nth-child(2) {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* ------------------------------
+種別行を太字＋少し強調
+------------------------------ */
+.repair-table tr td:first-child:not(:empty) {
+    font-weight: 700;
+}
+.repair-table tr td:first-child:not(:empty) {
+    background-color: #f5f5f5;
+}
+</style>
+<style>
+
+/* 横スクロール */
+.repair-table-wrapper {
+    overflow-x: auto;
+}
+
+/* 固定幅（ここ重要） */
+.sticky-col-1 {
+    min-width: 180px;
+    max-width: 180px;
+}
+
+.sticky-col-2 {
+    min-width: 220px;
+    max-width: 220px;
+}
+
+/* 年列 */
+.year-col {
+    min-width: 110px;
+    text-align: right;
+}
+
+
+</style>
+
+
+
+
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <div class="navbar-item">
+        <form action="" method="get">
+          <div class="field has-addons">
+            <!-- bulmaのselect要素はnavbar内では少し特殊でcontrolで包む必要がある -->
+            <div class="control">
+              <div class="select is-small"> {{form.version}} </div>
+            </div>
+            <div class="control">
+              <button type="submit" class="button is-primary is-small">表示</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'register:repair_plan' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+{% block content %}
+<br>
+<div class="container is-fluid">
+<div class="table-container repair-table-wrapper">
+<table class="table is-striped is-narrow is-hoverable repair-table">
+    <thead>
+        <tr>
+            <th class="has-text-centered sticky-col-1">工事種別</th>
+            <th class="has-text-centered sticky-col-2">工事名</th>
+            {% for year in header_years %}
+                <th class="has-text-centered year-col">{{ year }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for category in categories %}
+            {% for row in category.rows %}
+                <tr class="
+                    {% if forloop.first %}category-start{% endif %}
+                    {% if forloop.last %}category-end{% endif %}
+                ">
+                    {% if forloop.first %}
+                        <td rowspan="{{ category.rows|length }}"
+                            class="has-text-weight-bold
+                                   has-background-light
+                                   sticky-col-1
+                                   category-cell">
+                            {{ category.name }}
+                        </td>
+                    {% endif %}
+
+                    <td class="sticky-col-2">
+                        {{ row.kouji_name }}
+                    </td>
+
+                    {% for val in row.values %}
+                        <td class="has-text-right year-col">
+                            {{ val|intcomma }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+
+
+  {% comment %}
+  <table class="table is-striped is-narrow is-hoverable">
+    <thead>
+      <tr>
+        <th>工事種別</th>
+        <th>工事名</th>
+        {% for year in header_years %}
+          <th class="has-text-centered">{{ year }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for category in categories %}
+        {% for row in category.rows %}
+          <tr>
+            {% if forloop.first %}
+              <td rowspan="{{ category.rows|length }}"
+                class="has-text-weight-bold has-background-light">
+                {{ category.name }}
+              </td>
+            {% endif %}
+            <td>
+              {{ row.kouji_name }}
+            </td>
+            {% for val in row.values %}
+              <td class="has-text-right">
+                {{ val|intcomma }}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      {% endfor %}
+      <tr class="has-background-grey-lighter has-text-weight-bold">
+        <td colspan="2">合計</td>
+        {% for val in yearly_total %}
+          <td class="has-text-right">
+            {{ val|intcomma }}
+          </td>
+        {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+  {% endcomment %}
+</div>
+{% endblock content %}

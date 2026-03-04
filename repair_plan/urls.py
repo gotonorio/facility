@@ -21,6 +21,12 @@ urlpatterns = [
         list_views.RepairPlanListView.as_view(),
         name="repairplan_list",
     ),
+    # テスト
+    path(
+        "repairplan_test/",
+        list_views.RepairPlanPandasView.as_view(),
+        name="repairplan_test",
+    ),
     # 年度別修繕計画の表示
     path(
         "repairplan_by_year/",
@@ -46,6 +52,12 @@ urlpatterns = [
         "repairplan_table/",
         table_views.RepairPlanTableView.as_view(),
         name="repairplan_table",
+    ),
+    # pandas版テーブルの表示
+    path(
+        "repairplan_pandas_table/",
+        table_views.RepairPlanPandasTableView.as_view(),
+        name="repairplan_pandas_table",
     ),
     # 簡易版修繕計画表の表示
     path(

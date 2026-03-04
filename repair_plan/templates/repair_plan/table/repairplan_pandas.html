@@ -1,0 +1,82 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "common/base.html" %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% load static %} {# {% static  を使うため必要 #}
+{% load facility_extras %}
+
+{% block title %}
+修繕計画一覧
+{% endblock title %}
+{% block head %}
+<style>
+/* 金額を右揃え */
+table td:nth-child(n+3),
+table th:nth-child(n+3) {
+    text-align: right;
+}
+
+/* タイトル行（thead）中央揃え */
+.repair-table thead th {
+    text-align: center !important;
+    font-weight: bold;
+}
+
+/* 工事種別列・工事名列を太字 */
+.repair-table td:nth-child(1),
+.repair-table td:nth-child(2) {
+    font-weight: bold;
+    white-space: nowrap;
+}
+</style>
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <div class="navbar-item">
+        <form action="" method="get">
+          <div class="field has-addons">
+            <!-- bulmaのselect要素はnavbar内では少し特殊でcontrolで包む必要がある -->
+            <div class="control">
+              <div class="select is-small"> {{form.version}} </div>
+            </div>
+            <div class="control">
+              <button type="submit" class="button is-primary is-small">表示</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'register:repair_plan' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h1 class="title is-4">長期修繕計画表</h1>
+    <ul>
+      <li>金額には「経費」「消費税」「物価上昇分」は含みません</li>
+    </ul>
+  </div>
+  <div class="table-container">
+    <div> {{ html_table|safe }} </div>
+  </div>
+</div>
+
+
+
+{% endblock content %}
