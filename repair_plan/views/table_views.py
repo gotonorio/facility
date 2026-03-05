@@ -1,18 +1,19 @@
 import logging
 
-import pandas as pd
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views import generic
 from facility.services import get_latest_version
 from repair_plan.forms import RepairPlanListForm
-from repair_plan.services.table_formatter import build_repair_plan_data
-from repair_plan.services.table_service import (
-    get_pandas_table_data,
-    get_pivot_table_data,
-    get_repair_plan_table_data,
-    rename_headers,
-    sort_year_columns,
-)
+
+# from repair_plan.services.pandas_service import (
+#     add_total_bottom,
+#     get_pandas_table_data,
+#     get_pivot_table_data,
+#     rename_headers,
+#     sort_year_columns,
+# )
+# from repair_plan.services.table_formatter import add_totals, build_pivot, build_repair_plan_data
+from repair_plan.services.table_service import get_repair_plan_table_data
 
 logger = logging.getLogger(__name__)
 
@@ -63,120 +64,102 @@ class RepairPlanSimpleTableView(RepairPlanTableView):
     is_simple = True  # ロジックを切り替え
 
 
-class RepairPlanPandasTableView(PermissionRequiredMixin, generic.TemplateView):
-    """長期修繕計画表（pandas版）"""
+# class RepairPlanPandasTableView(PermissionRequiredMixin, generic.TemplateView):
+#     """長期修繕計画表（pandas版）"""
 
-    form_class = RepairPlanListForm
-    permission_required = "repair_plan.add_koujiname"
+#     form_class = RepairPlanListForm
+#     permission_required = "repair_plan.add_koujiname"
 
-    template_name = "repair_plan/table/repairplan_pandas.html"
+#     template_name = "repair_plan/table/repairplan_pandas.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
 
-        # バージョンの取得
-        ver = self.kwargs.get("version") or self.request.GET.get("version")
-        latest_version, is_manager = get_latest_version(self.request.user)
-        ver = ver or latest_version
+#         # バージョンの取得
+#         ver = self.kwargs.get("version") or self.request.GET.get("version")
+#         latest_version, is_manager = get_latest_version(self.request.user)
+#         ver = ver or latest_version
 
-        if not ver:
-            return context
+#         if not ver:
+#             return context
 
-        # kwargsに"ver"を追加してフォームを初期化する
-        form_kwargs = {"ver": ver}
-        context["form"] = RepairPlanListForm(**form_kwargs)
+#         # kwargsに"ver"を追加してフォームを初期化する
+#         form_kwargs = {"ver": ver}
+#         context["form"] = RepairPlanListForm(**form_kwargs)
 
-        # 1. 修繕計画データからpandasのデータフレーム（DF)を作成
-        df = get_pandas_table_data(ver)
+#         # 1. 修繕計画データからpandasのデータフレーム（DF)を作成。
+#         df = get_pandas_table_data(ver)
 
-        # # ----------------------------------------------
-        # #
-        # # ----------------------------------------------
-        # df = df.sort_values(["kouji_type__sequense", "kouji_name"])
-        # repair_plan_data = build_repair_plan_data(df)
-        # for category in repair_plan_data["categories"]:
-        #     logger.debug(f"Category: {category['name']}")
-        #     for row in category["rows"]:
-        #         logger.debug(f"  工事名: {row['kouji_name']}, 値: {row['values']}")
-        # # ----------------------------------------------
+#         # 2. DFを工事種別でソートしてからピボットテーブルを作成
+#         pivot_df = get_pivot_table_data(df)
 
-        # 2. DFを工事種別でソートしてからピボットテーブルを作成
-        pivot_df = get_pivot_table_data(df)
+#         # 3. ピボットテーブルの「年の列」をソート
+#         pivot_df = sort_year_columns(pivot_df)
 
-        # 3. 年の列をソート
-        pivot_df = sort_year_columns(pivot_df)
+#         # 4. ピボットテーブルの「ヘッダ名」を変更
+#         pivot_df = rename_headers(pivot_df)
 
-        # 4.ヘッダ名変更
-        pivot_df = rename_headers(pivot_df)
+#         # 5. ピボットテーブルの最下行に合計行を追加
+#         pivot_df = add_total_bottom(pivot_df)
 
-        # ピボットテーブルの最後列に行合計を追加(axis=1は行方向の合計)
-        year_columns = pivot_df.columns[2:]
-        pivot_df["合計"] = pivot_df[year_columns].sum(axis=1)
+#         # ピボットテーブルのList化test
+#         dict_list = pivot_df.reset_index().to_dict(orient="records")
+#         for row in dict_list:
+#             logger.debug(f"Row: {row}")
 
-        # ピボットテーブルの最下行に年ごとの合計を追加(axis=0は列方向の合計)
-        year_totals = pivot_df[year_columns].sum(axis=0)
-        # ピボットテーブルの総合計を計算(年ごとの合計の合計)
-        grand_total = pivot_df["合計"].sum(axis=0)
+#         # 工事種別の重複を空にする（上段だけ表示）
+#         pivot_df["工事種別"] = pivot_df["工事種別"].mask(pivot_df["工事種別"].duplicated(), "")
 
-        total_row = {
-            "工事種別": "",
-            "工事名": "総合計",
-            **year_totals.to_dict(),
-            "合計": grand_total,
-        }
-        # ピボットテーブルの最下行に合計行を追加
-        pivot_df = pd.concat([pivot_df, pd.DataFrame([total_row])], ignore_index=True)
+#         # 金額フォーマット（カンマ区切り、整数表示）を適用
+#         year_columns_total = pivot_df.columns[2:]
+#         for col in year_columns_total:
+#             pivot_df[col] = pivot_df[col].map("{:,.0f}".format)
 
-        # 工事種別の重複を空にする（上段だけ表示）
-        pivot_df["工事種別"] = pivot_df["工事種別"].mask(pivot_df["工事種別"].duplicated(), "")
+#         # HTML生成前に一旦保存
+#         html_table = pivot_df.to_html(
+#             classes="table is-striped is-size-6 is-narrow is-hoverable repair-table",
+#             index=False,
+#             border=0,
+#             escape=False,
+#         )
+#         context["html_table"] = html_table
 
-        # 金額フォーマット（カンマ区切り、整数表示）を適用
-        year_columns_total = pivot_df.columns[2:]
-        for col in year_columns_total:
-            pivot_df[col] = pivot_df[col].map("{:,.0f}".format)
+#         return context
 
-        # HTML生成前に一旦保存
-        html_table = pivot_df.to_html(
-            classes="table is-striped is-size-6 is-narrow is-hoverable repair-table",
-            index=False,
-            border=0,
-            escape=False,
-        )
-        context["html_table"] = html_table
+#     # ------------------------------------------------------------
+#     # 以下は、pandasのto_htmlを使わない従来の方法での実装例
+#     # ------------------------------------------------------------
 
-        return context
+#     # template_name = "repair_plan/table/repairplan_pandas_test.html"
 
-    # ------------------------------------------------------------
-    # 以下は、pandasを使わない従来の方法での実装例（コメントアウト）
-    # ------------------------------------------------------------
+#     # def get_context_data(self, **kwargs):
+#     #     context = super().get_context_data(**kwargs)
 
-    # template_name = "repair_plan/table/repairplan_pandas_test.html"
+#     #     # ----------------------
+#     #     # バージョンの決定
+#     #     # ----------------------
+#     #     ver = self.kwargs.get("version") or self.request.GET.get("version")
+#     #     latest_version, is_manager = get_latest_version(self.request.user)
+#     #     ver = ver or latest_version
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
+#     #     if not ver:
+#     #         return context
 
-    #     # ----------------------
-    #     # バージョンの決定
-    #     # ----------------------
-    #     ver = self.kwargs.get("version") or self.request.GET.get("version")
-    #     latest_version, is_manager = get_latest_version(self.request.user)
-    #     ver = ver or latest_version
+#     #     # kwargsに"ver"を追加
+#     #     form_kwargs = {"ver": ver}
+#     #     context["form"] = RepairPlanListForm(**form_kwargs)
 
-    #     if not ver:
-    #         return context
+#     #     # 1. 修繕計画データからpandasのデータフレーム（DF)を作成
+#     #     df = get_pandas_table_data(ver)
 
-    #     # kwargsに"ver"を追加
-    #     form_kwargs = {"ver": ver}
-    #     context["form"] = RepairPlanListForm(**form_kwargs)
+#     #     # 2. DFを工事種別でソートしてからピボットテーブルを作成
+#     #     pivot_df = build_pivot(df)
 
-    #     # ---------------------------
-    #     # pandasのデータフレームを取得
-    #     # ---------------------------
-    #     df = get_pandas_table_data(ver)
-    #     df = df.sort_values(["kouji_type__sequense", "kouji_name"])
+#     #     # 10. ピボットテーブルに合計行を追加
+#     #     pivot_df, yearly_total = add_totals(pivot_df)
 
-    #     repair_plan_data = build_repair_plan_data(df)
+#     #     repair_plan_data = build_repair_plan_data(pivot_df, yearly_total)
 
-    #     context.update(repair_plan_data)
+#     #     context.update(repair_plan_data)
 
-    #     return context
+#     #     return context

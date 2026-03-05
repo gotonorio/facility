@@ -1,4 +1,12 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 def build_pivot(df):
+    """工事種別でソートしてからピボットテーブルを作成して返す"""
+
+    # 工事種別でソートしてからピボットテーブルを作成
     df = df.sort_values(["kouji_type__sequense", "kouji_name"])
 
     return df.pivot_table(
@@ -12,28 +20,34 @@ def build_pivot(df):
 
 
 def add_totals(pivot_df):
+    """ピボットテーブルに合計行を追加して返す"""
+
     # ピボットテーブルの最後列に行合計を追加(axis=1は行方向の合計)
-    pivot_df["合計"] = pivot_df.sum(axis=1)
+    # pivot_df["合計"] = pivot_df.sum(axis=1)
     # 総合計を計算
     yearly_total = pivot_df.sum(axis=0)
 
     return pivot_df, yearly_total
 
 
-def build_repair_plan_data(df):
-    # 工事種別でソートしてからピボットテーブルを作成
-    pivot_df = build_pivot(df)
-    # ピボットテーブルに合計行を追加
-    pivot_df, yearly_total = add_totals(pivot_df)
+# def build_repair_plan_data(df):
+def build_repair_plan_data(pivot_df, yearly_total):
+    """修繕計画データを工事種別ごとにカテゴリ化して返す"""
 
+    # # 工事種別でソートしてからピボットテーブルを作成
+    # pivot_df = build_pivot(df)
+    # # ピボットテーブルに合計行を追加
+    # pivot_df, yearly_total = add_totals(pivot_df)
+
+    # 「年」の列をリストとして取得（順序はバラバラ)
     header_years = list(pivot_df.columns)
 
     categories = []
-
     current_type = None
     category_rows = []
-
+    # ピボットテーブルを行ごとに処理して、工事種別ごとにカテゴリを作成
     for (kouji_type, kouji_name), row in pivot_df.iterrows():
+        # 工事種別が変わったら新しいカテゴリを作成して、前のカテゴリを保存
         if kouji_type != current_type:
             if current_type is not None:
                 categories.append(

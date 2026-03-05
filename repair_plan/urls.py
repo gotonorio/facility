@@ -1,6 +1,6 @@
 from django.urls import path
 
-from repair_plan.views import data_views, list_views, master_data_views, table_views
+from repair_plan.views import data_views, list_views, master_data_views, table_pandas_views, table_views
 
 app_name = "repair_plan"
 urlpatterns = [
@@ -50,7 +50,7 @@ urlpatterns = [
     # pandas版テーブルの表示
     path(
         "repairplan_pandas_table/",
-        table_views.RepairPlanPandasTableView.as_view(),
+        table_pandas_views.RepairPlanPandasTableView.as_view(),
         name="repairplan_pandas_table",
     ),
     # 簡易版修繕計画表の表示

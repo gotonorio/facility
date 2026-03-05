@@ -1,7 +1,6 @@
 import logging
 
-import pandas as pd
-
+# import pandas as pd
 from repair_plan.models import KoujiName
 
 logger = logging.getLogger(__name__)
@@ -50,73 +49,73 @@ def get_repair_plan_table_data(ver, is_simple=False):
     }
 
 
-def get_pandas_table_data(ver):
-    """
-    指定バージョンの修繕計画テーブルデータをpandasで処理して返す
-    """
-    qs = KoujiName.objects.filter(version__version=ver).values(
-        "kouji_type__master_name",
-        "kouji_type__sequense",
-        "kouji_name",
-        "kouji_year",
-        "unit_price",
-    )
-    df = pd.DataFrame(list(qs))
-    return df
+# def get_pandas_table_data(ver):
+#     """
+#     指定バージョンの修繕計画テーブルデータをpandasで処理して返す
+#     """
+#     qs = KoujiName.objects.filter(version__version=ver).values(
+#         "kouji_type__master_name",
+#         "kouji_type__sequense",
+#         "kouji_name",
+#         "kouji_year",
+#         "unit_price",
+#     )
+#     df = pd.DataFrame(list(qs))
+#     return df
 
 
-def get_pivot_table_data(df):
-    """
-    指定バージョンの修繕計画テーブルデータをpandasで処理してピボットテーブル形式で返す
-    """
-    # ---------------------------
-    # pivotへ変換
-    # ---------------------------
-    pivot_df = (
-        df.sort_values(["kouji_type__sequense", "kouji_name"])
-        .pivot_table(
-            index=["kouji_type__master_name", "kouji_name"],
-            columns="kouji_year",
-            values="unit_price",
-            aggfunc="sum",
-            fill_value=0,
-            sort=False,
-        )
-        .reset_index()
-    )
+# def get_pivot_table_data(df):
+#     """
+#     指定バージョンの修繕計画テーブルデータをpandasで処理してピボットテーブル形式で返す
+#     """
+#     # ---------------------------
+#     # pivotへ変換
+#     # ---------------------------
+#     pivot_df = (
+#         df.sort_values(["kouji_type__sequense", "kouji_name"])
+#         .pivot_table(
+#             index=["kouji_type__master_name", "kouji_name"],
+#             columns="kouji_year",
+#             values="unit_price",
+#             aggfunc="sum",
+#             fill_value=0,
+#             sort=False,
+#         )
+#         .reset_index()
+#     )
 
-    # # 列（column）が整数型ならば、その列を昇順に並び替える
-    # year_cols = sorted([col for col in pivot_df.columns if isinstance(col, int)])
-    # # pivot_dfから「kouji_type」と「kouji_name」の列だけを取り出して、「年」の列を追加する
-    # pivot_df = pivot_df[["kouji_type__master_name", "kouji_name"] + year_cols]
+#     # # 列（column）が整数型ならば、その列を昇順に並び替える
+#     # year_cols = sorted([col for col in pivot_df.columns if isinstance(col, int)])
+#     # # pivot_dfから「kouji_type」と「kouji_name」の列だけを取り出して、「年」の列を追加する
+#     # pivot_df = pivot_df[["kouji_type__master_name", "kouji_name"] + year_cols]
 
-    # # ヘッダ名変更
-    # pivot_df = pivot_df.rename(
-    #     columns={
-    #         "kouji_type__master_name": "工事種別",
-    #         "kouji_name": "工事名",
-    #     }
-    # )
+#     # # ヘッダ名変更
+#     # pivot_df = pivot_df.rename(
+#     #     columns={
+#     #         "kouji_type__master_name": "工事種別",
+#     #         "kouji_name": "工事名",
+#     #     }
+#     # )
 
-    return pivot_df
-
-
-def sort_year_columns(pivot_df):
-    # 列（column）が整数型ならば、その列を昇順に並び替える
-    year_cols = sorted([col for col in pivot_df.columns if isinstance(col, int)])
-    # pivot_dfから「kouji_type」と「kouji_name」の列だけを取り出して、「年」の列を追加する
-    pivot_df = pivot_df[["kouji_type__master_name", "kouji_name"] + year_cols]
-
-    return pivot_df
+#     return pivot_df
 
 
-def rename_headers(pivot_df):
-    # ヘッダ名変更
-    pivot_df = pivot_df.rename(
-        columns={
-            "kouji_type__master_name": "工事種別",
-            "kouji_name": "工事名",
-        }
-    )
+# def sort_year_columns(pivot_df):
+#     # 列（column）が整数型ならば、その列を昇順に並び替える
+#     year_cols = sorted([col for col in pivot_df.columns if isinstance(col, int)])
+#     # pivot_dfから「kouji_type」と「kouji_name」の列だけを取り出して、「年」の列を追加する
+#     pivot_df = pivot_df[["kouji_type__master_name", "kouji_name"] + year_cols]
 
-    return pivot_df
+#     return pivot_df
+
+
+# def rename_headers(pivot_df):
+#     # ヘッダ名変更
+#     pivot_df = pivot_df.rename(
+#         columns={
+#             "kouji_type__master_name": "工事種別",
+#             "kouji_name": "工事名",
+#         }
+#     )
+
+#     return pivot_df
