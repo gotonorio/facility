@@ -9,7 +9,7 @@ from repair_plan.models import KoujiName
 logger = logging.getLogger(__name__)
 
 
-def get_pandas_table_data(ver):
+def get_pandas_dadaframe(ver):
     """
     指定バージョンの修繕計画テーブルデータをpandasで処理して返す
     """
@@ -24,7 +24,7 @@ def get_pandas_table_data(ver):
     return df
 
 
-def get_pivot_table_data(df):
+def get_pandas_pivottable(df):
     """
     指定バージョンの修繕計画テーブルデータをpandasで処理してピボットテーブル形式で返す
     """
@@ -71,7 +71,7 @@ def rename_headers(pivot_df):
 
 
 def add_total_bottom(pivot_df):
-    """ピボットテーブルの最下行に合計行を追加"""
+    """ピボットテーブルの最下行と最後列に合計を追加"""
 
     # ピボットテーブルの最後列に行合計を追加(axis=1は行方向の合計)
     year_columns = pivot_df.columns[2:]
@@ -92,3 +92,37 @@ def add_total_bottom(pivot_df):
     pivot_df = pd.concat([pivot_df, pd.DataFrame([total_row])], ignore_index=True)
 
     return pivot_df
+
+
+def add_total_last(pivot_df):
+    """ピボットテーブルの最後列に合計を追加"""
+
+    # ピボットテーブルの最後列に行合計を追加(axis=1は行方向の合計)
+    year_columns = pivot_df.columns[2:]
+    pivot_df["合計"] = pivot_df[year_columns].sum(axis=1)
+
+    return pivot_df
+
+
+def bottom_total_list(pivot_df):
+    """合計行をlistとして返す"""
+
+    # # ピボットテーブルの最後列に行合計を追加(axis=1は行方向の合計)
+    year_columns = pivot_df.columns[2:]
+    # pivot_df["合計"] = pivot_df[year_columns].sum(axis=1)
+
+    # ピボットテーブルの最下行に年ごとの合計を追加(axis=0は列方向の合計)
+    year_totals = pivot_df[year_columns].sum(axis=0)
+    # ピボットテーブルの総合計を計算(年ごとの合計の合計)
+    # grand_total = pivot_df["合計"].sum(axis=0)
+
+    # total_row = {
+    #     "工事種別": "",
+    #     "工事名": "総合計",
+    #     **year_totals.to_dict(),
+    #     "合計": grand_total,
+    # }
+    # # ピボットテーブルの最下行に合計行を追加
+    # pivot_df = pd.concat([pivot_df, pd.DataFrame([total_row])], ignore_index=True)
+
+    return year_totals

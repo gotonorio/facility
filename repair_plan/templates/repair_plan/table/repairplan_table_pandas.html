@@ -7,30 +7,6 @@
 {% block title %}
 修繕計画一覧
 {% endblock title %}
-{% block head %}
-<style>
-/* 金額を右揃え */
-table td:nth-child(n+3),
-table th:nth-child(n+3) {
-    text-align: right;
-}
-
-/* タイトル行（thead）中央揃え */
-.repair-table thead th {
-    text-align: center !important;
-    font-weight: bold;
-}
-
-/*「工事種別列」「工事名」「合計列」を太字 */
-.repair-table td:nth-child(1),
-.repair-table td:nth-child(2),
-.repair-table td:last-child {
-    font-weight: bold;
-    white-space: nowrap;
-}
-</style>
-{% endblock %}
-
 {% block navbar %}
 <nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
@@ -44,10 +20,17 @@ table th:nth-child(n+3) {
   </div>
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
+
       <div class="navbar-item">
         <form action="" method="get">
           <div class="field has-addons">
-            <!-- bulmaのselect要素はnavbar内では少し特殊でcontrolで包む必要がある -->
+            <!--ラベル表示-->
+            <div class="control">
+              <label class="button is-static is-small">
+                {{ form.version.label }}
+              </label>
+            </div>
+            <!-- bulmaのselect要素はnavbar内では少し特殊なようだ -->
             <div class="control">
               <div class="select is-small"> {{form.version}} </div>
             </div>
@@ -57,6 +40,7 @@ table th:nth-child(n+3) {
           </div>
         </form>
       </div>
+
     </div>
     <div class="navbar-end">
       <a class="navbar-item" href="{% url 'register:repair_plan' %}">戻る</a>
@@ -65,19 +49,57 @@ table th:nth-child(n+3) {
 </nav>
 {% endblock navbar %}
 {% block content %}
+{% if messages %}
+<div class="container" style="margin-top:1rem;">
+    <div class="notification is-info">
+        <button class="delete" type="button"></button>
+        {% for message in messages %}
+        <p> {{ message }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
 <br>
 <div class="container is-fluid">
   <div class="content">
-    <h1 class="title is-4">長期修繕計画表</h1>
+    <h4>長期修繕計画表</h4>
     <ul>
-      <li>金額には「経費」「消費税」「物価上昇分」は含みません</li>
+      <li class="has-text-weight-bold">金額には「経費」「消費税」「物価上昇分」は含まない。</li>
     </ul>
   </div>
   <div class="table-container">
-    <div> {{ html_table|safe }} </div>
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          {%for i in year %} 
+            <th class="has-text-centered">{{i}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in repair_plan_list %}
+          <tr>
+            {% for i in item %}
+              {% if forloop.first %}
+                <td class="has-text-weight-bold has-text-left">{{i}}</td>
+              {% elif forloop.counter == 2 %}
+                <td class=" has-text-left">{{i}}</td>
+              {% else %}
+                <td class="has-text-right ">{{i|intcomma}}</td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+        <tr>
+          <td></td>
+          <td class="has-text-weight-bold has-text-right">修繕支出合計</td>
+          {% for item in total %}
+            <td class="has-text-right">{{item|intcomma}}</td>
+          {% endfor %}
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
-
-
-
+<br>
 {% endblock content %}

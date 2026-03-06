@@ -5,29 +5,23 @@ from django.views.generic import TemplateView
 from facility.services import get_latest_version
 from repair_plan.forms import RepairPlanListForm
 from repair_plan.services.pandas_service import (
-    add_total_bottom,
-    get_pandas_table_data,
-    get_pivot_table_data,
+    add_total_last,
+    bottom_total_list,
+    get_pandas_dadaframe,
+    get_pandas_pivottable,
     rename_headers,
     sort_year_columns,
 )
 
-# from repair_plan.services.table_formatter import (
-#     add_totals,
-#     build_pivot,
-#     build_repair_plan_data,
-# )
-
 logger = logging.getLogger(__name__)
 
 
-class RepairPlanPandasTableView(PermissionRequiredMixin, TemplateView):
+class RepairPlanPandasView(PermissionRequiredMixin, TemplateView):
     """長期修繕計画表（pandas版）"""
 
     form_class = RepairPlanListForm
     permission_required = "repair_plan.add_koujiname"
-
-    template_name = "repair_plan/table/repairplan_pandas.html"
+    template_name = "repair_plan/table/repairplan_table_pandas.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -45,10 +39,10 @@ class RepairPlanPandasTableView(PermissionRequiredMixin, TemplateView):
         context["form"] = RepairPlanListForm(**form_kwargs)
 
         # 1. 修繕計画データからpandasのデータフレーム（DF)を作成。
-        df = get_pandas_table_data(ver)
+        df = get_pandas_dadaframe(ver)
 
         # 2. DFを工事種別でソートしてからピボットテーブルを作成
-        pivot_df = get_pivot_table_data(df)
+        pivot_df = get_pandas_pivottable(df)
 
         # 3. ピボットテーブルの「年の列」をソート
         pivot_df = sort_year_columns(pivot_df)
@@ -56,67 +50,22 @@ class RepairPlanPandasTableView(PermissionRequiredMixin, TemplateView):
         # 4. ピボットテーブルの「ヘッダ名」を変更
         pivot_df = rename_headers(pivot_df)
 
-        # 5. ピボットテーブルの最下行に合計行を追加
-        pivot_df = add_total_bottom(pivot_df)
-
-        # # ピボットテーブルのList化test
-        # dict_list = pivot_df.reset_index().to_dict(orient="records")
-        # for row in dict_list:
-        #     logger.debug(f"Row: {row}")
+        # 5. ピボットテーブルの最後列に合計を追加
+        pivot_df = add_total_last(pivot_df)
 
         # 工事種別の重複を空にする（上段だけ表示）
         pivot_df["工事種別"] = pivot_df["工事種別"].mask(pivot_df["工事種別"].duplicated(), "")
 
-        # 金額フォーマット（カンマ区切り、整数表示）を適用
-        year_columns_total = pivot_df.columns[2:]
-        for col in year_columns_total:
-            pivot_df[col] = pivot_df[col].map("{:,.0f}".format)
+        # ----------------------------------------
+        # ピボットテーブルデータのList化
+        # ----------------------------------------
+        # ヘッダーをlistとして取り出す
+        header_list = pivot_df.columns.to_list()
+        # データ本体のvalueをlistとするlistを作成する。
+        values_list = pivot_df.reset_index().values[:, 1:].tolist()
+        # 最下行の合計行を作成する
+        total = bottom_total_list(pivot_df)
 
-        # HTML生成前に一旦保存
-        html_table = pivot_df.to_html(
-            classes="table is-striped is-size-6 is-narrow is-hoverable repair-table",
-            index=False,
-            border=0,
-            escape=False,
-        )
-        context["html_table"] = html_table
+        context.update({"repair_plan_list": values_list, "year": header_list, "total": total})
 
         return context
-
-    # ------------------------------------------------------------
-    # 以下は、pandasのto_htmlを使わない従来の方法での実装例
-    # ------------------------------------------------------------
-
-    # template_name = "repair_plan/table/repairplan_pandas_test.html"
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-
-    #     # ----------------------
-    #     # バージョンの決定
-    #     # ----------------------
-    #     ver = self.kwargs.get("version") or self.request.GET.get("version")
-    #     latest_version, is_manager = get_latest_version(self.request.user)
-    #     ver = ver or latest_version
-
-    #     if not ver:
-    #         return context
-
-    #     # kwargsに"ver"を追加
-    #     form_kwargs = {"ver": ver}
-    #     context["form"] = RepairPlanListForm(**form_kwargs)
-
-    #     # 1. 修繕計画データからpandasのデータフレーム（DF)を作成
-    #     df = get_pandas_table_data(ver)
-
-    #     # 2. DFを工事種別でソートしてからピボットテーブルを作成
-    #     pivot_df = build_pivot(df)
-
-    #     # 10. ピボットテーブルに合計行を追加
-    #     pivot_df, yearly_total = add_totals(pivot_df)
-
-    #     repair_plan_data = build_repair_plan_data(pivot_df, yearly_total)
-
-    #     context.update(repair_plan_data)
-
-    #     return context
