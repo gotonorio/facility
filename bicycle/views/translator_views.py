@@ -41,11 +41,20 @@ class BicycleContractImportView(PermissionRequiredMixin, FormView):
         b_list = BicycleSpace.objects.get_bicycle_space(year, month, "").values_list(
             "no", "room_number", "status_of_use"
         )
-        result_ctx["bicycle_list"] = list(b_list)
+        qs_data = list(b_list)
+        result_ctx["bicycle_list"] = qs_data
 
-        # 登録成功時の処理
-        msg = f"{year}年{month}月の{kind}データの取り込みが完了しました。"
-        messages.success(self.request, msg)
+        # チェック
+        chk_list = []
+        for i, row in enumerate(result_ctx["data_list"]):
+            if row[4] == "契約中" and qs_data[i][2] != "使用中":
+                chk_list.append(row)
+
+        result_ctx["difference_list"] = chk_list
+
+        # # 登録成功時の処理
+        # msg = f"{year}年{month}月の{kind}データの取り込みが完了しました。"
+        # messages.success(self.request, msg)
 
         return self.render_to_response(self.get_context_data(form=form, **result_ctx))
 

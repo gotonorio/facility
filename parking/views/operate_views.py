@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
+from django.utils.http import urlencode
 from django.views.generic import FormView, UpdateView
 from parking.forms import MonthlyProcessingForm, ParkingUpdateForm
 from parking.models import ParkingSpace
@@ -54,7 +55,11 @@ class ParkingUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = "parking.add_parkingspace"
 
     def get_success_url(self):
-        return reverse(
-            "parking:fig",
-            kwargs={"year": self.object.payment_date.year, "month": self.object.payment_date.month},
+        base_url = reverse("parking:fig")
+        params = urlencode(
+            {
+                "year": self.object.payment_date.year,
+                "month": self.object.payment_date.month,
+            }
         )
+        return f"{base_url}?{params}"

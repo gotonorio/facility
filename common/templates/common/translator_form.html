@@ -119,7 +119,6 @@
             <tr>
               <th class="has-text-centered">区画番号</th>
               <th class="has-text-centered">タイプ</th>
-              <th class="has-text-centered">使用料</th>
               <th class="has-text-centered">部屋番号</th>
               <th class="has-text-centered">状態</th>
             </tr>
@@ -129,7 +128,6 @@
             <tr>
               <td class="has-text-left">{{ line.0 }} </td>
               <td class="has-text-right">{{ line.1}}</td>
-              <td class="has-text-right">{{ line.2|intcomma}}</td>
               <td class="has-text-right">{{ line.3}}</td>
               <td class="has-text-right">{{ line.4}}</td>
             </tr>
@@ -172,6 +170,33 @@
               {% else %}
                 <td class="has-text-centered">{{list.2}}</td>
               {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class='column is-4'>
+      <div class="content has-text-centered">
+        <h5>差分</h5>
+      </div>
+      <div class="table-container">
+        <table class="table table_center_nowrap is-striped is-narrow">
+          <thead>
+            <tr>
+              <th class="has-text-centered">区画番号</th>
+              <th class="has-text-centered">タイプ</th>
+              <th class="has-text-centered">部屋番号</th>
+              <th class="has-text-centered">状態</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in difference_list %}
+            <tr>
+              <td class="has-text-left">{{ row.0 }} </td>
+              <td class="has-text-right">{{ row.1}}</td>
+              <td class="has-text-right">{{ row.3}}</td>
+              <td class="has-text-right">{{ row.4}}</td>
             </tr>
             {% endfor %}
           </tbody>

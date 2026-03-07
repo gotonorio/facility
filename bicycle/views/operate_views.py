@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
+from django.utils.http import urlencode
 from django.views.generic import FormView, UpdateView
 
 
@@ -23,9 +24,14 @@ class BicycleSpaceUpdateView(PermissionRequiredMixin, UpdateView):
     raise_exception = True
 
     def get_success_url(self):
-        return reverse(
-            "bicycle:list", kwargs={"year": self.object.date.year, "month": self.object.date.month}
+        base_url = reverse("bicycle:list")
+        params = urlencode(
+            {
+                "year": self.object.date.year,
+                "month": self.object.date.month,
+            }
         )
+        return f"{base_url}?{params}"
 
 
 class MonthlyProcessingView(PermissionRequiredMixin, FormView):
