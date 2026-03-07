@@ -1,6 +1,6 @@
 from django.urls import path
 
-from bicycle.views import display_views, operate_views
+from bicycle.views import display_views, operate_views, translator_views
 
 app_name = "bicycle"
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
         operate_views.MonthlyProcessingView.as_view(),
         name="monthly_process",
     ),
+    path("translator_test/", translator_views.BicycleContractImportView.as_view(), name="translator_test"),
 ]

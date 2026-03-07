@@ -23,7 +23,7 @@ STATUS_OF_USE = (
 
 
 class BicycleSpaceQuerySet(models.QuerySet):
-    """駐車場スペースのQuerySet
+    """駐輪場スペースのQuerySet
     - querysetを返すメソッドを定義（フィルタリングや集計など）
     - Managerクラスが呼び出す
     """

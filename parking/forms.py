@@ -1,8 +1,7 @@
+from common.forms.base_form import YearMonthForm
 from django import forms
 
-# from facility.forms import YearMonthForm
-from common.forms.base_form import YearMonthForm
-from parking.models import ParkingSpace, ParkingType
+from parking.models import ParkingSpace
 
 ORDER_CHOICES = (
     ("no", "No"),
@@ -41,30 +40,22 @@ class ParkingUpdateForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         name = cleaned_data.get("name")
-        room = cleaned_data.get("room_number")
+        room = cleaned_data.get("room_number", 0)
         status = cleaned_data.get("status_of_use")
         no = cleaned_data.get("no")
 
         # 整合性チェック
         if room == 0 and status not in ["空き", "使用中止"]:
-            raise forms.ValidationError(
-                f"駐車場 No.{no}の「部屋番号」を入力してください。"
-            )
+            raise forms.ValidationError(f"駐車場 No.{no}の「部屋番号」を入力してください。")
 
         if name is None and status not in ["空き", "使用中止"]:
-            raise forms.ValidationError(
-                f"駐車場 No.{no}の「契約者」を入力してください。"
-            )
+            raise forms.ValidationError(f"駐車場 No.{no}の「契約者」を入力してください。")
 
         if status == "空き" and room > 0:
-            raise forms.ValidationError(
-                f"使用状況が「空き」なら部屋番号{room}は0にしてください。"
-            )
+            raise forms.ValidationError(f"使用状況が「空き」なら部屋番号{room}は0にしてください。")
 
         if status == "空き" and name is not None:
-            raise forms.ValidationError(
-                "使用状況が「空き」なら契約者は「空白」にしてください。"
-            )
+            raise forms.ValidationError("使用状況が「空き」なら契約者は「空白」にしてください。")
 
         return cleaned_data
 
@@ -79,9 +70,7 @@ class ParkingUpdateForm(forms.ModelForm):
             "comment",
         )
         widgets = {
-            "no": forms.NumberInput(
-                attrs={"class": "input", "readonly": True, "style": "width: 12ch"}
-            ),
+            "no": forms.NumberInput(attrs={"class": "input", "readonly": True, "style": "width: 12ch"}),
             "name": forms.TextInput(
                 attrs={
                     "class": "input",
@@ -89,9 +78,7 @@ class ParkingUpdateForm(forms.ModelForm):
                     "style": "width: 24ch",
                 },
             ),
-            "room_number": forms.NumberInput(
-                attrs={"class": "input", "style": "width: 12ch"}
-            ),
+            "room_number": forms.NumberInput(attrs={"class": "input", "style": "width: 12ch"}),
             "payment_date": forms.DateInput(
                 attrs={"class": "input", "readonly": True, "style": "width: 16ch"}
             ),
