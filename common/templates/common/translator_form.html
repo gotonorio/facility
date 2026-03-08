@@ -108,101 +108,103 @@
   </form>
   <br>
   {# 結果表示 #}
-  <div class='columns'>
-    <div class='column is-4'>
-      <div class="content">
-        <h4>クラセルの共用設備データ</h4>
+  {% if check_list %}
+    <div class='columns'>
+      <div class='column is-4'>
+        <div class="content">
+          <h4>クラセルの共用設備データ</h4>
+        </div>
+        <div class="table-container">
+          <table class="table table_nowrap is-striped is-narrow is-responsible">
+            <thead>
+              <tr>
+                <th class="has-text-centered">区画番号</th>
+                <th class="has-text-centered">タイプ</th>
+                <th class="has-text-centered">部屋番号</th>
+                <th class="has-text-centered">状態</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for line in data_list %}
+              <tr>
+                <td class="has-text-left">{{ line.0 }} </td>
+                <td class="has-text-right">{{ line.1}}</td>
+                <td class="has-text-right">{{ line.3}}</td>
+                <td class="has-text-right">{{ line.4}}</td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td></td>
+                <td class="has-text-right">合計</td>
+                <td class="has-text-right">{{total| intcomma}}</td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="table-container">
-        <table class="table table_nowrap is-striped is-narrow is-responsible">
-          <thead>
-            <tr>
-              <th class="has-text-centered">区画番号</th>
-              <th class="has-text-centered">タイプ</th>
-              <th class="has-text-centered">部屋番号</th>
-              <th class="has-text-centered">状態</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for line in data_list %}
-            <tr>
-              <td class="has-text-left">{{ line.0 }} </td>
-              <td class="has-text-right">{{ line.1}}</td>
-              <td class="has-text-right">{{ line.3}}</td>
-              <td class="has-text-right">{{ line.4}}</td>
-            </tr>
-            {% endfor %}
-            <tr>
-              <td></td>
-              <td class="has-text-right">合計</td>
-              <td class="has-text-right">{{total| intcomma}}</td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class='column is-3'>
+        <div class="content has-text-centered">
+          <h5>{{data_kind}}データ</h5>
+        </div>
+        <div class="table-container">
+          <table class="table table_center_nowrap is-striped is-narrow">
+            <thead>
+              <tr>
+                <th class="has-text-centered">区画番号</th>
+                {% if perms.parking.add_parkingspace %}
+                  <th class="has-text-centered">室番</th>
+                {% else %}
+                  <th class="has-text-centered">場所</th>
+                {% endif %}
+                <th class="has-text-centered">状況</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for list in bicycle_list %}
+              <tr>
+                <td class="has-text-centered">{{list.0}}</td>
+                <td class="has-text-centered">{{list.1}}</td>
+                {% if list.2 == '空き' %}
+                  <td class="has-text-centered"></td>
+                {% else %}
+                  <td class="has-text-centered">{{list.2}}</td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class='column is-4'>
+        <div class="content has-text-centered">
+          <h5>差分</h5>
+        </div>
+        <div class="table-container">
+          <table class="table table_center_nowrap is-striped is-narrow">
+            <thead>
+              <tr>
+                <th class="has-text-centered">区画番号</th>
+                <th class="has-text-centered">タイプ</th>
+                <th class="has-text-centered">部屋番号</th>
+                <th class="has-text-centered">状態</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in check_list %}
+              <tr>
+                <td class="has-text-left">{{ row.0 }} </td>
+                <td class="has-text-right">{{ row.1}}</td>
+                <td class="has-text-right">{{ row.3}}</td>
+                <td class="has-text-right">{{ row.4}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-    <div class='column is-3'>
-      <div class="content has-text-centered">
-        <h5>駐輪場</h5>
-      </div>
-      <div class="table-container">
-        <table class="table table_center_nowrap is-striped is-narrow">
-          <thead>
-            <tr>
-              <th class="has-text-centered">区画番号</th>
-              {% if perms.parking.add_parkingspace %}
-                <th class="has-text-centered">室番</th>
-              {% else %}
-                <th class="has-text-centered">場所</th>
-              {% endif %}
-              <th class="has-text-centered">状況</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for list in bicycle_list %}
-            <tr>
-              <td class="has-text-centered">{{list.0}}</td>
-              <td class="has-text-centered">{{list.1}}</td>
-              {% if list.2 == '空き' %}
-                <td class="has-text-centered"></td>
-              {% else %}
-                <td class="has-text-centered">{{list.2}}</td>
-              {% endif %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class='column is-4'>
-      <div class="content has-text-centered">
-        <h5>差分</h5>
-      </div>
-      <div class="table-container">
-        <table class="table table_center_nowrap is-striped is-narrow">
-          <thead>
-            <tr>
-              <th class="has-text-centered">区画番号</th>
-              <th class="has-text-centered">タイプ</th>
-              <th class="has-text-centered">部屋番号</th>
-              <th class="has-text-centered">状態</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for row in difference_list %}
-            <tr>
-              <td class="has-text-left">{{ row.0 }} </td>
-              <td class="has-text-right">{{ row.1}}</td>
-              <td class="has-text-right">{{ row.3}}</td>
-              <td class="has-text-right">{{ row.4}}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+  {% endif %}
 </div>
 {% endblock %}

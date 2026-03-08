@@ -5,9 +5,9 @@ from django import forms
 from common.forms.base_form import YearMonthForm
 
 KIND = (
-    ("駐車場契約", "駐車場契約"),
-    ("駐輪場契約", "駐輪場契約"),
-    ("バイク置場契約", "バイク置場契約"),
+    ("parking", "駐車場契約"),
+    ("bicycle", "自転車置場"),
+    ("motorcycle", "バイク置場契約"),
 )
 
 

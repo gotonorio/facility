@@ -38,6 +38,7 @@
     </div>
     <div class="navbar-end">
       {% if perms.parking.add_parkingspace %}
+        <a href="{% url 'parking:translator_test' %}" class="navbar-item">Kueasel チェック</a>
         <a class="navbar-item is-size-6" href="{% url 'parking:management'%}">管理者用</a>
       {% endif %}
       <a class="navbar-item " href="{% url 'register:facility' %}">戻る</a>

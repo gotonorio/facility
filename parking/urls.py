@@ -1,6 +1,6 @@
 from django.urls import path
 
-from parking.views import display_views, operate_views
+from parking.views import display_views, operate_views, translator_views
 
 app_name = "parking"
 urlpatterns = [
@@ -22,4 +22,5 @@ urlpatterns = [
     path("management/", display_views.ParkingSpaceManagementView.as_view(), name="management"),
     path("monthly/", operate_views.MonthlyProcessingView.as_view(), name="monthly"),
     path("update/<int:pk>", operate_views.ParkingUpdateView.as_view(), name="update"),
+    path("translator_test/", translator_views.ParkingContractCheckView.as_view(), name="translator_test"),
 ]

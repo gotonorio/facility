@@ -1,6 +1,5 @@
 import logging
 
-from bicycle.models import BicycleSpace
 from common.forms.translator_forms import KuraselTranslatorForm
 from common.services.translator_service import execute_translator
 from django.contrib import messages
@@ -9,11 +8,12 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.timezone import localtime
 from django.views.generic import FormView
+from parking.models import ParkingSpace
 
 logger = logging.getLogger(__name__)
 
 
-class BicycleContractImportView(PermissionRequiredMixin, FormView):
+class ParkingContractCheckView(PermissionRequiredMixin, FormView):
     template_name = "common/translator_form.html"
     form_class = KuraselTranslatorForm
     permission_required = "parking.add_parkingspace"
@@ -45,7 +45,7 @@ class BicycleContractImportView(PermissionRequiredMixin, FormView):
             return self.render_to_response(self.get_context_data(form=form, **result_ctx))
 
         # 自転車置場データ（区画番号、部屋番号、使用状況）の取込み
-        b_list = BicycleSpace.objects.get_bicycle_space(year, month, "").values_list(
+        b_list = ParkingSpace.objects.get_parking_space(year, month, "").values_list(
             "no", "room_number", "status_of_use"
         )
         qs_data = list(b_list)
@@ -58,7 +58,5 @@ class BicycleContractImportView(PermissionRequiredMixin, FormView):
                 chk_list.append(row)
 
         result_ctx["check_list"] = chk_list
-        if chk_list == []:
-            messages.info(self.request, "クラセルとの誤差はありません。")
 
         return self.render_to_response(self.get_context_data(form=form, **result_ctx))
