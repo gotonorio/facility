@@ -65,10 +65,15 @@ def execute_translator(form_data):
     month = form_data["month"]
     kind = form_data["kind"]
 
+    context_result = {
+        "year": year,
+        "month": month,
+        "error_message": "",
+    }
+
     try:
         # 1. テキスト解析
         data_kind, data_list = translate_kurasel_text(form_data["note"])
-        logger.debug(data_kind)
         chk_kind = False
         if data_kind == kind:
             chk_kind = True
@@ -76,16 +81,23 @@ def execute_translator(form_data):
         # 2. 合計計算
         total = sum(int(d[2]) for d in data_list if d[4] != "空き")
 
-        context_result = {
-            "year": year,
-            "month": month,
-            "chk_kind": chk_kind,
-            "data_list": data_list,
-            "data_kind": data_kind,
-            "total": total,
-        }
+        context_result["chk_kind"] = chk_kind
+        context_result["data_list"] = data_list
+        context_result["data_kind"] = data_kind
+        context_result["total"] = total
 
-    except ValueError:
-        return {}
+        # context_result = {
+        #     "year": year,
+        #     "month": month,
+        #     "chk_kind": chk_kind,
+        #     "data_list": data_list,
+        #     "data_kind": data_kind,
+        #     "total": total,
+        #     "error_message": "",
+        # }
 
-    return context_result
+    except ValueError as e:
+        context_result["error_message"] = str(e)
+        return False, context_result
+
+    return True, context_result

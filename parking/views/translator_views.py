@@ -29,16 +29,17 @@ class ParkingContractCheckView(PermissionRequiredMixin, FormView):
 
     def form_valid(self, form):
         # クラセルの共用設備データ取込み（Service関数の実行）
-        result_ctx = execute_translator(form.cleaned_data)
+        rtn, result_ctx = execute_translator(form.cleaned_data)
 
-        if result_ctx:
+        if rtn:
             # ここでは result_ctx が辞書であることが確定するので警告も出ません
             year = result_ctx["year"]
             month = result_ctx["month"]
             chk_kind = result_ctx["chk_kind"]
         else:
             # 失敗した時の処理（メッセージを表示するなど）
-            messages.error(self.request, "テキストの解析に失敗しました。")
+            messages.error(self.request, result_ctx["error_message"])
+            return self.render_to_response(self.get_context_data(form=form, **result_ctx))
 
         if not chk_kind:
             messages.error(self.request, "共用設備区分確認してください。")
@@ -58,5 +59,7 @@ class ParkingContractCheckView(PermissionRequiredMixin, FormView):
                 chk_list.append(row)
 
         result_ctx["check_list"] = chk_list
+        if chk_list == []:
+            messages.info(self.request, "クラセルとの誤差はありません。")
 
         return self.render_to_response(self.get_context_data(form=form, **result_ctx))
