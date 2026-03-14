@@ -62,5 +62,7 @@ class ParkingContractCheckView(PermissionRequiredMixin, FormView):
         result_ctx["check_list"] = chk_list
         if chk_list == []:
             messages.info(self.request, "クラセルとの誤差はありません。")
+        else:
+            messages.error(self.request, "クラセルとの差異があるようです。")
 
         return self.render_to_response(self.get_context_data(form=form, **result_ctx))
