@@ -20,12 +20,18 @@ class ParkingContractCheckView(PermissionRequiredMixin, FormView):
     success_url = reverse_lazy("bicycle:list")
 
     def get_initial(self):
-        # GETパラメータからの年月取得をここに集約
+        """フォームの初期値を設定する"""
         now = localtime(timezone.now())
         return {
             "year": self.request.GET.get("year", now.year),
             "month": self.request.GET.get("month", now.month),
         }
+
+    def get_context_data(self, **kwargs):
+        """templateファイルに「title」変数を渡す"""
+        context = super().get_context_data(**kwargs)
+        context["title"] = "駐車場"
+        return context
 
     def form_valid(self, form):
         # クラセルの共用設備データ取込み（Service関数の実行）
@@ -35,14 +41,9 @@ class ParkingContractCheckView(PermissionRequiredMixin, FormView):
             # ここでは result_ctx が辞書であることが確定するので警告も出ません
             year = result_ctx["year"]
             month = result_ctx["month"]
-            chk_kind = result_ctx["chk_kind"]
         else:
             # 失敗した時の処理（メッセージを表示するなど）
             messages.error(self.request, result_ctx["error_message"])
-            return self.render_to_response(self.get_context_data(form=form, **result_ctx))
-
-        if not chk_kind:
-            messages.error(self.request, "共用設備区分確認してください。")
             return self.render_to_response(self.get_context_data(form=form, **result_ctx))
 
         # 自転車置場データ（区画番号、部屋番号、使用状況）の取込み

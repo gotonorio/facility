@@ -5,18 +5,15 @@ from django import forms
 from common.forms.base_form import YearMonthForm
 
 KIND = (
-    ("parking", "駐車場契約"),
+    ("parking", "駐車場"),
     ("bicycle", "自転車置場"),
-    ("motorcycle", "バイク置場契約"),
+    ("motorcycle", "バイク置場"),
 )
 
 
 class KuraselTranslatorForm(YearMonthForm):
     """クラセルデータ取り込み用ベースForm"""
 
-    kind = forms.ChoiceField(
-        label="共用設備区分", widget=forms.Select(attrs={"class": "select-css"}), choices=KIND
-    )
     note = forms.CharField(
         widget=forms.Textarea(
             attrs={
