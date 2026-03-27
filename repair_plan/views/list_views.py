@@ -1,9 +1,8 @@
 import logging
 
-import pandas as pd
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView
 from repair_plan.forms import RepairPlanListForm
 from repair_plan.models import KoujiName
 from repair_plan.services.list_service import (

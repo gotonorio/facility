@@ -5,7 +5,7 @@ from repair_plan.models import MasterPlan
 
 class RepairPlanBaseForm(forms.Form):
     """修繕計画表示用のベースForm
-    - widgetは継承先で設定する
+    querysetとwidgetは継承先の__init__()で設定する
     """
 
     version = forms.ModelChoiceField(
