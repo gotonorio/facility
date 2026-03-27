@@ -60,20 +60,68 @@ https://github.com/chartjs/chartjs-adapter-date-fns
     <h4>長期修繕計画シミュレータ</h4>
   </div>
 
-  <form method='GET' enctype='multipart/form-data' style="width:240px;" class="narrow_spacing">
+  <form method='GET' enctype='multipart/form-data'>
     {{ form.non_field_errors }}
-    {% for field in form %}
-      <div class='field'>
+    {% comment %}計画Ver{% endcomment %}
+    <div class='control'>
+      <div class='label'>{{ form.masterplan_ver.label_tag }}</div>
+      {{ form.masterplan_ver.label_tagversion.errors }}
+      <div class='my_field'>{{ form.masterplan_ver }}</div>
+    </div>
+
+    <div class="columns">
+      <div class="column">
+        {% comment %} 経費率 {% endcomment %}
         <div class='control'>
-          <div class='label'>{{ field.label_tag }}</div>
-          {% if field.help_text %}
-            <span class='helptext'>{{ field.help_text }}</span>
-          {% endif %}
-          {{ field.errors }}
-          <div class='my_field'>{{ field }}</div>
+          <div class='label'>{{ form.expense_rate.label_tag }}</div>
+          {{ form.expense_rate.errors }}
+          <div class='my_field'>{{ form.expense_rate }}</div>
+        </div>
+        {% comment %} 修繕費収入率 {% endcomment %}
+        <div class='control'>
+          <div class='label'>{{ form.shuuzenhi_rate.label_tag }}</div>
+          {{ form.shuuzenhi_rate.errors }}
+          <div class='my_field'>{{ form.shuuzenhi_rate }}</div>
+        </div>
+        {% comment %} 物価指数 {% endcomment %}
+        <div class='control'>
+          <div class='label'>{{ form.cpi_flg.label_tag }}</div>
+          {{ form.cpi_flg.errors }}
+          <div class='my_field'>{{ form.cpi_flg }}</div>
         </div>
       </div>
-    {% endfor %}
+      <div class="column">
+        {% comment %} 消費税率 {% endcomment %}
+        <div class='control'>
+          <div class='label'>{{ form.sales_tax_rate.label_tag }}</div>
+          {{ form.sales_tax_rate.errors }}
+          <div class='my_field'>{{ form.sales_tax_rate }}</div>
+        </div>
+        {% comment %} 駐車場収入率 {% endcomment %}
+        <div class='control'>
+          <div class='label'>{{ form.parking_rate.label_tag }}</div>
+          {{ form.parking_rate.errors }}
+          <div class='my_field'>{{ form.parking_rate }}</div>
+        </div>
+        {% if is_manager %}
+          {% comment %} 完了工事を考慮 {% endcomment %}
+          <div class='control'>
+            <div class='label'>{{ form.include_actual_cost.label_tag }}</div>
+            {{ form.include_actual_cost.errors }}
+            <div class='my_field'>{{ form.include_actual_cost }}</div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="column">
+      </div>
+      <div class="column">
+      </div>
+      <div class="column">
+      </div>
+      <div class="column">
+      </div>
+
+    </div>
     <br>
     <div class="content">
       <button type="submit" class="button is-success is-size-7">実行</button>

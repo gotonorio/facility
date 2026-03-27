@@ -24,14 +24,16 @@ def calc_expense_list(ver, expense_rate, sales_tax_rate, cpi_flg, include_actual
     """長期修繕計画支出額を年度毎に集計したリストを返す
     - 完了工事の計画支出を0とする。
     - F()式の列が異なるデータ型(integer,float)のため、ExpressionWrapper()を使う。
-    - (1) values().annotate()（SQLのBROUP BY）で計画支出金額、実支出金額の行集計を行う。
+    - (1) values().annotate()（SQLのGROUP BY）で計画支出金額、実支出金額の行集計を行う。
     - (2) values().annotate()で完了した工事について修繕計画の行集計を行う。
     - (3) 年度毎に「予定支出金額」から「実支出金額」を差し引く処理を行う。
     """
     # (1) 長期修繕計画の「予定支出額」と「完了工事の実支出額」を年度毎に集計したリスト
     if include_actual_cost:
+        # 完了工事を考慮する場合、完了工事の合計
         actual_cost_expr = Sum("actual_cost")
     else:
+        # 完了工事を考慮しない場合、完了工事の合計は0とする
         actual_cost_expr = Value(0, output_field=IntegerField())
 
     plan_qs = (
@@ -47,7 +49,7 @@ def calc_expense_list(ver, expense_rate, sales_tax_rate, cpi_flg, include_actual
     plan_list = list(plan_qs)
 
     # （1-1）支出額に物価指数を反映する。
-    if cpi_flg == "on":
+    if cpi_flg:
         plan_list = calc_cpi(plan_list)
 
     # (2) 完了した工事の計画支出額を年度毎に集計したリスト

@@ -1,8 +1,8 @@
 import logging
 
 from django import forms
+from repair_plan.models import MasterPlan
 
-from repair_plan.models import KoujiName, MasterPlan
 from repair_plan_simulator.models import ConsumerPriceIndex, Shuuzenhi_income
 
 logger = logging.getLogger(__name__)
@@ -15,6 +15,9 @@ class SimulateDataForm(forms.Form):
         queryset=MasterPlan.objects.none(),
         label="計画 Ver.",
         required=True,
+        empty_label=None,
+        # to_field_name を指定して、value を ID 以外（version）にする
+        to_field_name="version",
         widget=forms.Select(attrs={"class": "select-css is-size-6"}),
     )
     # 経費率
@@ -53,38 +56,17 @@ class SimulateDataForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        """
-        forms.Formの定義時に initial=Model.objects.get(...) のように DBに即時アクセスすると、
-        migrate時にDBが存在しないためエラーが発生する。--> 遅延評価するため__init__()で処理する。
-        only_managerがFalseなら、verの初期値は設定しない。
-        """
-        # ビューから渡された引数を取り出す（親クラスに渡す前に消す必要がある）
         self.is_manager = kwargs.pop("is_manager", False)
-        super(SimulateDataForm, self).__init__(*args, **kwargs)
-        try:
-            if self.is_manager:
-                # 管理者には全ての修繕計画versionを表示。
-                versions = (
-                    KoujiName.objects.values_list("version__version", flat=True)
-                    .order_by("-version")
-                    .distinct()
-                )
-                self.fields["masterplan_ver"].choices = [(v, v) for v in versions]
-            else:
-                # 管理者以外にはonly_managerフラグがFalseの修繕計画versionを表示。
-                versions = (
-                    KoujiName.objects.filter(version__only_manager=False)
-                    .values_list("version__version", flat=True)
-                    .order_by("-version")
-                    .distinct()
-                )
-                self.fields["masterplan_ver"].choices = [(v, v) for v in versions]
-        except Exception as e:
-            # DB未マイグレート or モデルが空の時でもエラーにしない
-            logger.error(f"RepairPlanListForm init error: {e}")
-            self.fields["masterplan_ver"].choices = []
+        super().__init__(*args, **kwargs)
 
-        # cpi_flgの初期値をTrueに設定
+        # choices ではなく queryset を差し替える
+        qs = MasterPlan.objects.all().order_by("-version")
+        if not self.is_manager:
+            qs = qs.filter(only_manager=False)
+
+        self.fields["masterplan_ver"].queryset = qs
+
+        # 初期値の設定（初期表示時のみ適用したい場合）
         self.fields["cpi_flg"].initial = True
 
 
@@ -129,9 +111,7 @@ class ShuuzenhiIncomeCreateForm(forms.ModelForm):
                     "class": "select-css",
                 }
             ),
-            "comment": forms.Textarea(
-                attrs={"class": "textarea", "rows": "4", "required": False}
-            ),
+            "comment": forms.Textarea(attrs={"class": "textarea", "rows": "4", "required": False}),
             # "comment": forms.TextInput(
             #     attrs={
             #         "class": "input",
@@ -169,9 +149,7 @@ class CPICreateForm(forms.ModelForm):
                     "class": "input",
                 }
             ),
-            "comment": forms.Textarea(
-                attrs={"class": "textarea", "rows": "4", "required": False}
-            ),
+            "comment": forms.Textarea(attrs={"class": "textarea", "rows": "4", "required": False}),
         }
 
     # 入力フォームの初期値を設定するため
