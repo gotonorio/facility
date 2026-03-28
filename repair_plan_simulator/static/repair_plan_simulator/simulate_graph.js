@@ -18,13 +18,12 @@ function clearCanvas(){
 * 多次元配列による修繕費収入グラフ表示 by N.Goto
 ****************************************************************
 */
-function simulateShuuzenhiChart2(rawData) {
+function simulateShuuzenhiChart2(rawData, title) {
     
     // Chart.js用にデータを整形（金額を万円単位に変換）
     const labels = rawData.map(item => item[0]);      // 年
     const incomeData = rawData.map(item => Math.floor(item[1] / 10000));  // 収入累計（万円単位）
     const expenseData = rawData.map(item => Math.floor(item[2] / 10000)); // 支出累計（万円単位）
-
     // グラフの描画
     const ctx = document.getElementById('simulate_graph').getContext('2d');
     const myChart = new Chart(ctx, {
@@ -94,7 +93,8 @@ function simulateShuuzenhiChart2(rawData) {
             plugins: {
                 title: {
                     display: true,
-                    text: '長期修繕計画 収支累計推移',
+                    // text: '長期修繕計画 収支累計推移',
+                    text: title + '年版 長期修繕計画 収支累計推移',
                     font: {
                         size: 14
                     }

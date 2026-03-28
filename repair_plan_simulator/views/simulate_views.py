@@ -60,13 +60,13 @@ class SimulateView(LoginRequiredMixin, ListView):
             # ver_str として渡す必要がある場合は str(ver_val) などに変換
             simulate_data = self.get_simulation_results(str(ver_val), sim_data)
             context["simulate_data"] = simulate_data
+            context["version"] = int(ver_val)
 
             # グラフ出力が必要な場合
             if self.request.GET.get("export") == "true":
                 self.handle_graph_export(simulate_data)
 
         context["form"] = form
-        context["version"] = int(ver_val)
         context["is_manager"] = self.is_manager
 
         return context

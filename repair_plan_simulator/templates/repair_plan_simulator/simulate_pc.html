@@ -57,7 +57,7 @@ https://github.com/chartjs/chartjs-adapter-date-fns
 <div class="container  is-fluid">
   <div class="content">
     <br>
-    <h4>長期修繕計画シミュレータ</h4>
+    <h4>{{version}}年版 長期修繕計画シミュレータ</h4>
   </div>
 
   <form method='GET' enctype='multipart/form-data'>
@@ -202,7 +202,7 @@ https://github.com/chartjs/chartjs-adapter-date-fns
   </script>
   {% endfor %}
   <script type="text/javascript">
-    simulateShuuzenhiChart2(graph_data);
+    simulateShuuzenhiChart2(graph_data, "{{version}}");
   </script>
   {% endif %}
   <br>
