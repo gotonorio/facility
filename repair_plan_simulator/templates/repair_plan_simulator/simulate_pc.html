@@ -31,8 +31,10 @@ https://github.com/chartjs/chartjs-adapter-date-fns
   </div>
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      <a href="{% url 'repair_plan_simulator:except_list' %}" class="navbar-item" >除外工事の選定</a>
-      <a href="{% url 'repair_plan_simulator:simulate_data' %}" class="navbar-item">シミュレーション用データ</a>
+      {% if perms.repair_plan.add_koujiname %}
+        <a href="{% url 'repair_plan_simulator:except_list' %}" class="navbar-item" >除外工事の選定</a>
+        <a href="{% url 'repair_plan_simulator:simulate_data' %}" class="navbar-item">シミュレーション用データ</a>
+      {% endif %}
     </div>
     <div class="navbar-end">
       <a class="navbar-item" href="{% url 'register:repair_plan' %}">戻る</a>
