@@ -55,7 +55,7 @@
 <br>
 <div class="container is-fluid">
   <div class="content">
-    <h4>{{title}} 駐輪場 新規契約状況</h4>
+    <h4>{{title}} 駐輪場 新規契約一覧</h4>
   </div>
   <div class="table-container">
     <table class="table table_nowrap is-striped is-narrow">
@@ -80,5 +80,32 @@
     </table>
   </div>
   <br>
+  {% if new_cancel %}
+  <div class="content">
+    <h4>{{title}} 駐輪場 解約一覧</h4>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">場所</th>
+          <th class="has-text-centered">駐輪番号</th>
+          <th class="has-text-centered">室番号</th>
+          <th class="has-text-centered">状況</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for space in new_cancel %}
+        <tr>
+          <td class="has-text-centered">{{space.location}}</td>
+          <td class="has-text-centered">{{space.no}}</td>
+          <td class="has-text-centered">{{space.room_number}}</td>
+          <td class="has-text-centered">解約</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}

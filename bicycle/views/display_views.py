@@ -12,6 +12,7 @@ from bicycle.services.display_service import (
 from common.forms.base_form import YearMonthForm
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.timezone import localtime
 from django.views.generic import ListView, TemplateView
@@ -103,7 +104,9 @@ class NewContractView(PermissionRequiredMixin, ListView):
     permission_required = "parking.add_parkingspace"
     raise_exception = True
 
-    def get_new_usage_diff(self, this_year, this_month):
+    def get_new_contact(self, this_year, this_month):
+        """当月に新規解約されたデータを返す"""
+
         # 1. 当月と前月の初日を取得
         this_date = date(this_year, this_month, 1)
         prev_date = this_date - relativedelta(months=1)
@@ -125,7 +128,36 @@ class NewContractView(PermissionRequiredMixin, ListView):
             prev_status = prev_map.get((space.location, space.no))
 
             # 前月が「空き」だった場合のみリストに追加
-            if prev_status == "空き":
+            if prev_status == "空き" or prev_status == "契約予定":
+                diff_results.append(space)
+
+        return diff_results
+
+    def get_new_cancel(self, this_year, this_month):
+        """当月に解約されたデータを返す"""
+
+        # 1. 当月と前月の初日を取得
+        this_date = date(this_year, this_month, 1)
+        prev_date = this_date - relativedelta(months=1)
+
+        # 2. 前月の「使用中」データを取得
+        previous_used_spaces = BicycleSpace.objects.filter(
+            date__year=prev_date.year, date__month=prev_date.month
+        ).filter(Q(status_of_use="使用中") | Q(status_of_use="解約予定"))
+
+        # 3. 当月のデータをすべて取得して、照合用の辞書を作成
+        # キーを (場所, No) のタプルにすることで一意に特定します
+        current_spaces = BicycleSpace.objects.filter(date__year=this_year, date__month=this_month)
+        current_map = {(obj.location, obj.no): obj.status_of_use for obj in current_spaces}
+
+        # 4. 差分抽出
+        diff_results = []
+        for space in previous_used_spaces:
+            # 当月のステータスを確認
+            current_status = current_map.get((space.location, space.no))
+
+            # 当月が「空き」だった場合のみリストに追加
+            if current_status == "空き":
                 diff_results.append(space)
 
         return diff_results
@@ -138,7 +170,11 @@ class NewContractView(PermissionRequiredMixin, ListView):
         year = self.kwargs.get("year") or self.request.GET.get("year", local_now.year)
         month = self.kwargs.get("month") or self.request.GET.get("month", local_now.month)
 
-        context["new_contract"] = self.get_new_usage_diff(int(year), int(month))
         context["form"] = BicycleSpaseListForm(initial={"year": year, "month": month})
+
+        # 新規契約
+        context["new_contract"] = self.get_new_contact(int(year), int(month))
+        # 解約
+        context["new_cancel"] = self.get_new_cancel(int(year), int(month))
 
         return context
