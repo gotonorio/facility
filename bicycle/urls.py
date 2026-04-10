@@ -16,4 +16,5 @@ urlpatterns = [
         name="monthly_process",
     ),
     path("translator_test/", translator_views.BicycleContractImportView.as_view(), name="translator_test"),
+    path("new_contract/", display_views.NewContractView.as_view(), name="new_contract"),
 ]

@@ -1,0 +1,84 @@
+{% extends "common/base.html" %}
+{% load static %}
+{% load facility_extras %}
+{% load humanize %}
+
+{% block title %}
+駐輪場 新規追加
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+      <div class="navbar-item">
+        <form action="" method="get">
+          <div class="field has-addons">
+            <div class="control"> {{form.year}} </div>
+            <!-- bulmaのselect要素はnavbar内では少し特殊なようだ -->
+            <div class="control"> <div class="select is-small"> {{form.month}} </div></div>
+            <div class="control">
+              <button type="submit" class="button is-primary is-small">表示</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="navbar-end">
+      <a class="navbar-item" href="{% url 'bicycle:list' %}">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<!-- メッセージフレームワーク -->
+{% if messages %}
+<div class="container" style="margin-top:1rem;">
+    <div class="notification is-info">
+        <button class="delete" type="button"></button>
+        {% for message in messages %}
+        <p> {{ message }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>{{title}} 駐輪場 新規契約状況</h4>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow">
+      <thead>
+        <tr>
+          <th class="has-text-centered">場所</th>
+          <th class="has-text-centered">駐輪番号</th>
+          <th class="has-text-centered">室番号</th>
+          <th class="has-text-centered">状況</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for space in new_contract %}
+        <tr>
+          <td class="has-text-centered">{{space.location}}</td>
+          <td class="has-text-centered">{{space.no}}</td>
+          <td class="has-text-centered">{{space.room_number}}</td>
+          <td class="has-text-centered">新規契約</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <br>
+</div>
+{% endblock %}
