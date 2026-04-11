@@ -21,6 +21,8 @@ class YearMonthForm(forms.Form):
 
     year = forms.IntegerField(
         label="西暦",
+        min_value=2023,  # 2023年からデータを入力
+        max_value=2200,  # 2200年までマンションが続けばいいな
         widget=forms.NumberInput(
             attrs={
                 "style": "width:10ch",

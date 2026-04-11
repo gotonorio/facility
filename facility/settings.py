@@ -174,6 +174,11 @@ LOGIN_REDIRECT_URL = "register:mypage"
 LOGOUT_REDIRECT_URL = "register:login"
 # ブラウザを閉じたらログアウトさせる。
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# ログイン状態を維持する秒数（例：3600秒 = 1時間）
+SESSION_COOKIE_AGE = 3600
+# 操作するたびに有効期限を更新する場合（推奨：利便性重視）
+# これをTrueにすると、何か操作するたびにそこから1時間有効になります
+SESSION_SAVE_EVERY_REQUEST = True
 # バックアップ数
 BACKUP_NUM = 10
 # 数値の3桁カンマ

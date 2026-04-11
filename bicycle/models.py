@@ -1,5 +1,7 @@
 import logging
+from datetime import date
 
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.db import models
 from django.db.models import Count, Q
@@ -65,7 +67,10 @@ class BicycleSpaceQuerySet(models.QuerySet):
 
 
 class BicycleSpaceManager(models.Manager):
-    """駐輪場スペースのManager"""
+    """駐輪場スペースのManager
+    BicycleSpace.objects.関数名 で呼び出す
+    アンダースコアで始まる関数は内部関数
+    """
 
     # カスタムQuerySet（ParkingSpaceQuerySet）を指定
     def get_queryset(self):
@@ -77,6 +82,46 @@ class BicycleSpaceManager(models.Manager):
     def get_bicycle_incomehistory(self, year):
         """指定された年の収入履歴を返す"""
         return self.get_queryset().get_bicycle_incomehistory(year)
+
+    # 以下は駐輪場の新規契約・解約状況処理のため
+    def _get_status_map(self, target_date):
+        """指定した年月の { (location, no): status } マップを返す"""
+        spaces = self.filter(date__year=target_date.year, date__month=target_date.month)
+        return {(s.location, s.no): s.status_of_use for s in spaces}
+
+    def _get_target_dates(self, year, month):
+        this_date = date(year, month, 1)
+        return this_date, this_date - relativedelta(months=1)
+
+    def get_new_contact(self, this_year, this_month):
+        """当月に新規契約されたデータを返す"""
+        this_date, prev_date = self._get_target_dates(this_year, this_month)
+
+        # 1. 当月の「使用中」をベースにする
+        current_used = self.filter(date=this_date, status_of_use="使用中")
+        # 2. 前月の状況マップを取得
+        prev_map = self._get_status_map(prev_date)
+
+        # 3. 判定
+        return [
+            space
+            for space in current_used
+            if prev_map.get((space.location, space.no)) in ["空き", "契約予定"]
+        ]
+
+    def get_new_cancel(self, this_year, this_month):
+        """当月に解約されたデータを返す"""
+        this_date, prev_date = self._get_target_dates(this_year, this_month)
+
+        # 1. 前月の「使用中・解約予定」をベースにする
+        prev_used = self.filter(date=prev_date).filter(
+            Q(status_of_use="使用中") | Q(status_of_use="解約予定")
+        )
+        # 2. 当月の状況マップを取得
+        current_map = self._get_status_map(this_date)
+
+        # 3. 判定
+        return [space for space in prev_used if current_map.get((space.location, space.no)) == "空き"]
 
 
 class BicycleSpace(models.Model):
