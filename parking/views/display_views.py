@@ -275,7 +275,7 @@ def generate_parking_maps_html(context_data):
         os.makedirs(settings.HTML_OUTPUT_ROOT, exist_ok=True)
 
         # 3. 書き出し
-        # 書き込みそのものが失敗した場合、ここで例外（Error）が発生します
+        # 書き込みそのものが失敗した場合、ここで例外（Error）が発生する
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(html_string)
 
