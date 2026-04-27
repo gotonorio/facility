@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.timezone import localtime
-from django.views.generic import ListView, TemplateView, View
+from django.views.generic import DetailView, ListView, TemplateView, View
 from parking.forms import ParkingSpaceFigForm
 from parking.models import ParkingSpace
 from parking.services.display_service import (
@@ -117,9 +117,11 @@ class ParkingFigView(PermissionRequiredMixin, TemplateView):
     def get_template_names(self):
         if self.request.user.has_perm("parking.add_parkingspace"):
             return ["parking/parking_fig_manager.html"]
+        elif self.request.user.has_perm("parking.view_parkingspace"):
+            return ["parking/parking_fig_director.html"]
         return ["parking/parking_fig.html"]
 
-    # get() はレスポンス制御だけを行い、データの取得は load_data() に分ける。
+    # get() はレスポンス制御とデータの取得を行う。
     def get(self, request, *args, **kwargs):
         year, month = resolve_year_month(
             self.kwargs.get("year"),
@@ -140,6 +142,7 @@ class ParkingFigView(PermissionRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        # 駐車場区画番号をキーとしたcontextデータの展開
         for item in self.qs:
             context[f"sect{item.no}"] = item
 
@@ -293,62 +296,10 @@ def generate_parking_maps_html(context_data):
         return False
 
 
-# class ParkingFigView(PermissionRequiredMixin, TemplateView):
-#     """空き駐車場の図解表示"""
+class ParkingDetailView(PermissionRequiredMixin, DetailView):
+    """directorグループ用の詳細表示View"""
 
-#     model = ParkingSpace
-#     context_object_name = "parkings"
-#     permission_required = "repair_plan.view_koujiname"
-
-#     def get_template_names(self):
-#         if self.request.user.has_perm("parking.add_parkingspace"):
-#             return ["parking/parking_fig_manager.html"]
-#         return ["parking/parking_fig.html"]
-
-#     # データの取得（HttpResponseを返す）
-#     def get(self, request, *args, **kwargs):
-#         local_now = localtime(timezone.now())
-#         year = kwargs.get("year") or request.GET.get("year", local_now.year)
-#         month = kwargs.get("month") or request.GET.get("month", local_now.month)
-#         self.mode = request.GET.get("mode")
-
-#         # データ取得（指定された年月のデータがない場合は最大年月のデータを返す）
-#         self.qs, self.year, self.month = get_parking_diagram_data(year, month)
-
-#         # querysetエラー処理でredirectするのはget()で行う。
-#         if not self.qs.exists():
-#             messages.info(request, "駐車場データが存在しません")
-#             return redirect("register:facility")
-
-#         # get_context_data()処処に
-#         return super().get(request, *args, **kwargs)
-
-#     # テンプレートで使う「辞書」の作成（Dictを返す）
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         for item in self.qs:
-#             context[f"sect{item.no}"] = item
-
-#         # 利用状況を取得する
-#         _, empty_num = ParkingSpace.objects.get_empty_space(self.year, self.month, "")
-#         num = ParkingSpace.objects.get_parking_space_num(self.year, self.month, "")
-
-#         context.update(
-#             {
-#                 "form": ParkingSpaceFigForm(initial={"year": self.year, "month": self.month}),
-#                 "title": f"{self.year}年{self.month}月度の駐車場：空き＝{empty_num}台/{num}台",
-#             }
-#         )
-
-#         # HTMLファイル出力は、当年月データまたは最新のデータを出力する。
-#         if self.mode == "export":
-#             # 出力ボタンから呼ばれた時の処理
-#             is_ok = generate_parking_maps_html(context)
-#             if is_ok:
-#                 messages.success(self.request, f"{self.year}年{self.month}月の駐車場状況図を保存しました")
-#             else:
-#                 messages.error(self.request, f"{self.year}年{self.month}月の駐車場状況図の出力に失敗しました")
-#         else:
-#             pass
-
-#         return context
+    model = ParkingSpace
+    template_name = "parking/parking_fig_detail.html"
+    permission_required = "parking.view_parkingspace"
+    # logger.debug(object.no)

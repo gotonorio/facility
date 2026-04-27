@@ -1,0 +1,66 @@
+{# https://stackoverflow.com/questions/39123348/how-to-pass-a-queryset-from-django-to-javascript-function #}
+{% extends "common/base.html" %}
+
+{% block title %}
+駐車場詳細
+{% endblock title %}
+
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+    </div>
+    <div class="navbar-end">
+      <a href="{% url 'parking:fig' %}" class="navbar-item">戻る</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+
+{% block content %}
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>契約者情報</h4>
+  </div>
+  <div class="table-container">
+    <table class="table table_nowrap is-striped is-narrow">
+      <tbody>
+        <tr>
+          <td class="has-text-left">区画No</td>
+          <td class="has-text-right">{{object.no}}</td>
+        </tr>
+        <tr>
+          <td class="has-text-left">駐車場タイプ</td>
+          <td class="has-text-right">{{object.parking_type}}</td>
+        </tr>
+        <tr>
+          <td class="has-text-left">契約者</td>
+          <td class="has-text-right">{{object.name}}</td>
+        </tr>
+        <tr>
+          <td class="has-text-left">部屋番号</td>
+          <td class="has-text-right">{{object.room_number}} 号室</td>
+        </tr>
+        <tr>
+          <td class="has-text-left">使用状況</td>
+          <td class="has-text-right">{{object.status_of_use}}</td>
+        </tr>
+        <tr>
+          <td class="has-text-left">備考</td>
+          <td class="has-text-right">{{object.comment}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}

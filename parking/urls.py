@@ -18,6 +18,7 @@ urlpatterns = [
         display_views.UtilizationRateView.as_view(),
         name="utilization_rate",
     ),
+    path("detail/<int:pk>", display_views.ParkingDetailView.as_view(), name="detail"),
     # 管理者用
     path("management/", display_views.ParkingSpaceManagementView.as_view(), name="management"),
     path("monthly/", operate_views.MonthlyProcessingView.as_view(), name="monthly"),
