@@ -63,9 +63,11 @@
           <th class="has-text-centered">工事名</th>
           {% if perms.repair_plan.add_koujiname %}
             <th class="has-text-centered">工事金額</th>
+          {% endif %}
+          {% if perms.parking.view_parkingspace %}
             <th class="has-text-centered">施工業者</th>
           {% endif %}
-          {% if perms.parking.add_parkingspace %}
+          {% if perms.repair_plan.add_koujiname %}
             <th class="has-text-centered">備考</th>
           {% endif %}
         </tr>
@@ -79,9 +81,11 @@
           <td class="has-text-left">{{rireki.koujimei}}</td>
           {% if perms.repair_plan.add_koujiname %}
             <td class="has-text-right">{{rireki.cost|intcomma}}</td>
+          {% endif %}
+          {% if perms.parking.view_parkingspace %}
             <td class="has-text-left is-size-7">{{rireki.constractor}}</td>
           {% endif %}
-          {% if perms.parking.add_parkingspace %}
+          {% if perms.repair_plan.add_koujiname %}
             <td class="has-text-left is-size-7">{{rireki.comment|markdown_to_html}}</td>
           {% endif %}
         </tr>
