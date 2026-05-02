@@ -165,7 +165,8 @@ class ParkingFigView(PermissionRequiredMixin, TemplateView):
 class ParkingFigExportView(PermissionRequiredMixin, View):
     """駐車場図のHTML出力専用View"""
 
-    permission_required = "repair_plan.add_koujiname"
+    # facility_manager以上が処理可能
+    permission_required = "parking.add_parkingspace"
 
     def get(self, request, *args, **kwargs):
         # 年月決定
