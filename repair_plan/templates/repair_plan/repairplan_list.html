@@ -24,9 +24,11 @@
         <form action="" method="get">
           <div class="field is-grouped">
             <!-- bulmaのselect要素はnavbar内では少し特殊でcontrolで包む必要がある -->
+            {% if request.user|is_in_group:'chairman' or request.user|is_in_group:'repair_plan_manager' %}
             <div class="control">
               <div class="select is-small"> {{form.version}} </div>
             </div>
+            {% endif %}
             <div class="control">
               <div class="select is-small"> {{form.koujitype}} </div>
             </div>

@@ -1,17 +1,10 @@
 
 .menubox {
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    padding: .5em .5em 0;
-    background-color:#000033;
-    color: white;
-    /* border: solid 1px;
-    margin-top: 2px;
-    margin-left: 10px;
-    padding: 10px;
+    border: solid 1px;
+    padding: 20px;
     position: relative;
     background-color:#000033;
-    border-radius: 0.5em; */
+    border-radius: 0.5em;
   }
   hr {
     border-style: none;
@@ -35,8 +28,8 @@
 /* https://developer.mozilla.org/ja/docs/Web/HTML/Element/details */ 
 details {
     border: 1px solid #aaa;
-    border-radius: 4px;
-    padding: .5em .5em 0;
+    border-radius: 0.5em;
+    padding: 0.5em;
     background-color:#000033;
     color: white;
 }

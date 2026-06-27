@@ -1,13 +1,18 @@
 {% extends "common/base.html" %}
-{# http://cccabinet.jpn.org/bootstrap4/components/navbar #}
+{% load static %}
+
 {% block title %}
-  設備管理ホーム
+  設備管理
 {% endblock %}
+
+{% block head %}
+  <link href="{% static 'common/mycss/mobile_menu.css' %}" rel="stylesheet">
+{% endblock head%}
 
 {% block navbar %}
 <nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item">【設備台帳】</a>
+    <a href="{% url 'register:mypage' %}" class="navbar-item">共用設備</a>
     <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
@@ -27,12 +32,11 @@
 <br>
 {% block content %}
 <br>
-<div class="container">
+<div class="container is-fluid">
   <section class="sectionbox">
     <details>
       <summary>消火器設備</summary>
       <a href="{% url 'shoukaki:list' %}" class="white_color" >消火器リスト</a>
-      <a href="{% url 'shoukaki:inspect' %}" class="white_color">点検消火器</a>
       <a href="{% url 'shoukaki:disposal' %}" class="white_color">廃棄消火器</a>
     </details>
     <br>
@@ -40,8 +44,6 @@
       <summary>駐車場設備</summary>
       <a href="{% url 'parking:list' %}" class="white_color">駐車場リスト</a>
       <a href="{% url 'parking:rirekilist' %}" class="white_color">収入履歴</a>
-      <hr class="divide">
-      <a href="#" class="white_color">一時利用(未完)</a>
     </details>
     <br>
     <details>

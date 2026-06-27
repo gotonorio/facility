@@ -204,7 +204,7 @@ class ParkingFigExportView(PermissionRequiredMixin, View):
         )
 
         # HTML生成
-        is_ok = generate_parking_maps_html(context)
+        is_ok = _generate_parking_maps_html(context)
 
         if is_ok:
             messages.success(request, f"{year}年{month}月の駐車場状況図を保存しました")
@@ -265,7 +265,7 @@ class IncomeRirekiView(PermissionRequiredMixin, ListView):
         return context
 
 
-def generate_parking_maps_html(context_data):
+def _generate_parking_maps_html(context_data):
     """駐車場図のHTMLを生成して共有領域に保存する関数"""
     try:
         # 1. HTMLを生成

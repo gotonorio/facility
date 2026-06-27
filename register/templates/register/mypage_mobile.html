@@ -1,78 +1,65 @@
 {% extends "common/base.html" %}
-
-{# Load custom template tags #}
-{% load facility_extras %}
-
-{# http://cccabinet.jpn.org/bootstrap4/components/navbar #}
+{% load static %}
 {% block title %}
-  設備管理ホーム
-{% endblock %}
+mobileホーム
+{% endblock title %}
+
+{% block head %}
+  <link href="{% static 'common/mycss/mobile_menu.css' %}" rel="stylesheet">
+{% endblock head%}
 
 {% block navbar %}
-<nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
+{# https://bulma.io/documentation/components/navbar/ #}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item">【SG】</a>
-    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+    <div class="navbar-item">メインメニュー</div>
+    {# ハンバーガアイコンのため以下の5行とbase.htmlでのjsスクリプトが必要 #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMypage">
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
     </a>
   </div>
-
-  <div id="navbarBasicExample" class="navbar-menu">
+  <div id="navbarMypage" class="navbar-menu">
     <div class="navbar-start">
     </div>
     <div class="navbar-end">
-      {% if request.user|is_in_group:'chairman' %}
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link is-size-6">管理者用</a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" href="{% url 'register:signup' %}">仮登録</a>
-            <a class="navbar-item" href="{% url 'register:user_list' %}">登録者一覧</a>
-            <a class="navbar-item" href="{% url 'register:pwd_update' user.pk %}">パスワード変更</a>
-          </div>
-        </div>
-      {% endif %}
       <div class="navbar-item">
         <form method="post" action="{% url 'register:logout' %}">
           {% csrf_token %}
-          <button type="submit">ログアウト</button>
+          <button type="submit" >ログアウト</button>
         </form>
       </div>
     </div>
   </div>
 </nav>
 {% endblock navbar %}
-<br>
+
 {% block content %}
 <br>
-<div class="container">
-
-  <section class="sectionbox">
-    <div class="columns">
-      <div class="column is-2">
-        <div class="menubox has-text-centered">
-          <a href="{% url 'register:facility' %}" class="navbar-item">共用設備</a>
-        </div>
-      </div>
-      {% comment %} <div class="column is-3">
-        <div class="menubox has-text-centered">
-          <a href="{% url 'register:repair_plan' %}" class="navbar-item">長期修繕計画</a>
-        </div>
-      </div> {% endcomment %}
-      <br>
-      <br>
-      <br>
-      <br>
-      <div class="column is-3">
-        <div class="menubox has-text-centered is-size-7">
-          <form method="post" action="{% url 'register:logout' %}">
-            {% csrf_token %}
-            <button type="submit">ログアウト</button>
-          </form>
-        </div>
+<br>
+<div class="container is-fluid">
+  <div class="columns">
+    <div class="column">
+      <div class="menubox has-text-centered">
+        <a href="{% url 'register:facility' %}" class="white_color">共用設備</a>
       </div>
     </div>
-  </section>
+    <div class="column">
+      <div class="menubox has-text-centered">
+        <a href="{% url 'register:repair_plan' %}" class="white_color">長期修繕計画</a>
+      </div>
+    </div>
+    <br>
+    <br>
+    <div class="column is-3 has-text-centered">
+      <form method="post" action="{% url 'register:logout' %}">
+        {% csrf_token %}
+        <button class="button is-danger is-small" type="submit">ログアウト</button>
+      </form>
+    </div>
+  </div>
 </div>
-{% endblock %}
+{% endblock content %}
+
+

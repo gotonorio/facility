@@ -1,13 +1,18 @@
 {% extends "common/base.html" %}
-{# http://cccabinet.jpn.org/bootstrap4/components/navbar #}
+{% load static %}
+
 {% block title %}
   長期修繕計画
 {% endblock %}
 
+{% block head %}
+  <link href="{% static 'common/mycss/mobile_menu.css' %}" rel="stylesheet">
+{% endblock head%}
+
 {% block navbar %}
 <nav class="navbar is-fixed-top is-black is-size-6" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item">【設備台帳】</a>
+    <a href="{% url 'register:mypage' %}" class="navbar-item">長期修繕計画</a>
     <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>

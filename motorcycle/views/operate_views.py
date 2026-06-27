@@ -37,7 +37,7 @@ class MotorCycleSpaceUpdateView(PermissionRequiredMixin, UpdateView):
 class MonthlyProcessingView(PermissionRequiredMixin, FormView):
     """月次処理"""
 
-    template_name = "motorcycle/monthly_processing.html"
+    template_name = "motorcycle/monthly_processing_form.html"
     form_class = MonthlyProcessingForm
     permission_required = "parking.add_parkingspace"
     raise_exception = True

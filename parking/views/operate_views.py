@@ -17,7 +17,7 @@ from parking.services.operate_service import (
 class MonthlyProcessingView(PermissionRequiredMixin, FormView):
     """月次処理"""
 
-    template_name = "parking/monthly_processing.html"
+    template_name = "parking/monthly_processing_form.html"
     form_class = MonthlyProcessingForm
     permission_required = "parking.add_parkingspace"
     success_url = reverse_lazy("parking:management")

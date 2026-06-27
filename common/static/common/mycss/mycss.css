@@ -159,23 +159,40 @@ div.my_field > textarea {
   white-space: nowrap;
 }
 
-/* markdown用style */
-.markdown {
-  overflow-x: auto;
-  margin:0px;
-}
-/* 767px以下ではmargin-leftを4pxにする */
+/*
+------------------------------------
+containerの余白用css
+-------------------------------------
+*/
+/* スマホ画面（1023px以下）: 2px */
 @media screen and (max-width: 767px) {
-  .markdown {
+  .container.is-fluid {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+}
+/* PC画面（1024px以上）: 16px */
+@media screen and (min-width: 768px) {
+  .container.is-fluid {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+}
+/*
+------------------------------------
+mobile画面のtable用css
+-------------------------------------
+*/
+/* 767px以下ではmargin-leftを2pxにする */
+@media screen and (max-width: 767px) {
+  .mobile_table {
     overflow-x: auto;
-    margin-left:0px;
+    margin-left:2px;
     padding:2px;
   }
 }
-.markdown table {
-  /* 表の外枠表示 */
-  border: dotted 1px;
-  /* 表の最小幅で表示させる。倍率は適当。 */
+/* 表は最小幅で表示させる。widthは適当。 */
+.mobile_table table {
   width: 30%;
   white-space: nowrap;
 }

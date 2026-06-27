@@ -34,12 +34,13 @@
         {% endfor %}
     </div>
 </div>
-{% endif %}}
+{% endif %}
 <div class="container is-fluid">
   <div class="content">
+    <br>
     <h4>駐輪場</h4>
   </div>
-  <div class="columns">
+  {% comment %} <div class="columns"> {% endcomment %}
     <form method='POST' enctype='multipart/form-data'>
       {{ form.non_field_errors }}
       {% for field in form %}
@@ -61,7 +62,7 @@
         <a class='button is-danger is-size-7' href="{% url 'bicycle:list' %}">戻る</a>
       </div>
     </form>
-  </div>
+  {% comment %} </div> {% endcomment %}
   <br>
 </div>
 {% endblock content %}
