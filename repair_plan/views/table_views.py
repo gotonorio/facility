@@ -6,7 +6,7 @@ from facility.services import get_latest_version
 from repair_plan.forms import RepairPlanListForm
 
 # from repair_plan.services.pandas_service import (
-#     add_total_bottom,
+#     add_total_df,
 #     get_pandas_table_data,
 #     get_pivot_table_data,
 #     rename_headers,
@@ -100,7 +100,7 @@ class RepairPlanSimpleTableView(RepairPlanTableView):
 #         pivot_df = rename_headers(pivot_df)
 
 #         # 5. ピボットテーブルの最下行に合計行を追加
-#         pivot_df = add_total_bottom(pivot_df)
+#         pivot_df = add_total_df(pivot_df)
 
 #         # ピボットテーブルのList化test
 #         dict_list = pivot_df.reset_index().to_dict(orient="records")

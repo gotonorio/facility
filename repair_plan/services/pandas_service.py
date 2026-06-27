@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 def get_pandas_dadaframe(ver):
     """
-    指定バージョンの修繕計画テーブルデータをpandasで処理して返す
+    指定バージョンの修繕計画データを抽出して、データフレームとして返す
     """
     qs = KoujiName.objects.filter(version__version=ver).values(
         "kouji_type__master_name",
@@ -26,11 +26,16 @@ def get_pandas_dadaframe(ver):
 
 def get_pandas_pivottable(df):
     """
-    指定バージョンの修繕計画テーブルデータをpandasで処理してピボットテーブル形式で返す
+    指定バージョンの修繕計画テーブルデータをソートしてピボットテーブル形式で返す
+    - index   : 元データの列名を指定。結果の行見出しとなる。（工事種別名と工事名）
+    - columns : 元データの列名を指定。結果の列見出しとなる。(西暦年)
+    - values  : 元データの列名（unit_price）を指定。「工事種別名+工事名」毎の西暦年毎の合計値が計算される。
+    - aggfunc : valuesの処理方法を指定。合計（sum）を指定。
+    - fill_value : valuesが存在しない場合は「0」とする。
+    - sort    : 集計した行・列のインデックスが勝手にソートされないようにFalseを設定。
+    - reset_index() : pivot_table()で作成したピボットテーブルでは「kouji_type__master_name」「kouji_name」が
+                    行インデックとなっているので、これを普通の列へ戻すためにリセットする。
     """
-    # ---------------------------
-    # pivotへ変換
-    # ---------------------------
     pivot_df = (
         df.sort_values(["kouji_type__sequense", "kouji_name"])
         .pivot_table(
@@ -48,10 +53,11 @@ def get_pandas_pivottable(df):
 
 
 def sort_year_columns(pivot_df):
-    """列（column）が整数型ならば、その列を昇順に並び替える"""
-
+    """列（column）が整数型ならば、その列を昇順に並び替える
+    - データフレームの並び順List = ["kouji_type__master_name", "kouji_name", 2024, 2025, 2026, ...]
+    - pivot_df = pivot_df[データフレームの並び順List]で、その指定した順番通りに並んだデータフレームにして返す
+    """
     year_cols = sorted([col for col in pivot_df.columns if isinstance(col, int)])
-    # pivot_dfから「kouji_type」と「kouji_name」の列だけを取り出して、「年」の列を追加する
     pivot_df = pivot_df[["kouji_type__master_name", "kouji_name"] + year_cols]
 
     return pivot_df
@@ -70,59 +76,25 @@ def rename_headers(pivot_df):
     return pivot_df
 
 
-def add_total_bottom(pivot_df):
-    """ピボットテーブルの最下行と最後列に合計を追加"""
+def add_total_df(pivot_df):
+    """データフレームの最下行と最後列に合計を追加"""
 
-    # ピボットテーブルの最後列に行合計を追加(axis=1は行方向の合計)
+    # dfの最後列に行合計を追加(axis=1は行方向の合計)
+    # 金額は3列目以降
     year_columns = pivot_df.columns[2:]
     pivot_df["合計"] = pivot_df[year_columns].sum(axis=1)
 
-    # ピボットテーブルの最下行に年ごとの合計を追加(axis=0は列方向の合計)
-    year_totals = pivot_df[year_columns].sum(axis=0)
-    # ピボットテーブルの総合計を計算(年ごとの合計の合計)
-    grand_total = pivot_df["合計"].sum(axis=0)
+    # dfの最下行に年ごとの合計を追加
+    # 列合計のデータフレームを作成する（axis=0は列方向の合計）
+    year_totals = pivot_df.sum(numeric_only=True, axis=0)
 
+    # 行タイトルと合計行を辞書化した辞書を作成
     total_row = {
-        "工事種別": "",
-        "工事名": "総合計",
+        "工事種別": "修繕支出合計",
+        "工事名": "",
         **year_totals.to_dict(),
-        "合計": grand_total,
     }
-    # ピボットテーブルの最下行に合計行を追加
+    # dfの最下行に合計行データフレームを追加
     pivot_df = pd.concat([pivot_df, pd.DataFrame([total_row])], ignore_index=True)
 
     return pivot_df
-
-
-def add_total_last(pivot_df):
-    """ピボットテーブルの最後列に合計を追加"""
-
-    # ピボットテーブルの最後列に行合計を追加(axis=1は行方向の合計)
-    year_columns = pivot_df.columns[2:]
-    pivot_df["合計"] = pivot_df[year_columns].sum(axis=1)
-
-    return pivot_df
-
-
-def bottom_total_list(pivot_df):
-    """合計行をlistとして返す"""
-
-    # # ピボットテーブルの最後列に行合計を追加(axis=1は行方向の合計)
-    year_columns = pivot_df.columns[2:]
-    # pivot_df["合計"] = pivot_df[year_columns].sum(axis=1)
-
-    # ピボットテーブルの最下行に年ごとの合計を追加(axis=0は列方向の合計)
-    year_totals = pivot_df[year_columns].sum(axis=0)
-    # ピボットテーブルの総合計を計算(年ごとの合計の合計)
-    # grand_total = pivot_df["合計"].sum(axis=0)
-
-    # total_row = {
-    #     "工事種別": "",
-    #     "工事名": "総合計",
-    #     **year_totals.to_dict(),
-    #     "合計": grand_total,
-    # }
-    # # ピボットテーブルの最下行に合計行を追加
-    # pivot_df = pd.concat([pivot_df, pd.DataFrame([total_row])], ignore_index=True)
-
-    return year_totals

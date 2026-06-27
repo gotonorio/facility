@@ -34,11 +34,7 @@ class RepairPlanListForm(RepairPlanBaseForm):
         if not is_manager:
             qs = qs.filter(version__only_manager=False)
 
-        versions = (
-            qs.values_list("version__version", flat=True)
-            .order_by("-version")
-            .distinct()
-        )
+        versions = qs.values_list("version__version", flat=True).order_by("-version").distinct()
         self.fields["version"].choices = [(v, v) for v in versions]
 
         # 初期値のセット
@@ -58,20 +54,18 @@ class DeleteKoujinameVerForm(RepairPlanBaseForm):
     confirm_flg = forms.BooleanField(
         label="削除確認",
         required=False,
-        )
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # KoujiNameに存在するMasterPlanのIDをリストとして取得
-        existing_version_ids = KoujiName.objects.values_list(
-            "version", flat=True
-        ).distinct()
+        # KoujiNameに存在するMasterPlanのidをリストとして取得
+        existing_version_ids = KoujiName.objects.values_list("version", flat=True).distinct()
 
         # 親クラスの version フィールドの queryset を直接書き換える
         # これにより、バリデーションもこのQuerySetに基づいて行われます
-        self.fields["version"].queryset = MasterPlan.objects.filter(
-            id__in=existing_version_ids
-        ).order_by("-version")
+        self.fields["version"].queryset = MasterPlan.objects.filter(id__in=existing_version_ids).order_by(
+            "-version"
+        )
 
         self.fields["version"].widget.attrs["class"] = "select-css"

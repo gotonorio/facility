@@ -32,13 +32,13 @@
           <a href="{% url 'repair_plan:repairplan_list' %}" class="navbar-item">修繕工事リスト</a>
           {% if request.user|is_in_group:'chairman' or request.user|is_in_group:'repair_plan_manager' %}
             <a href="{% url 'repair_plan:repairplan_pandas' %}" class="navbar-item">長期修繕計画表</a>
-            <a href="{% url 'repair_plan:repairplan_table' %}" class="navbar-item">長期修繕計画表(sql)</a>
-            <a href="{% url 'repair_plan:repairplan_by_koujitype' %}" class="navbar-item">修繕計画 工事種別リスト</a>
+            {% comment %} <a href="{% url 'repair_plan:repairplan_table' %}" class="navbar-item">長期修繕計画表(sql)</a> {% endcomment %}
+            {% comment %} <a href="{% url 'repair_plan:repairplan_by_koujitype' %}" class="navbar-item">修繕計画 工事種別リスト</a> {% endcomment %}
             <div class="navbar-divider"></div>
           {% endif %}
-          <a href="{% url 'repair_plan:repairplan_simpletable' %}" class="navbar-item">長期修繕計画表（簡易版）</a>
+          <a href="{% url 'repair_plan:repairplan_simpletable' %}" class="navbar-item">長期修繕計画表</a>
           <div class="navbar-divider"></div>
-          <a href="{% url 'repair_plan:masterplan_list' %}" class="navbar-item">修繕計画マスタ 一覧</a>
+          {% comment %} <a href="{% url 'repair_plan:masterplan_list' %}" class="navbar-item">修繕計画マスタ 一覧</a> {% endcomment %}
         </div>
       </div>
       <div class="navbar-item has-dropdown is-hoverable">
