@@ -49,7 +49,7 @@ class BicycleSpaceListView(LoginRequiredMixin, TemplateView):
 class BicycleSpaceByRoomView(BicycleSpaceListView):
     """住戸別駐輪場一覧"""
 
-    template_name = "bicycle/bicyclespace_by_room_pc.html"
+    template_name = "bicycle/bicyclespace_by_room.html"
 
     def get_context_data(self, **kwargs):
         # 親の共通処理（日付取得等）を活かしつつ、中身を差し替え
@@ -62,7 +62,7 @@ class BicycleSpaceByRoomView(BicycleSpaceListView):
 class BicycleSpaceFeeByRoomView(BicycleSpaceListView):
     """住戸別駐輪場使用料（管理者用）"""
 
-    template_name = "bicycle/bicyclespacefee_by_room_pc.html"
+    template_name = "bicycle/bicyclespacefee_by_room.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

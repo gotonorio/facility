@@ -5,6 +5,8 @@
     position: relative;
     background-color:#000033;
     border-radius: 0.5em;
+    width:80%;
+    margin: 0 auto;
   }
   hr {
     border-style: none;

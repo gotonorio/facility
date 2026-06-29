@@ -172,18 +172,22 @@ containerの余白用css
   }
 }
 /* PC画面（1024px以上）: 16px */
+/*
+デフォルトの32pxのままとする
 @media screen and (min-width: 768px) {
   .container.is-fluid {
     padding-left: 14px !important;
     padding-right: 14px !important;
   }
 }
+*/
 /*
 ------------------------------------
 mobile画面のtable用css
 -------------------------------------
 */
 /* 767px以下ではmargin-leftを2pxにする */
+/*
 @media screen and (max-width: 767px) {
   .mobile_table {
     overflow-x: auto;
@@ -191,8 +195,9 @@ mobile画面のtable用css
     padding:2px;
   }
 }
+*/
 /* 表は最小幅で表示させる。widthは適当。 */
-.mobile_table table {
+/* .mobile_table table {
   width: 30%;
   white-space: nowrap;
-}
+} */

@@ -1,0 +1,97 @@
+{% extends "common/base.html" %}
+{% load static %}
+{% load humanize %} {# 3桁区切りのため追加 #}
+{% block title %}
+pandas_major_category
+{% endblock title %}
+
+{% block head %}
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <script src="{% static 'payment/js/pie_chart.js' %}"></script>
+{% endblock head %}
+
+{% block navbar %}
+<nav class="navbar is-fixed-top is-black" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">【SG川崎】</a>
+    {# ハンバーガアイコンのため #}
+    <a role="button" class="navbar-burger " aria-label="menu" aria-expanded="false" data-target="navbarMainMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navbarMainMenu" class="navbar-menu">
+    <div class="navbar-start">
+      <div class="navbar-item">
+        <form action="" method="GET" enctype="multipart/form-data">
+          <div class="field is-grouped">
+            {% comment %}
+            <!--ラベル表示-->
+            <div class="control">
+              <label>{{ form.version.label }}</label>
+            </div>
+            {% endcomment %}
+            <!-- bulmaのselect要素はnavbar内では少し特殊なようだ -->
+            <div class="control">
+              <div class="select is-small"> {{form.version}} </div>
+              <button type="submit" class="button is-primary is-small">表示</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <a class="navbar-item" href="{% url 'register:repair_plan' %}">戻る</a>
+      </div>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+<br>
+{% block content %}
+<style>
+  /* ヘッダー行を中央揃えに */
+  .table-container th {
+      background-color: #f5f5f5;
+      text-align: center !important;
+  }
+  /* 全てのデータセル(td)を右揃えに */
+  .repair-table td {
+      text-align: right !important;
+      vertical-align: middle;
+  }
+  /* テーブルの1列目（工事種別）と2列目（工事名）のセルを折り返し禁止にする */
+  .repair-table td:nth-child(1),
+  .repair-table td:nth-child(2) {
+      white-space: nowrap;
+      text-align: left !important;
+  }
+  /* 合計行（最後の行）を強調 */
+  .repair-table tr:last-child {
+      background-color: #f5f5f5;
+      font-weight: bold;
+  }
+  /* 合計列（最後の列）に色を付ける */
+  .repair-table td:last-child,
+  .repair-table th:last-child {
+      background-color: #fafafa;
+      font-weight: bold;
+  }
+</style>
+
+<br>
+<div class="container is-fluid">
+  <div class="content">
+    <h4>長期修繕計画表</h4>
+    <ul>
+      <li class="has-text-weight-bold">金額には「経費」「消費税」「物価上昇分」は含まない。</li>
+    </ul>
+  </div>
+  <div class="table-container is-size-6">
+    {{ html_table|safe }}
+  </div>
+  <br>
+</div>
+{% endblock %}

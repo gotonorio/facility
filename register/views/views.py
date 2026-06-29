@@ -31,7 +31,7 @@ class Logout(LoginRequiredMixin, LogoutView):
 
 
 class MypageView(LoginRequiredMixin, generic.TemplateView):
-    """モバイル対応"""
+    """PC・mobile 対応"""
 
     def get_template_names(self):
         """templateファイルを切り替える"""

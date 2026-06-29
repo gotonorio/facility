@@ -21,14 +21,14 @@ class RirekiListView(LoginRequiredMixin, generic.TemplateView):
     # form_classはどのような時に必要か？
     form_class = RirekiListForm
     # TemplateViewの場合はtemplate_nameは必須．
-    template_name = "rireki/rireki_list_pc.html"
+    template_name = "rireki/rireki_list.html"
 
     def get_template_names(self):
         """templateファイルを切り替える"""
         if self.request.user_agent_flag == "mobile":
-            template_name = "rireki/rireki_list_pc.html"
+            template_name = "rireki/rireki_list.html"
         else:
-            template_name = "rireki/rireki_list_pc.html"
+            template_name = "rireki/rireki_list.html"
         return [template_name]
 
     # get_context_data の引数の kwargs には、urls.py で指定した名前つきの

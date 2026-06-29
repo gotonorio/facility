@@ -8,6 +8,7 @@ from repair_plan.services.pandas_service import (
     add_total_df,
     get_pandas_dadaframe,
     get_pandas_pivottable,
+    pivottable_to_htmltable,
     rename_headers,
     sort_year_columns,
 )
@@ -20,7 +21,8 @@ class RepairPlanPandasView(PermissionRequiredMixin, TemplateView):
 
     form_class = RepairPlanListForm
     permission_required = "repair_plan.add_koujiname"
-    template_name = "repair_plan/table/repairplan_table_pandas.html"
+    # template_name = "repair_plan/table/repairplan_table_pandas.html"
+    template_name = "repair_plan/table/repairplan_html_table.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -56,14 +58,19 @@ class RepairPlanPandasView(PermissionRequiredMixin, TemplateView):
         # 工事種別の重複を空にする（上段だけ表示）
         pivot_df["工事種別"] = pivot_df["工事種別"].mask(pivot_df["工事種別"].duplicated(), "")
 
-        # ----------------------------------------
-        # ピボットテーブルデータのList化
-        # ----------------------------------------
-        # ヘッダーをlistとして取り出す
-        header_list = pivot_df.columns.to_list()
-        # データ本体のvalueをlistとするlistを作成する。
-        values_list = pivot_df.reset_index().values[:, 1:].tolist()
+        # # ----------------------------------------
+        # # ピボットテーブルデータのList化
+        # # ----------------------------------------
+        # # ヘッダーをlistとして取り出す
+        # header_list = pivot_df.columns.to_list()
+        # # データ本体のvalueをlistとするlistを作成する。
+        # values_list = pivot_df.reset_index().values[:, 1:].tolist()
+        # context.update({"repair_plan_list": values_list, "year": header_list})
 
-        context.update({"repair_plan_list": values_list, "year": header_list})
+        # ----------------------------------------
+        # ピボッタテーブルのto_html()によるHTML出力
+        # ----------------------------------------
+        html_table = pivottable_to_htmltable(pivot_df)
+        context["html_table"] = html_table
 
         return context

@@ -15,7 +15,7 @@ class RepairPlanBaseForm(forms.Form):
         # widget=forms.Select(
         #     attrs={
         #         "style": "width:10ch",
-        #         "class": "select",
+        #         "class": "select-css",
         #     }
         # ),
     )

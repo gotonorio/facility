@@ -98,3 +98,34 @@ def add_total_df(pivot_df):
     pivot_df = pd.concat([pivot_df, pd.DataFrame([total_row])], ignore_index=True)
 
     return pivot_df
+
+
+def pivottable_to_htmltable(pivot_df):
+    """pivot_tableからtemplate出力用のhtml_tableを生成する"""
+
+    # 1. カンマ区切り関数
+    def comma_format(val):
+        try:
+            # valを数値として扱えるか試し、3桁区切りの文字列にする
+            return f"{int(val):,}"
+        except (ValueError, TypeError):
+            # 文字列（""など）や、変換できない値の場合はそのまま返す
+            return val
+
+    # 2. 数値列のリスト
+    numeric_cols = list(pivot_df.columns[2:])
+
+    # 3. フォーマット辞書を生成
+    formatter_dict = {col: comma_format for col in numeric_cols}
+
+    # 4. テンプレートに渡すために HTML 文字列（<table>）に変換
+    # classes で bulma の CSS クラスを付与する
+    html_table = pivot_df.to_html(
+        index=False,
+        classes="table is-striped is-narrow is-hoverable repair-table",
+        index_names=False,
+        formatters=formatter_dict,  # ここでカンマ区切りを適用
+        border=1,  # tableの外枠
+    )
+
+    return html_table
