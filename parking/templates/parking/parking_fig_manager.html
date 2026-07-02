@@ -6,15 +6,6 @@
 {% endblock title %}
 {% block head %}
 <link href="{% static 'parking/parking_fig.css' %}" rel="stylesheet">
-<style>
-  .set_right {
-    text-align: right;
-  }
-  .td_crlf {
-    width: 26px;
-    height: 26px;
-  }
-</style>
 {% endblock head %}
 
 {% block content %}
@@ -50,7 +41,8 @@
   <h3>　{{title}}</h3>
 </div>
 <div class="table-wrapper">
-  <table class="table_center_nowrap table_fix">
+  {% comment %} <table class="table_center_nowrap table_fix"> {% endcomment %}
+  <table class="table_nowrap table_fix">
     <!-- table-layout: fixed;を設定しているため、1行目に32列x26pxを確保しておく -->
     <colgroup>
       {% for i in "x"|rjust:"32" %}
@@ -126,7 +118,7 @@
       <td {% if sect32.status_of_use == '空き' %} class="td_w_empty"{% elif sect32.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect32.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect32.pk %}">32</a></td>
     </tr>
     <tr>
-      <td colspan="11">機械式駐車場（下段 No.44〜No.64 使用中止）</td>
+      <td colspan="11"></td>
       <td colspan="13"></td>
       <td {% if sect33.status_of_use == '空き' %} class="td_w_empty"{% elif sect33.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect33.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2"><a href="{% url 'parking:update' sect33.pk %}">33</a></td>
     </tr>

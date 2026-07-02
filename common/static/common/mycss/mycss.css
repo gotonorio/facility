@@ -3,50 +3,92 @@
   --main-text: #333;
   --main-bg: #fff;
   --md-strong: yellow;
-  --font-sans: "Helvetica Neue", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", "Noto Sans JP", sans-serif;
-  --font-serif: "Hiragino Mincho ProN", "YuMincho", "Yu Mincho", "Noto Serif JP", serif;
   --navbar-height: 3.25rem; /* ここ一箇所を変えるだけで済むようにする */
+  --font-sans:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Hiragino Sans",
+    "Yu Gothic UI",
+    "Yu Gothic",
+    "Noto Sans JP",
+    sans-serif;
+  --font-serif:
+    "Hiragino Mincho ProN",
+    "Yu Mincho",
+    "YuMincho",
+    "Noto Serif JP",
+    serif;
+  --font-mono:
+    ui-monospace,
+    "SF Mono",
+    "Cascadia Code",
+    "Consolas",
+    "Menlo",
+    "Monaco",
+    "Noto Sans Mono CJK JP",
+    monospace;
 }
-
 /* すべての要素でパディングが高さに含まれるようにする（超重要） */
 *, *::before, *::after {
   box-sizing: border-box;
 }
-
-/* ブラウザの仕様違いを吸収するためhtml,bodyの両方に設定する */
+/*
+------------------------------------
+containerの余白調整css
+-------------------------------------
+*/
+/* スマホ画面（1023px以下）: 2px */
+@media screen and (max-width: 767px) {
+  .container.is-fluid {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+}
+/* PC画面（1024px以上）: 16px */
+@media screen and (min-width: 768px) {
+  .container.is-fluid {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+}
+/*
+------------------------------------
+ブラウザの仕様違いを吸収するためhtml,bodyの両方に設定する
+-------------------------------------
+*/
 html, body {
   margin: 0;
   padding: 0;
-  min-height: 100dvh;
   color: var(--main-text);
   background-color: var(--main-bg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
-
 .site-wrapper {
   display: flex;
   flex-direction: column;
-  /* 100dvh固定ではなく、最低100dvhにする */
   min-height: 100dvh; 
-  /* ナビバー分の余白を確保 */
+  /* navbar分の余白を確保 */
   padding-top: var(--navbar-height);
 }
-
 main {
   /* フッターを下に押し下げる */
   flex: 1; 
 }
-
 .my-footer {
   padding: 1.0rem 0;
   border-top: 1px solid #eee;
   background-color: var(--main-bg);
 }
 
-/* セレクトボックスのカスタマイズ */
-/* 2019/08/02現在、safariでBulmaのclass = "select"が機能しないため、下記cssを使用。*/
-/* https://coliss.com/articles/build-websites/operation/css/consistent-select-element-styling.html*/
+/*
+------------------------------------
+セレクトボックスのカスタマイズ
+2019/08/02現在、safariでBulmaのclass = "select"が機能しないため、下記cssを使用。
+https://coliss.com/articles/build-websites/operation/css/consistent-select-element-styling.html
+-------------------------------------
+*/
 .select-css {
   display: block;
   /* 先ほど決めたフォント順序に同期させる */
@@ -63,12 +105,10 @@ main {
   border: 1px solid #aaa;
   box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
   border-radius: .5em;
-  
   /* デフォルトの矢印を消す */
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  
   background-color: #fff;
   /* 右側の矢印アイコン（SVG） */
   background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
@@ -77,16 +117,9 @@ main {
   background-position: right .7em top 50%, 0 0;
   background-size: .65em auto, 100%;
 }
-
-/* IE/Edge 用の古い指定（現在はほぼ不要だがお守りとして） */
-.select-css::-ms-expand {
-  display: none;
-}
-
 .select-css:hover {
   border-color: #888;
 }
-
 .select-css:focus {
   border-color: #aaa;
   /* フォーカス時のリング（アクセシビリティ対応） */
@@ -94,14 +127,17 @@ main {
   color: #222; 
   outline: none;
 }
-
 /* optionタグ内のフォントを調整 */
 .select-css option {
   font-weight: normal;
   font-family: sans-serif; /* ブラウザ標準に従わせるのが安全 */
 }
 
-/* 入力フォーム用 style sheet */
+/*
+------------------------------------
+入力フォーム用 style sheet
+------------------------------------
+*/
 .errorlist {
   margin: 0;
   padding: 0;
@@ -123,7 +159,11 @@ div.my_field > textarea {
   border-radius: 10px;
   border: solid 1px #999;
 }
-
+/*
+------------------------------------
+webkit系ブラウザ用設定
+------------------------------------
+*/
 /* webkit系ブラウザ用のスクロールバー調整 */
 ::-webkit-scrollbar{
   width: 10px;
@@ -138,7 +178,11 @@ div.my_field > textarea {
   box-shadow: inset 0 0 0 2px #fff;
 }
 
-/* ログイン画面用 */
+/*
+------------------------------------
+ログイン画面用 
+------------------------------------
+*/
 .login_container {
   width: 240px;
   margin: 0 auto;
@@ -148,56 +192,38 @@ div.my_field > textarea {
   width: 420px;
   /* margin: auto; */
 }
-/* tableの中央配置 */
-.table_center_nowrap {
-  width: auto;
-  margin: 3px auto;
-  white-space: nowrap;
-}
+/*
+------------------------------------
+table関係の設定
+-------------------------------------
+*/
 .table_nowrap {
-  width: auto;
+  /* width: auto;
+  margin: 3px auto; */
   white-space: nowrap;
 }
-
 /*
 ------------------------------------
-containerの余白用css
+不要
 -------------------------------------
-*/
-/* スマホ画面（1023px以下）: 2px */
-@media screen and (max-width: 767px) {
-  .container.is-fluid {
-    padding-left: 4px !important;
-    padding-right: 4px !important;
-  }
-}
-/* PC画面（1024px以上）: 16px */
-/*
-デフォルトの32pxのままとする
-@media screen and (min-width: 768px) {
-  .container.is-fluid {
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-  }
-}
-*/
-/*
-------------------------------------
-mobile画面のtable用css
--------------------------------------
-*/
-/* 767px以下ではmargin-leftを2pxにする */
-/*
-@media screen and (max-width: 767px) {
-  .mobile_table {
-    overflow-x: auto;
-    margin-left:2px;
-    padding:2px;
-  }
-}
 */
 /* 表は最小幅で表示させる。widthは適当。 */
 /* .mobile_table table {
   width: 30%;
   white-space: nowrap;
+} */
+/* .table_nowrap {
+  width: auto;
+  white-space: nowrap;
+} */
+/* tableの中央配置
+.table_center_nowrap {
+  width: auto;
+  margin: 3px auto;
+  white-space: nowrap;
+} */
+
+/* IE/Edge 用の古い指定（現在はほぼ不要だがお守りとして） */
+/* .select-css::-ms-expand {
+  display: none;
 } */

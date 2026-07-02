@@ -8,6 +8,15 @@
     word-break: break-all;
 }
 
+/* 凡例表示部 */
+.set_right {
+    text-align: right;
+}
+.td_crlf {
+    width: 26px;
+    height: 26px;
+}
+
 /* ----- 2026年2月16日追加分 ----- */
 .table-wrapper {
     width: 100%;
@@ -30,6 +39,12 @@
     line-height: 26px;      /* 文字を上下中央に */
     box-sizing: border-box; /* 枠線を含めて26pxにする */
     margin: 0;              /* 余計な外白を消す */
+}
+/* tableの中央配置 */
+.table_center_nowrap {
+    width: auto;
+    margin: 3px auto;
+    white-space: nowrap;
 }
 
 /* 横長セル（31番など）の幅を死守する */

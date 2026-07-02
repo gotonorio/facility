@@ -6,15 +6,6 @@
 {% endblock title %}
 {% block head %}
 <link href="{% static 'parking/parking_fig.css' %}" rel="stylesheet">
-<style>
-  .set_right {
-    text-align: right;
-  }
-  .td_crlf {
-    width: 26px;
-    height: 26px;
-  }
-</style>
 {% endblock head %}
 
 {% block content %}
@@ -114,7 +105,7 @@
       <td {% if sect32.status_of_use == '空き' %} class="td_w_empty"{% elif sect32.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect32.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">32</td>
     </tr>
     <tr>
-      <td colspan="11">機械式駐車場（下段 No.44〜No.64 使用中止）</td>
+      <td colspan="11"></td>
       <td colspan="13"></td>
       <td {% if sect33.status_of_use == '空き' %} class="td_w_empty"{% elif sect33.status_of_use == '予約中'%} class="td_w_reserve"{% elif sect33.status_of_use == '解約予定'%}class="td_w_cancel"{% else %}class="td_w"{% endif %} colspan="2">33</td>
     </tr>
