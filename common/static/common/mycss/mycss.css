@@ -41,8 +41,8 @@ containerの余白調整css
 /* スマホ画面（1023px以下）: 2px */
 @media screen and (max-width: 767px) {
   .container.is-fluid {
-    padding-left: 6px !important;
-    padding-right: 6px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
   }
 }
 /* PC画面（1024px以上）: 16px */
@@ -65,6 +65,11 @@ html, body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
+/* ハンバーガメニューの色を変更 */
+.navbar-burger {
+  color: #fff; /* お好みの色に変更 */
+}
+/* ページ全体を「ヘッダー・コンテンツ・フッター」の縦レイアウトにする */
 .site-wrapper {
   display: flex;
   flex-direction: column;
@@ -197,11 +202,20 @@ webkit系ブラウザ用設定
 table関係の設定
 -------------------------------------
 */
-.table_nowrap {
-  /* width: auto;
-  margin: 3px auto; */
-  white-space: nowrap;
+.table_nowrap td,
+.table_nowrap th {
+    white-space: nowrap;
 }
+/*
+------------------------------------
+card-contentの余白を調整
+-------------------------------------
+*/
+.card-content {
+    /* padding: 0.5rem; */
+    padding: 2px;
+}
+
 /*
 ------------------------------------
 不要

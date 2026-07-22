@@ -4,8 +4,10 @@ import matplotlib
 from django.conf import settings
 
 matplotlib.use("Agg")  # これを最初に追加！GUIを使わない設定にする
-import japanize_matplotlib  # 日本語フォントを有効にするための設定
 import matplotlib.pyplot as plt
+
+# 日本語フォントを有効にするためにimportするだけ。勝手にさっ駆除されないように # noqa: F401 を付ける
+import matplotlib_fontja  # noqa: F401
 from matplotlib.ticker import FuncFormatter  # グラフの軸のフォーマットをカスタマイズするためのインポート
 
 
