@@ -68,12 +68,16 @@ class User(AbstractUser):
         """完全に物理削除する場合はこちらを明示的に呼ぶ"""
         super().delete(using=using, keep_parents=keep_parents)
 
-    def group_name(user_name):
-        """ユーザの所属するグループ名をリストで返す"""
-        user_groups = user_name.groups.all()
-        # ユーザーが所属するグループの名前を取得する
-        group_names = [group.name for group in user_groups]
-        return group_names[0]
+    # def group_name(user_name):
+    #     """ユーザの所属するグループ名をリストで返す"""
+    #     user_groups = user_name.groups.all()
+    #     # ユーザーが所属するグループの名前を取得する
+    #     group_names = [group.name for group in user_groups]
+    #     return group_names[0]
+    def group_name(self):
+        """ユーザの所属するグループ名を返す"""
+        group = self.groups.first()
+        return group.name if group else None
 
 
 @receiver(models.signals.post_save, sender=User)

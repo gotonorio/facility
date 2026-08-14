@@ -107,23 +107,21 @@ class UserManagementView(PermissionRequiredMixin, generic.UpdateView):
     def get_context_data(self, **kwargs):
         """ユーザ修正画面で現在値をformに表示させる"""
         context = super().get_context_data(**kwargs)
-        pk = self.object.pk
-        user = User.objects.get(pk=pk)
-        groups = user.groups.all()
-        if groups.exists():
-            group_name = groups[0]
-        else:
-            group_name = ""
+
+        # self.objectには、すでに対象のUserオブジェクトが入っている
+        user = self.object
 
         user_update_form = UserUpdateForm(
             initial={
                 "username": user.username,
                 "email": user.email,
                 "is_active": user.is_active,
-                "group": group_name,
+                "group": user.group_name() or "",
             }
         )
+
         context["form"] = user_update_form
+
         return context
 
 

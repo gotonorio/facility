@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class RepairPlanPandasView(PermissionRequiredMixin, TemplateView):
-    """長期修繕計画表（pandas版）"""
+    """長期修繕計画表（管理者用pandas版）のテスト"""
 
     form_class = RepairPlanListForm
     permission_required = "repair_plan.add_koujiname"
