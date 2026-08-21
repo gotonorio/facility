@@ -11,7 +11,7 @@ def get_repair_plan_table_data(ver, is_simple=False):
     指定バージョンの修繕計画テーブルデータと計算結果を返す
     """
     # 期間の取得
-    range_data = KoujiName.objects.get_year_range(ver)
+    range_data = KoujiName.get_year_range(ver)
     start_year = range_data.get("start_year")
     end_year = range_data.get("end_year")
 
@@ -19,7 +19,7 @@ def get_repair_plan_table_data(ver, is_simple=False):
         return None
 
     # 修繕計画データの抽出
-    qs_list = KoujiName.objects.get_repair_plan_list(ver, start_year, end_year, is_simple)
+    qs_list = KoujiName.get_repair_plan_list(ver, start_year, end_year, is_simple)
 
     # 年毎の支出合計を保持するListの初期化
     # (start_yearからend_yearまでの年数 + アルファ)

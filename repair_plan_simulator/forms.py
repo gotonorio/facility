@@ -12,6 +12,7 @@ class SimulateDataForm(forms.Form):
     """修繕計画シミュレーション画面でのForm"""
 
     masterplan_ver = forms.ModelChoiceField(
+        # 空のquerysetを返す
         queryset=MasterPlan.objects.none(),
         label="計画 Ver.",
         required=True,
@@ -63,8 +64,8 @@ class SimulateDataForm(forms.Form):
         qs = MasterPlan.objects.all().order_by("-version")
         if not self.is_manager:
             qs = qs.filter(only_manager=False)
-
         self.fields["masterplan_ver"].queryset = qs
+        logger.debug(type(qs))
 
         # 初期値の設定（初期表示時のみ適用したい場合）
         self.fields["cpi_flg"].initial = True

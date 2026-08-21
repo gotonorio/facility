@@ -51,38 +51,45 @@ class MasterUnit(models.Model):
         return self.unit_name
 
 
-class KoujiNameQuerySet(models.QuerySet):
-    """KoujiNameのQuerySet"""
+class KoujiName(models.Model):
+    """新修繕計画データ"""
 
-    def get_year_range(self, ver):
+    version = models.ForeignKey(MasterPlan, verbose_name="Ver", on_delete=models.PROTECT)
+    # simulation計算時に予定した工事を中止した場合にdo_calc=Falseとしてシミュレーションする。
+    # 上記以外では使用しない。（本当はBooleaeFieldでよかったけれど）
+    do_calc = models.IntegerField(verbose_name="計算対象", default=1)
+    kouji_type = models.ForeignKey(MasterKoujiType, on_delete=models.PROTECT, verbose_name="工事種別")
+    kouji_name = models.CharField(verbose_name="工事名", max_length=128)
+    kouji_spec = models.CharField(verbose_name="工事仕様", max_length=128, blank=True)
+    kouji_quantity = models.FloatField(verbose_name="施工数量")
+    unit = models.ForeignKey(MasterUnit, verbose_name="単位", on_delete=models.PROTECT, null=True)
+    unit_price = models.IntegerField(verbose_name="工事単価")
+    kouji_year = models.IntegerField(verbose_name="施工予定年")
+    comment = models.TextField(verbose_name="備考", blank=True, null=True)
+    complete = models.BooleanField(verbose_name="工事完了", default=False)
+    actual_cost = models.IntegerField(verbose_name="実工事費", default=0)
+
+    def __str__(self):
+        return self.kouji_name
+
+    # objects = KoujiNameQuerySet.as_manager()
+
+    @classmethod
+    def get_year_range(cls, ver):
         """修繕計画の開始、終了年を返す"""
-        year_range = self.filter(version__version=ver).aggregate(
+        year_range = cls.objects.filter(version__version=ver).aggregate(
             end_year=Max("kouji_year"), start_year=Min("kouji_year")
         )
         return year_range
 
-    def get_koujiname_list(self, ver, koujitype):
-        """指定されたバージョンの計画工抽出querysetを返す"""
-        # クエリの作成
-        qs = self.select_related("kouji_type")
-        if koujitype == "ALL":
-            qs = qs.filter(version__version=ver)
-        else:
-            qs = qs.filter(version__version=ver).filter(kouji_type=koujitype)
+    @classmethod
+    def get_repair_plan_list_by_year(cls, ver, year):
+        """指定された年の修繕計画を返す"""
+        qs = cls.objects.filter(version__version=ver, kouji_year=year)
         return qs
 
-    def delete_koujiname_by_ver(self, ver):
-        """指定されたバージョンのkoujinameを削除する"""
-        try:
-            qs = self.filter(version__version=ver)
-        except self.DoesNotExist:
-            msg = f"version={ver}が存在しません"
-            return msg
-        qs.delete()
-        msg = f"version{ver}を削除しました"
-        return msg
-
-    def get_repair_plan_list(self, ver, start_year, end_year, simple=False):
+    @classmethod
+    def get_repair_plan_list(cls, ver, start_year, end_year, simple=False):
         """長期繕計画表を返す
         - ver: バージョン番号
         - start_year: 開始年
@@ -91,9 +98,9 @@ class KoujiNameQuerySet(models.QuerySet):
         - 表示年数（列数）を動的に決めるためlistとして返す(values_list)
         """
         if simple:
-            qs = self.filter(version__version=ver).values_list("kouji_type__master_name")
+            qs = cls.objects.filter(version__version=ver).values_list("kouji_type__master_name")
         else:
-            qs = self.filter(version__version=ver).values_list("kouji_type__master_name", "kouji_name")
+            qs = cls.objects.filter(version__version=ver).values_list("kouji_type__master_name", "kouji_name")
 
         cnt = end_year - start_year + 1
         # annotateの引数をDictとして生成する。
@@ -126,31 +133,25 @@ class KoujiNameQuerySet(models.QuerySet):
             qs = qs.annotate(**annotations).order_by("kouji_type", "kouji_name")
         return qs
 
-    def get_repair_plan_list_by_year(self, ver, year):
-        """指定された年の修繕計画を返す"""
-        qs = self.filter(version__version=ver, kouji_year=year)
+    @classmethod
+    def get_koujiname_list(cls, ver, koujitype):
+        """指定されたバージョンの計画工抽出querysetを返す"""
+        # クエリの作成
+        qs = cls.objects.select_related("kouji_type")
+        if koujitype == "ALL":
+            qs = qs.filter(version__version=ver)
+        else:
+            qs = qs.filter(version__version=ver).filter(kouji_type=koujitype)
         return qs
 
-
-class KoujiName(models.Model):
-    """新修繕計画データ"""
-
-    version = models.ForeignKey(MasterPlan, verbose_name="Ver", on_delete=models.PROTECT)
-    # simulation計算時に予定した工事を中止した場合にdo_calc=Falseとしてシミュレーションする。
-    # 上記以外では使用しない。（本当はBooleaeFieldでよかったけれど）
-    do_calc = models.IntegerField(verbose_name="計算対象", default=1)
-    kouji_type = models.ForeignKey(MasterKoujiType, on_delete=models.PROTECT, verbose_name="工事種別")
-    kouji_name = models.CharField(verbose_name="工事名", max_length=128)
-    kouji_spec = models.CharField(verbose_name="工事仕様", max_length=128, blank=True)
-    kouji_quantity = models.FloatField(verbose_name="施工数量")
-    unit = models.ForeignKey(MasterUnit, verbose_name="単位", on_delete=models.PROTECT, null=True)
-    unit_price = models.IntegerField(verbose_name="工事単価")
-    kouji_year = models.IntegerField(verbose_name="施工予定年")
-    comment = models.TextField(verbose_name="備考", blank=True, null=True)
-    complete = models.BooleanField(verbose_name="工事完了", default=False)
-    actual_cost = models.IntegerField(verbose_name="実工事費", default=0)
-
-    def __str__(self):
-        return self.kouji_name
-
-    objects = KoujiNameQuerySet.as_manager()
+    @classmethod
+    def delete_koujiname_by_ver(cls, ver):
+        """指定されたバージョンのkoujinameを削除する"""
+        try:
+            qs = cls.objects.filter(version__version=ver)
+        except cls.DoesNotExist:
+            msg = f"version={ver}が存在しません"
+            return msg
+        qs.delete()
+        msg = f"version{ver}を削除しました"
+        return msg

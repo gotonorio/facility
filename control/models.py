@@ -11,7 +11,9 @@ class ControlRecord(models.Model):
 
     @classmethod
     def show_tmp_user_menu(cls):
-        return cls.objects.get("tmp_user_flg")
+        """ControlRecordはレコードが1つだけ"""
+        record = cls.objects.first()
+        return record.tmp_user_flg if record else False
 
 
 class Description(models.Model):
