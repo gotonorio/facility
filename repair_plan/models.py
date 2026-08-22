@@ -131,6 +131,7 @@ class KoujiName(models.Model):
             qs = qs.annotate(**annotations).order_by("kouji_type__master_name")
         else:
             qs = qs.annotate(**annotations).order_by("kouji_type", "kouji_name")
+
         return qs
 
     @classmethod

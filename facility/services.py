@@ -1,9 +1,12 @@
 import calendar
+import logging
 
 from django.db.models import Max
 from django.utils import timezone
 from register.models import User
 from repair_plan.models import MasterPlan
+
+logger = logging.getLogger(__name__)
 
 
 def select_period(year, month):
@@ -23,7 +26,8 @@ def get_latest_version(user_name):
     # forms.pyのversionセレクタに引数と初期値を設定する。引数の「True」は__init__()で受け取ることができる。
     group_name = User.group_name(user_name)
     is_manager = False
-    if group_name in ["chairman", "repair_plan_manager", "specialist_committee"]:
+    # if group_name in ["chairman", "repair_plan_manager", "specialist_committee"]:
+    if group_name in ["chairman", "repair_plan_manager"]:
         latest_ver = MasterPlan.objects.aggregate(ver=Max("version"))
         is_manager = True
     else:
