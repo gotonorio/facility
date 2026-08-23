@@ -1,0 +1,28 @@
+# https://docs.astral.sh/ruff/configuration/
+
+[tool.ruff]
+exclude = [
+    "__pycache__",
+    ".git",
+]
+
+line-length = 120
+indent-width = 4
+
+# -----------------------------------------------
+# Ruffの自動成形指定
+# -----------------------------------------------
+[tool.ruff.format]
+# 1. ダブルクォーテーションにする
+quote-style = "double"
+# 2. インデントはスペース
+indent-style = "space"
+# 3. 既存の改行コード（LF または CRLF）を自動検出して維持する
+line-ending = "auto"
+
+# -----------------------------------------------
+# django-pytest用設定
+# -----------------------------------------------
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "facility.settings"
+python_files = ["test_*.py", "*_test.py"]
