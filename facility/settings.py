@@ -257,6 +257,10 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
+        # 何もしない（ログを捨てる）ハンドラを定義 (2026-10-13)
+        "null": {
+            "class": "logging.NullHandler",
+        },
     },
     "loggers": {
         # 2. 不正なホスト名（DisallowedHost）のエラーを発生させるロガーを指定
