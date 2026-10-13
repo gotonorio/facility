@@ -168,7 +168,7 @@ CSRF_TRUSTED_ORIGINS = ["https://facility.sophiagardens.org"]
 AUTH_USER_MODEL = "register.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-VERSION_NO = "2026-10-13"
+VERSION_NO = "2026-10-14"
 LOGIN_URL = "register:login"
 LOGIN_REDIRECT_URL = "register:mypage"
 LOGOUT_REDIRECT_URL = "register:login"
@@ -288,68 +288,6 @@ LOGGING = {
     #     "level": "DEBUG",
     # },
 }
-
-# LOG_BASE_DIR = os.path.join(
-#     "logs",
-# )
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "filters": {
-#         "require_debug_false": {
-#             "()": "django.utils.log.RequireDebugFalse",
-#         },
-#         "require_debug_true": {
-#             "()": "django.utils.log.RequireDebugTrue",
-#         },
-#     },
-#     "formatters": {"simple": {"format": "%(asctime)s [%(levelname)s] %(message)s"}},
-#     # ログの出力方法についての設定。
-#     "handlers": {
-#         # DEBUG = Falseの場合、ログファイルに出力する。
-#         "info": {
-#             "level": "INFO",
-#             "filters": ["require_debug_false"],
-#             "class": "logging.handlers.RotatingFileHandler",
-#             "maxBytes": 51200,
-#             "backupCount": 5,
-#             "filename": os.path.join(LOG_BASE_DIR, "info.log"),
-#             "formatter": "simple",
-#         },
-#         "warning": {
-#             "level": "WARNING",
-#             "filters": ["require_debug_false"],
-#             "class": "logging.handlers.RotatingFileHandler",
-#             "maxBytes": 51200,
-#             "backupCount": 5,
-#             "filename": os.path.join(LOG_BASE_DIR, "warning.log"),
-#             "formatter": "simple",
-#         },
-#         # DEBUG = Trueの場合、コンソールにログ出力する。
-#         "debug": {
-#             "level": "DEBUG",
-#             "filters": ["require_debug_true"],
-#             "class": "logging.StreamHandler",
-#             "formatter": "simple",
-#         },
-#         # 何もしない（ログを捨てる）ハンドラを定義 (2026-10-13)
-#         "null": {
-#             "class": "logging.NullHandler",
-#         },
-#     },
-#     "loggers": {
-#         # 2. 不正なホスト名（DisallowedHost）のエラーを発生させるロガーを指定
-#         "django.security.DisallowedHost": {
-#             "handlers": ["null"],  # ログを「null（ゴミ箱）」に送る
-#             "propagate": False,  # 上位のロガーにエラーを伝播させない
-#         },
-#         # これにより、通常のバグやエラーが各ログファイルへ正しく出力される
-#         "": {
-#             "handlers": ["info", "warning", "error", "debug"],
-#             "level": "INFO",
-#         },
-#     },
-# }
 
 # -----------------------------------------------------------------------------
 # static files settings

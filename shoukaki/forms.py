@@ -65,7 +65,7 @@ class ShoukakiForm(forms.ModelForm):
             "shoukaki",
             "location",
             "installation_date",
-            "inspection_date",
+            # "inspection_date",
             "made_year",
             "made_no",
             "comment",
@@ -79,13 +79,13 @@ class ShoukakiForm(forms.ModelForm):
                     "class": "is-size-6",
                 }
             ),
-            "inspection_date": forms.DateInput(
-                attrs={
-                    "type": "date",
-                    "value": timezone.datetime.now().strftime("%Y-%m-%d"),
-                    "class": "is-size-6",
-                }
-            ),
+            # "inspection_date": forms.DateInput(
+            #     attrs={
+            #         "type": "date",
+            #         "value": timezone.datetime.now().strftime("%Y-%m-%d"),
+            #         "class": "is-size-6",
+            #     }
+            # ),
         }
 
     def __init__(self, *args, **kwargs):
