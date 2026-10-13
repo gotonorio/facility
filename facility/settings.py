@@ -168,7 +168,7 @@ CSRF_TRUSTED_ORIGINS = ["https://facility.sophiagardens.org"]
 AUTH_USER_MODEL = "register.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-VERSION_NO = "2026-08-22"
+VERSION_NO = "2026-10-13"
 LOGIN_URL = "register:login"
 LOGIN_REDIRECT_URL = "register:mypage"
 LOGOUT_REDIRECT_URL = "register:login"
@@ -258,10 +258,17 @@ LOGGING = {
             "formatter": "simple",
         },
     },
-    # ロガーはルートロガーのみとする。levelはDEBUG以上とする。
-    "root": {
-        "handlers": ["info", "warning", "debug"],
-        "level": "DEBUG",
+    "loggers": {
+        # 2. 不正なホスト名（DisallowedHost）のエラーを発生させるロガーを指定
+        "django.security.DisallowedHost": {
+            "handlers": ["null"],  # ログを「null（ゴミ箱）」に送る
+            "propagate": False,  # 上位のロガーにエラーを伝播させない
+        },
+        # これにより、通常のバグやエラーが各ログファイルへ正しく出力される
+        "": {
+            "handlers": ["info", "warning", "error", "debug"],
+            "level": "INFO",
+        },
     },
 }
 
